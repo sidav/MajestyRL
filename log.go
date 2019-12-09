@@ -20,12 +20,12 @@ func (m *logMessage) getText() string {
 	}
 }
 
-type LOG struct {
+type log struct {
 	last_msgs [LOG_HEIGHT]logMessage
 	logWasChanged bool
 }
 
-func (l *LOG) appendMessage(msg string) {
+func (l *log) appendMessage(msg string) {
 	if l.last_msgs[LOG_HEIGHT-1].message == msg {
 		l.last_msgs[LOG_HEIGHT-1].count++
 	} else {
@@ -37,7 +37,7 @@ func (l *LOG) appendMessage(msg string) {
 	l.logWasChanged = true
 }
 
-func (l *LOG) appendMessagef(msg string, zomg interface{}) {
+func (l *log) appendMessagef(msg string, zomg interface{}) {
 	msg = fmt.Sprintf(msg, zomg)
 	l.appendMessage(msg)
 }
@@ -52,7 +52,7 @@ func (l *LOG) appendMessagef(msg string, zomg interface{}) {
 // 	renderLog(true)
 // }
 
-func (l *LOG) WasChanged() bool {
+func (l *log) WasChanged() bool {
 	was := l.logWasChanged
 	l.logWasChanged = false
 	return was

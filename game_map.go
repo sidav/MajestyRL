@@ -148,7 +148,7 @@ func (g *gameMap) createCostMapForPathfinding() *[][]int {
 	for i := 0; i < width; i++ {
 		for j := 0; j < height; j++ {
 			// TODO: optimize by iterating through pawns separately
-			if !(g.tileMap[i][j].isPassable) || g.getPawnAtCoordinates(i, j) != nil {
+			if !(g.tileMap[i][j].isPassable()) || g.getPawnAtCoordinates(i, j) != nil {
 				costmap[i][j] = -1
 			}
 		}
