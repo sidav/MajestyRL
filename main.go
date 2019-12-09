@@ -1,16 +1,11 @@
 package main
 
 import (
-	geometry "github.com/sidav/golibrl/geometry"
-	cmenu "github.com/sidav/golibrl/console_menu"
+	// cmenu "github.com/sidav/golibrl/console_menu"
 	cw "github.com/sidav/golibrl/console"
-	"strconv"
-	"time"
+	// "strconv"
+	// "time"
 )
-
-func areCoordsValid(x, y int) bool {
-	return geometry.AreCoordsInRect(x, y, 0, 0, mapW, mapH)
-}
 
 var (
 	GAME_IS_RUNNING                     = true

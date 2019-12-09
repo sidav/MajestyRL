@@ -42,15 +42,15 @@ func (l *LOG) appendMessagef(msg string, zomg interface{}) {
 	l.appendMessage(msg)
 }
 
-func (l *LOG) warning(msg string) {
-	l.appendMessage(msg)
-	renderLog(true)
-}
+// func (l *LOG) warning(msg string) {
+// 	l.appendMessage(msg)
+// 	renderLog(true)
+// }
 
-func (l *LOG) warningf(msg string, zomg interface{}) {
-	l.appendMessagef(msg, zomg)
-	renderLog(true)
-}
+// func (l *LOG) warningf(msg string, zomg interface{}) {
+// 	l.appendMessagef(msg, zomg)
+// 	renderLog(true)
+// }
 
 func (l *LOG) WasChanged() bool {
 	was := l.logWasChanged
