@@ -9,14 +9,14 @@ import (
 )
 
 var (
-	GAME_IS_RUNNING  = true
-	LOG              *log
-	RENDERER         rendererStruct
+	GAME_IS_RUNNING   = true
+	LOG               *log
+	RENDERER          rendererStruct
 	PLAYER_CONTROLLER playerController
-	CURRENT_TICK     = 1
-	CURRENT_MAP      *gameMap
-	CHEAT_IGNORE_FOW bool
-	DEBUG_OUTPUT     bool
+	CURRENT_TICK      = 1
+	CURRENT_MAP       *gameMap
+	CHEAT_IGNORE_FOW  bool
+	DEBUG_OUTPUT      bool
 )
 
 func getCurrentTurn() int {
@@ -38,6 +38,9 @@ func main() {
 	// load test mission
 	initTestMission()
 
-	PLAYER_CONTROLLER.controlAsFaction(CURRENT_MAP.factions[0])	
-
+	for !PLAYER_CONTROLLER.exit { // main game loop 
+		for _, currFaction := range CURRENT_MAP.factions {
+			PLAYER_CONTROLLER.controlAsFaction(currFaction)
+		}
+	}
 }

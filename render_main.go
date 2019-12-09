@@ -1,6 +1,9 @@
 package main 
 
-import cw "github.com/sidav/golibrl/console"
+import (
+	cw "github.com/sidav/golibrl/console"
+	geometry "github.com/sidav/golibrl/geometry"
+)
 
 var (
 	CONSOLE_W, CONSOLE_H = 80, 25
@@ -13,7 +16,9 @@ var (
 	SIDEBAR_FLOOR_3      = 11 // y-coord right below "floor 2"
 )
 
-type rendererStruct struct {}
+type rendererStruct struct {
+	currentFactionSeeingTheScreen *faction 
+}
 
 func (r *rendererStruct) setFgColorByCcell(c *ccell) {
 	cw.SetFgColor(c.color)
@@ -34,13 +39,17 @@ func (r *rendererStruct) updateBoundsIfNeccessary(force bool) {
 }
 
 func (r *rendererStruct) renderScreen(f *faction) {
+	r.currentFactionSeeingTheScreen = f 
 	r.updateBoundsIfNeccessary(false)
 	cw.Clear_console()
-	r.renderMapInViewport(f, CURRENT_MAP)
+	r.renderMapInViewport(CURRENT_MAP)
+	r.renderPawnsInViewport(CURRENT_MAP)
 	cw.Flush_console()
 }
 
-func (r *rendererStruct) renderMapInViewport(f *faction, g *gameMap) {
+func (r *rendererStruct) renderMapInViewport(g *gameMap) {
+	f := r.currentFactionSeeingTheScreen
+	r.currentFactionSeeingTheScreen = f 
 	vx, vy := f.cursor.getCameraCoords()
 	for x := vx; x < vx+VIEWPORT_W; x++ {
 		for y := vy; y < vy+VIEWPORT_H; y++ {
@@ -59,4 +68,14 @@ func (r *rendererStruct) renderMapInViewport(f *faction, g *gameMap) {
 			}
 		}
 	}
+}
+
+func (r *rendererStruct) areGlobalCoordsOnScreen(gx, gy int) bool {
+	vx, vy := r.currentFactionSeeingTheScreen.cursor.getCameraCoords()
+	return geometry.AreCoordsInRect(gx, gy, vx, vy, VIEWPORT_W, VIEWPORT_H)
+}
+
+func (r *rendererStruct) areGlobalCoordsOnScreenForFaction(gx, gy int, f *faction) bool {
+	vx, vy := f.cursor.getCameraCoords()
+	return geometry.AreCoordsInRect(gx, gy, vx, vy, VIEWPORT_W, VIEWPORT_H)
 }
