@@ -9,12 +9,14 @@ import (
 )
 
 var (
-	GAME_IS_RUNNING                     = true
-	LOG                                 *log
-	CURRENT_TICK                        = 1
-	CURRENT_MAP                         *gameMap
-	CHEAT_IGNORE_FOW                    bool
-	DEBUG_OUTPUT                        bool
+	GAME_IS_RUNNING  = true
+	LOG              *log
+	RENDERER         rendererStruct
+	PLAYER_CONTROLLER playerController
+	CURRENT_TICK     = 1
+	CURRENT_MAP      *gameMap
+	CHEAT_IGNORE_FOW bool
+	DEBUG_OUTPUT     bool
 )
 
 func getCurrentTurn() int {
@@ -32,8 +34,10 @@ func main() {
 	cw.Init_console("M@JESTY", cw.TCellRenderer)
 	defer cw.Close_console()
 
-	LOG = &log{}	
-	// load test mission 
+	LOG = &log{}
+	// load test mission
 	initTestMission()
-	
+
+	PLAYER_CONTROLLER.controlAsFaction(CURRENT_MAP.factions[0])	
+
 }

@@ -42,3 +42,11 @@ func createFaction(name string, n int, playerControlled, aiControlled bool) *fac
 	}
 	return fctn
 }
+
+func (f *faction) wereCoordsSeen(x, y int) bool {
+	return f.seenTiles[x][y]
+}
+
+func (f *faction) areCoordsInSight(x, y int) bool {
+	return f.tilesInSight[x][y]
+}
