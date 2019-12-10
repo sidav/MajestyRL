@@ -11,6 +11,7 @@ type buildingLogic struct {
 
 func (bl *buildingLogic) doTurn(bld *pawn) {
 	bl.generatePawns(bld)
+	bl.actForEachPawnInside(bld)
 }
 
 func (bl *buildingLogic) generatePawns(bld *pawn) {
@@ -33,6 +34,7 @@ func (bl *buildingLogic) actForEachPawnInside(bld *pawn) {
 			bld.asBuilding.removePawnFromInside(p)
 			CURRENT_MAP.addPawn(p)
 			CURRENT_MAP.placePawnNearPawn(p, bld)
+			LOG.AppendMessage("Pawn moved out.")
 		}
 	}
 }

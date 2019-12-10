@@ -31,7 +31,7 @@ func (b *building) registerPawnHere(p *pawn) {
 	if b.pawnsRegistered == nil {
 		b.pawnsRegistered = make([]*pawn, 0)
 	}
-	b.pawnsRegistered = append(b.pawnsInside, p)
+	b.pawnsRegistered = append(b.pawnsRegistered, p)
 }
 
 func (b *building) AddAndRegisterNewPawn(p *pawn) {

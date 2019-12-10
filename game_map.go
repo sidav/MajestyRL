@@ -49,7 +49,9 @@ func (g *gameMap) getPawnAtCoordinates(x, y int) *pawn {
 }
 
 func (g *gameMap) placePawnNearPawn(spawnThis, nearThis *pawn) {
-	spawnThis.x = nearThis.x-1 
+	w, h := nearThis.getSize()
+	spawnThis.x = nearThis.x + w/2  
+	spawnThis.y = nearThis.y + h 
 }
 
 // func (g *gameMap) getPawnsInRect(x, y, w, h int) []*pawn {
