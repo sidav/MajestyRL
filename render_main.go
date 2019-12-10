@@ -1,4 +1,4 @@
-package main 
+package main
 
 import (
 	cw "github.com/sidav/golibrl/console"
@@ -17,7 +17,7 @@ var (
 )
 
 type rendererStruct struct {
-	currentFactionSeeingTheScreen *faction 
+	currentFactionSeeingTheScreen *faction
 }
 
 func (r *rendererStruct) setFgColorByCcell(c *ccell) {
@@ -28,28 +28,29 @@ func (r *rendererStruct) setFgColorByCcell(c *ccell) {
 func (r *rendererStruct) updateBoundsIfNeccessary(force bool) {
 	if cw.WasResized() || force {
 		CONSOLE_W, CONSOLE_H = cw.GetConsoleSize()
-		VIEWPORT_W           = 2 * CONSOLE_W / 3
-		VIEWPORT_H           = CONSOLE_H - LOG_HEIGHT - 1
-		SIDEBAR_X            = VIEWPORT_W + 1
-		SIDEBAR_W            = CONSOLE_W - VIEWPORT_W - 1
-		SIDEBAR_H            = CONSOLE_H - LOG_HEIGHT
-		SIDEBAR_FLOOR_2      = 7  // y-coord right below resources info
-		SIDEBAR_FLOOR_3      = 11 // y-coord right below "floor 2"
+		VIEWPORT_W = 2 * CONSOLE_W / 3
+		VIEWPORT_H = CONSOLE_H - LOG_HEIGHT - 1
+		SIDEBAR_X = VIEWPORT_W + 1
+		SIDEBAR_W = CONSOLE_W - VIEWPORT_W - 1
+		SIDEBAR_H = CONSOLE_H - LOG_HEIGHT
+		SIDEBAR_FLOOR_2 = 7  // y-coord right below resources info
+		SIDEBAR_FLOOR_3 = 11 // y-coord right below "floor 2"
 	}
 }
 
 func (r *rendererStruct) renderScreen(f *faction) {
-	r.currentFactionSeeingTheScreen = f 
+	r.currentFactionSeeingTheScreen = f
 	r.updateBoundsIfNeccessary(false)
 	cw.Clear_console()
 	r.renderMapInViewport(CURRENT_MAP)
 	r.renderPawnsInViewport(CURRENT_MAP)
+	LOG.Render(CONSOLE_H - LOG_HEIGHT)
 	cw.Flush_console()
 }
 
 func (r *rendererStruct) renderMapInViewport(g *gameMap) {
 	f := r.currentFactionSeeingTheScreen
-	r.currentFactionSeeingTheScreen = f 
+	r.currentFactionSeeingTheScreen = f
 	vx, vy := f.cursor.getCameraCoords()
 	for x := vx; x < vx+VIEWPORT_W; x++ {
 		for y := vy; y < vy+VIEWPORT_H; y++ {

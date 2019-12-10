@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 const (
 	TICKS_PER_TURN = 10
 )
@@ -14,7 +16,7 @@ func getCurrentTurn() int {
 
 func startGameLoop() {
 	for !PLAYER_CONTROLLER.exit { // main game loop
-
+		LOG.AppendMessagef("Starting turn %d.", getCurrentTurn())
 		if CURRENT_TICK%TICKS_PER_TURN == 0 {
 			for _, currFaction := range CURRENT_MAP.factions {
 				PLAYER_CONTROLLER.controlAsFaction(currFaction)
@@ -28,5 +30,6 @@ func startGameLoop() {
 		}
 
 		CURRENT_TICK++
+		time.Sleep(5 * time.Millisecond)
 	}
 }
