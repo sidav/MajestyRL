@@ -14,10 +14,26 @@ func (r *rendererStruct) renderPawnsInViewport(g *gameMap) {
 				r.renderBuilding(f, p, g, vx, vy, false)
 			}
 		} else {
-			// TODO
+			r.renderUnit(f, p, vx, vy, false)
 		}
 	}
 }
+
+func (r *rendererStruct) renderUnit(f *faction, p *pawn, vx, vy int, inverse bool) {
+	if r.areGlobalCoordsOnScreen(p.x, p.y) && f.areCoordsInSight(p.x, p.y){
+		static := staticUnitDataTable[p.asUnit.code]
+		tileApp := static.app.char
+		colorToRender := p.faction.getFactionColor()
+		if inverse {
+			cw.SetBgColor(colorToRender)
+			cw.SetFgColor(cw.BLACK)
+		} else {
+			cw.SetFgColor(colorToRender)
+		}
+		cw.PutChar(tileApp, p.x-vx, p.y-vy)
+		cw.SetBgColor(cw.BLACK)
+	}
+} 
 
 func (r *rendererStruct) renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
 	b_w, b_h := p.getSize()

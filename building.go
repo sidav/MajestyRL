@@ -7,7 +7,7 @@ type building struct {
 
 	currWorkers, currTCs, currGuards, currRoyalGurads int
 	pawnsInside                                       []*pawn
-	pawnsRegisteredHere                               []*pawn
+	pawnsRegistered                                   []*pawn
 }
 
 func (b *building) getAppearance() *buildingAppearance {
@@ -28,10 +28,10 @@ func (b *building) addPawnToPawnsInside(p *pawn) {
 }
 
 func (b *building) registerPawnHere(p *pawn) {
-	if b.pawnsRegisteredHere == nil {
-		b.pawnsRegisteredHere = make([]*pawn, 0)
+	if b.pawnsRegistered == nil {
+		b.pawnsRegistered = make([]*pawn, 0)
 	}
-	b.pawnsRegisteredHere = append(b.pawnsInside, p)
+	b.pawnsRegistered = append(b.pawnsInside, p)
 }
 
 func (b *building) AddAndRegisterNewPawn(p *pawn) {
@@ -41,9 +41,25 @@ func (b *building) AddAndRegisterNewPawn(p *pawn) {
 
 func (b *building) recalculateCurrValues() {
 	b.currWorkers = 0
-	for _, p := range b.pawnsRegisteredHere {
+	for _, p := range b.pawnsRegistered {
 		if !p.isBuilding() {
 			b.currWorkers++
+		}
+	}
+}
+
+func (b *building) removePawnFromInside(p *pawn) {
+	for i, pi := range b.pawnsInside {
+		if p == pi {
+			b.pawnsInside = append(b.pawnsInside[:i], b.pawnsInside[i+1:]...) // ow it's fucking... magic!
+		}
+	}
+}
+
+func (b *building) removePawnFromRegistered(p *pawn) {
+	for i, pi := range b.pawnsRegistered {
+		if p == pi {
+			b.pawnsRegistered = append(b.pawnsRegistered[:i], b.pawnsRegistered[i+1:]...) // ow it's fucking... magic!
 		}
 	}
 }
