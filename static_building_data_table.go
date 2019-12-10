@@ -1,12 +1,19 @@
-package main 
+package main
 
 type buildingStaticData struct {
-	app *buildingAppearance
+	app                   *buildingAppearance
 	underConstructionData *underConstructionData
+
+	cost int
+
+	goldStorage int
+
+	maxWorkers, maxTaxCollectors, maxGuards, maxRoyalGuards int
 }
 
-var staticBuildingDataTable = map[string]*buildingStaticData {
+var staticBuildingDataTable = map[string]*buildingStaticData{
 	"PALACE": &buildingStaticData{
+		// appearance
 		app: &buildingAppearance{
 			chars: []string{
 				"O---O",
@@ -15,7 +22,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData {
 				"|\\|/|",
 				"O---O",
 			},
-			colors: [][]int {
+			colors: [][]int{
 				{-1, 7, 7, 7, -1},
 				{7, 7, 7, 7, 7},
 				{7, 7, -1, 7, 7},
@@ -23,8 +30,16 @@ var staticBuildingDataTable = map[string]*buildingStaticData {
 				{-1, 7, 7, 7, -1},
 			},
 		},
-		underConstructionData: &underConstructionData {
+		// construction
+		underConstructionData: &underConstructionData{
 			maxConstructedAmount: 1000,
 		},
+		// cost
+		cost: 100000,
+		// misc
+		goldStorage:      5000,
+		maxWorkers:       2,
+		maxTaxCollectors: 1,
+		maxRoyalGuards:   1,
 	},
 }

@@ -19,10 +19,6 @@ var (
 	DEBUG_OUTPUT      bool
 )
 
-func getCurrentTurn() int {
-	return CURRENT_TICK/10 + 1
-}
-
 func debug_write(text string) {
 	if DEBUG_OUTPUT {
 		LOG.appendMessage("DEBUG: " + text)
@@ -38,9 +34,5 @@ func main() {
 	// load test mission
 	initTestMission()
 
-	for !PLAYER_CONTROLLER.exit { // main game loop 
-		for _, currFaction := range CURRENT_MAP.factions {
-			PLAYER_CONTROLLER.controlAsFaction(currFaction)
-		}
-	}
+	startGameLoop()
 }
