@@ -1,5 +1,6 @@
 package main 
 
 type unit struct {
-	intent *intent 
+	intent *intent
+	code string 
 }
