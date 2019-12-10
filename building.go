@@ -3,6 +3,7 @@ package main
 type building struct {
 	hasBeenPlaced bool
 	code          string
+	beingConstructed *underConstructionData 
 }
 
 func (b *building) getAppearance() *buildingAppearance {
