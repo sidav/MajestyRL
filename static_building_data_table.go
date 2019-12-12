@@ -3,6 +3,7 @@ package main
 type buildingStaticData struct {
 	app                   *buildingAppearance
 	underConstructionData *underConstructionData
+	maxHitpoints          int
 
 	cost int
 
@@ -34,6 +35,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		underConstructionData: &underConstructionData{
 			maxConstructedAmount: 1000,
 		},
+		maxHitpoints: 1000,
 		// cost
 		cost: 100000,
 		// misc

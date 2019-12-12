@@ -13,3 +13,7 @@ func (ucd *underConstructionData) clone() *underConstructionData {
 	}
 	return &newUcd
 }
+
+func (ucd *underConstructionData) isCompleted() bool {
+	return ucd.currentConstructedAmount >= ucd.maxConstructedAmount
+}

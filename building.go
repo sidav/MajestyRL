@@ -14,6 +14,10 @@ func (b *building) getAppearance() *buildingAppearance {
 	return staticBuildingDataTable[b.code].app
 }
 
+func (b *building) isUnderConstruction() bool {
+	return b.beingConstructed == nil || b.beingConstructed.isCompleted()
+}
+
 func (b *building) getSize() (int, int) {
 	w := len(b.getAppearance().chars)
 	h := len(b.getAppearance().chars[0])

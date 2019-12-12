@@ -40,4 +40,5 @@ func initTestMission() {
 	playerFaction := createFaction("Your Majesty", 0, true, false)
 	CURRENT_MAP.factions = append(CURRENT_MAP.factions, playerFaction)
 	CURRENT_MAP.addBuilding(createBuildingAtCoords("PALACE", true, mapW/2, mapH/2, playerFaction), true)
+	CURRENT_MAP.addBuilding(createBuildingAtCoords("PALACE", false, mapW/3, mapH/3, playerFaction), true)
 }
