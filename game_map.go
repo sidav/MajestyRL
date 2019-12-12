@@ -31,6 +31,11 @@ func (g *gameMap) addBuilding(b *pawn, asAlreadyConstructed bool) {
 	g.addPawn(b)
 }
 
+func (g *gameMap) putUnitIntoBuilding(unit, building *pawn) {
+	g.removePawn(unit)
+	building.addPawnToPawnsInside(unit)
+}
+
 func (g *gameMap) removePawn(p *pawn) {
 	for i := 0; i < len(g.pawns); i++ {
 		if p == g.pawns[i] {

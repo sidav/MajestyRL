@@ -1,6 +1,7 @@
-package main 
+package main
 
 type unit struct {
-	intent *intent
-	code string 
+	intent       *intent
+	registeredIn *pawn // building where the unit is registered, its "home"
+	code         string
 }

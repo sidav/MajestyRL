@@ -1,5 +1,11 @@
 package main 
 
+// low level unit actions. 
+
+func (u *pawn) spendTime(time int) {
+	u.nextTickToAct = CURRENT_TICK + time 
+}
+
 func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true if route exists. TODO: rewrite
 	order := u.asUnit.intent
 

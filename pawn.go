@@ -12,6 +12,10 @@ type pawn struct {
 	nextTickToAct int
 }
 
+func (p *pawn) isTimeToAct() bool {
+	return CURRENT_TICK >= p.nextTickToAct
+}
+
 func (p *pawn) getCoords() (int, int) {
 	return p.x, p.y
 }

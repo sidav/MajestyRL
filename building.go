@@ -24,23 +24,26 @@ func (b *building) getSize() (int, int) {
 	return w, h
 }
 
-func (b *building) addPawnToPawnsInside(p *pawn) {
+func (bld *pawn) addPawnToPawnsInside(p *pawn) {
+	b := bld.asBuilding
 	if b.pawnsInside == nil {
 		b.pawnsInside = make([]*pawn, 0)
 	}
 	b.pawnsInside = append(b.pawnsInside, p)
 }
 
-func (b *building) registerPawnHere(p *pawn) {
+func (bld *pawn) registerPawnHere(p *pawn) {
+	b := bld.asBuilding
 	if b.pawnsRegistered == nil {
 		b.pawnsRegistered = make([]*pawn, 0)
 	}
 	b.pawnsRegistered = append(b.pawnsRegistered, p)
+	p.asUnit.registeredIn = bld 
 }
 
-func (b *building) AddAndRegisterNewPawn(p *pawn) {
-	b.addPawnToPawnsInside(p)
-	b.registerPawnHere(p)
+func (bld *pawn) AddAndRegisterNewPawn(p *pawn) {
+	bld.addPawnToPawnsInside(p)
+	bld.registerPawnHere(p)
 }
 
 func (b *building) recalculateCurrValues() {
@@ -58,6 +61,10 @@ func (b *building) removePawnFromInside(p *pawn) {
 			b.pawnsInside = append(b.pawnsInside[:i], b.pawnsInside[i+1:]...) // ow it's fucking... magic!
 		}
 	}
+}
+
+func (b *building) addPawnToInside(p *pawn) {
+	b.pawnsInside = append(b.pawnsInside, p)
 }
 
 func (b *building) removePawnFromRegistered(p *pawn) {

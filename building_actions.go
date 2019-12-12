@@ -10,6 +10,9 @@ type buildingLogic struct {
 }
 
 func (bl *buildingLogic) doTurn(bld *pawn) {
+	if bld.asBuilding.isUnderConstruction() {
+		return 
+	}
 	bl.generatePawns(bld)
 	bl.actForEachPawnInside(bld)
 }
@@ -21,7 +24,8 @@ func (bl *buildingLogic) generatePawns(bld *pawn) {
 	if bld.asBuilding.currWorkers < bstatic.maxWorkers && CURRENT_TICK % REGENERATE_WORKERS_EACH == 0 {
 		// spawn one more worker 
 		newWorker := createUnitAtCoords("PEASANT", bld.x, bld.y, bld.faction)
-		bld.asBuilding.AddAndRegisterNewPawn(newWorker)
+		bld.AddAndRegisterNewPawn(newWorker)
+		bld.asBuilding.recalculateCurrValues()
 		LOG.AppendMessage(fmt.Sprintf("Peasant created (%d/%d) at turn %d", bld.asBuilding.currWorkers, bstatic.maxWorkers, CURRENT_TICK))
 	} 
 }
@@ -29,7 +33,8 @@ func (bl *buildingLogic) generatePawns(bld *pawn) {
 func (bl *buildingLogic) actForEachPawnInside(bld *pawn) {
 	// bstatic := staticBuildingDataTable[bld.asBuilding.code]
 	for _, p := range bld.asBuilding.pawnsInside {
-		if ULOGIC.actFromInsideBuilding(p) {
+		ULOGIC.decideNewIntent(p)
+		if ULOGIC.wantsToLeaveBuilding(p) {
 			// remove unit from unitsInside and place it outside the building 
 			bld.asBuilding.removePawnFromInside(p)
 			CURRENT_MAP.addPawn(p)
