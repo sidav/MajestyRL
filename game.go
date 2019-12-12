@@ -28,7 +28,7 @@ func startGameLoop() {
 		for _, curpawn := range CURRENT_MAP.pawns {
 			if curpawn.isTimeToAct() {
 				if curpawn.isBuilding() {
-					BLOGIC.doTurn(curpawn)
+					BLOGIC.act(curpawn)
 					continue
 				}
 				ULOGIC.decideNewIntent(curpawn)

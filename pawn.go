@@ -37,8 +37,12 @@ func (p *pawn) getCenter() (int, int) {
 }
 
 func (p *pawn) isOccupyingCoords(x, y int) bool {
+	if p.isBuilding() {
+		bx, by := p.getCoords()
+		w, h := p.getSize()
+		return geometry.AreCoordsInRect(x, y, bx, by, w, h)
+	}
 	return p.x == x && p.y == y 
-	// TODO: buildings
 }
 
 func (p *pawn) IsCloseupToCoords(x, y int) bool {

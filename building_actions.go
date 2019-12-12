@@ -3,13 +3,13 @@ package main
 import "fmt"
 
 const (
-	REGENERATE_WORKERS_EACH = 100 // ticks 
+	REGENERATE_WORKERS_EACH = 1000 // ticks 
 )
 
 type buildingLogic struct {
 }
 
-func (bl *buildingLogic) doTurn(bld *pawn) {
+func (bl *buildingLogic) act(bld *pawn) {
 	if bld.asBuilding.isUnderConstruction() {
 		return 
 	}
