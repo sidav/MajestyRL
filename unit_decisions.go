@@ -12,7 +12,9 @@ func (ul *unitLogic) decideNewIntent(p *pawn) {
 		static := staticUnitDataTable[p.asUnit.code]
 
 		if static.canBuild { // try to build and/or repair building
-			for _, consideredPawn := range CURRENT_MAP.pawns {
+			startingPawnIndex := rnd.Rand(len(CURRENT_MAP.pawns))
+			for i := range CURRENT_MAP.pawns {
+				consideredPawn := CURRENT_MAP.pawns[(i+startingPawnIndex) % len(CURRENT_MAP.pawns)]
 				if consideredPawn.isBuilding() && p.faction == consideredPawn.faction {
 					// should we build it?
 					if consideredPawn.asBuilding.beingConstructed != nil {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	 geometry "github.com/sidav/golibrl/geometry"
+	geometry "github.com/sidav/golibrl/geometry"
 )
 
 var (
@@ -13,6 +13,7 @@ type gameMap struct {
 	tileMap  [][]*tile
 	factions []*faction
 	pawns    []*pawn
+	bids     []*bid
 }
 
 func (g *gameMap) areCoordsValid(x, y int) bool {
@@ -54,8 +55,8 @@ func (g *gameMap) getPawnAtCoordinates(x, y int) *pawn {
 
 func (g *gameMap) placePawnNearPawn(spawnThis, nearThis *pawn) {
 	w, h := nearThis.getSize()
-	spawnThis.x = nearThis.x + w/2  
-	spawnThis.y = nearThis.y + h 
+	spawnThis.x = nearThis.x + w/2
+	spawnThis.y = nearThis.y + h
 }
 
 // func (g *gameMap) getPawnsInRect(x, y, w, h int) []*pawn {
