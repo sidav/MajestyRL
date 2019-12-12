@@ -1,8 +1,9 @@
 package main
 
 type buildingStaticData struct {
+	name                  string
 	app                   *buildingAppearance
-	underConstructionData *underConstructionData
+	underConstructionData underConstructionData
 	maxHitpoints          int
 
 	cost int
@@ -31,8 +32,9 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 				{-1, 7, 7, 7, -1},
 			},
 		},
+		name: "Palace",
 		// construction
-		underConstructionData: &underConstructionData{
+		underConstructionData: underConstructionData{
 			maxConstructedAmount: 1000,
 		},
 		maxHitpoints: 1000,
@@ -43,5 +45,30 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		maxWorkers:       2,
 		maxTaxCollectors: 1,
 		maxRoyalGuards:   1,
+	},
+	"HUT": &buildingStaticData{
+		// appearance
+		app: &buildingAppearance{
+			chars: []string{
+				"/-\\",
+				"|=|",
+				"---",
+			},
+			colors: [][]int{
+				{7, 7, 7},
+				{7, -1, 7},
+				{7, 7, 7},
+			},
+		},
+		name: "Hut",
+		// construction
+		underConstructionData: underConstructionData{
+			maxConstructedAmount: 250,
+		},
+		maxHitpoints: 100,
+		// cost
+		cost: 500,
+		// misc
+		maxWorkers: 1,
 	},
 }

@@ -22,6 +22,7 @@ func startGameLoop() {
 			for _, currFaction := range CURRENT_MAP.factions {
 				PLAYER_CONTROLLER.controlAsFaction(currFaction)
 			}
+			time.Sleep(15 * time.Millisecond)
 		}
 
 		for _, curpawn := range CURRENT_MAP.pawns {
@@ -36,6 +37,5 @@ func startGameLoop() {
 		}
 
 		CURRENT_TICK++
-		time.Sleep(15 * time.Millisecond)
 	}
 }

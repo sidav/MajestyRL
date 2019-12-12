@@ -33,7 +33,7 @@ func (u *pawn) executeBuildIntent() {
 		}
 		u.spendTime(TICKS_PER_TURN)
 	} else {
-		u.doMoveToIntentTarget(10)
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
 	}
 }
 
@@ -46,6 +46,6 @@ func (u *pawn) executeReturnHome() {
 		CURRENT_MAP.putUnitIntoBuilding(u, tBld)
 		u.asUnit.intent = nil
 	} else {
-		u.doMoveToIntentTarget(10)
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
 	}
 }

@@ -13,7 +13,7 @@ func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true 
 	ux, uy := u.getCoords()
 	var vx, vy int
 
-	path := CURRENT_MAP.getPathFromTo(ux, uy, ox, oy)
+	path := CURRENT_MAP.getPathFromTo(ux, uy, ox, oy, desiredAccuracy)
 	if path != nil {
 		vx, vy = path.GetNextStepVector()
 	}
@@ -22,6 +22,7 @@ func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true 
 
 		u.x += vx
 		u.y += vy
+		u.spendTime(TICKS_PER_TURN)
 		// TODO: delays 
 	}
 	return true

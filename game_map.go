@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/sidav/golibrl/astar"
 	 geometry "github.com/sidav/golibrl/geometry"
 )
 
@@ -148,25 +147,3 @@ func (g *gameMap) placePawnNearPawn(spawnThis, nearThis *pawn) {
 // 	}
 // 	return true
 // }
-
-func (g *gameMap) createCostMapForPathfinding() *[][]int {
-	width, height := len(g.tileMap), len((g.tileMap)[0])
-
-	costmap := make([][]int, width)
-	for j := range costmap {
-		costmap[j] = make([]int, height)
-	}
-	for i := 0; i < width; i++ {
-		for j := 0; j < height; j++ {
-			// TODO: optimize by iterating through pawns separately
-			if !(g.tileMap[i][j].isPassable()) || g.getPawnAtCoordinates(i, j) != nil {
-				costmap[i][j] = -1
-			}
-		}
-	}
-	return &costmap
-}
-
-func (g *gameMap) getPathFromTo(fx, fy, tx, ty int) *astar.Cell {
-	return astar.FindPath(g.createCostMapForPathfinding(), fx, fy, tx, ty, true, astar.DEFAULT_PATHFINDING_STEPS, false, true)
-}
