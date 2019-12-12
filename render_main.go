@@ -44,6 +44,7 @@ func (r *rendererStruct) renderScreen(f *faction) {
 	cw.Clear_console()
 	r.renderMapInViewport(CURRENT_MAP)
 	r.renderPawnsInViewport(CURRENT_MAP)
+	r.renderUIOutline()
 	LOG.Render(CONSOLE_H - LOG_HEIGHT)
 	cw.Flush_console()
 }

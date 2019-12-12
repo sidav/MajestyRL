@@ -17,15 +17,15 @@ func (u *pawn) executeBuildIntent() {
 	tBld := u.asUnit.intent.targetPawn
 	ux, uy := u.getCoords()
 	builderCoeff := 10
-	if tBld.IsCloseupToCoords(ux, uy) {
-		if !tBld.asBuilding.isUnderConstruction() {
-			if tBld.asBuilding.beingConstructed != nil {
-				tBld.asBuilding.beingConstructed = nil
-				reportToPlayer("our new building is complete!", u.faction)
-			}
-			u.asUnit.intent = nil
-			return
+	if !tBld.asBuilding.isUnderConstruction() {
+		if tBld.asBuilding.beingConstructed != nil {
+			tBld.asBuilding.beingConstructed = nil
+			reportToPlayer("our new building is complete!", u.faction)
 		}
+		u.asUnit.intent = nil
+		return
+	}
+	if tBld.IsCloseupToCoords(ux, uy) {
 		tBld.asBuilding.beingConstructed.currentConstructedAmount += builderCoeff
 		tBld.hitpoints += tBld.getMaxHitpoints() / (tBld.asBuilding.beingConstructed.maxConstructedAmount / builderCoeff)
 		if tBld.hitpoints > tBld.getMaxHitpoints() {

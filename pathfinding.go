@@ -3,9 +3,7 @@ package main
 import "github.com/sidav/golibrl/astar"
 
 const (
-	PATHFINDING_DEPTH_FASTEST = 10 
-	PATHFINDING_DEPTH_MEDIUM = 50
-	PATHFINDING_DEPTH_ACCURATE = 100
+	PATHFINDING_DEPTH_FASTEST = 1
 )
 
 func (g *gameMap) createCostMapForPathfinding() *[][]int {
