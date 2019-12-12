@@ -19,7 +19,7 @@ func (u *pawn) actByBuildIntent() {
 	ux, uy := u.getCoords()
 	builderCoeff := 1 
 	if tBld.IsCloseupToCoords(ux, uy) {
-		if tBld.asBuilding.isUnderConstruction() {
+		if !tBld.asBuilding.isUnderConstruction() {
 			tBld.asBuilding.beingConstructed = nil
 			u.asUnit.intent = nil
 			return 

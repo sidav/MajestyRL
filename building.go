@@ -15,7 +15,7 @@ func (b *building) getAppearance() *buildingAppearance {
 }
 
 func (b *building) isUnderConstruction() bool {
-	return b.beingConstructed == nil || b.beingConstructed.isCompleted()
+	return b.beingConstructed != nil && !b.beingConstructed.isCompleted()
 }
 
 func (b *building) getSize() (int, int) {

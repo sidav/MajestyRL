@@ -17,7 +17,7 @@ func getCurrentTurn() int {
 
 func startGameLoop() {
 	for !PLAYER_CONTROLLER.exit { // main game loop
-		// LOG.AppendMessagef("Starting turn %d.", getCurrentTurn())
+		LOG.AppendMessagef("Starting turn %d.", getCurrentTurn())
 
 		if CURRENT_TICK%TICKS_PER_TURN == 0 {
 			for _, currFaction := range CURRENT_MAP.factions {
@@ -36,6 +36,6 @@ func startGameLoop() {
 		}
 
 		CURRENT_TICK++
-		time.Sleep(5 * time.Millisecond)
+		time.Sleep(15 * time.Millisecond)
 	}
 }

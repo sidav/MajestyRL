@@ -8,7 +8,7 @@ func (r *rendererStruct) renderPawnsInViewport(g *gameMap) {
 	for _, p := range g.pawns {
 		// cx, cy := p.getCenter()
 		if p.isBuilding() {
-			if p.asBuilding.beingConstructed != nil {
+			if p.asBuilding.isUnderConstruction() {
 				r.renderBuildingUnderConstruction(f, p, vx, vy, false)
 			} else {
 				r.renderBuilding(f, p, g, vx, vy, false)
