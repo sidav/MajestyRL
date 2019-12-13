@@ -44,7 +44,7 @@ func (r *rendererStruct) renderFactionStats() {
 		cw.PutString(fmt.Sprintf("%s: turn %d", f.name, getCurrentTurn()), statsx, 0)
 	}
 	cw.SetFgColor(cw.YELLOW)
-	r.renderStatusbar("GOLD:", eco.currentGold, 7500, statsx, 2, SIDEBAR_W-3, cw.YELLOW, cw.DARK_YELLOW, false)
+	r.renderStatusbar("GOLD:", eco.currentGold, eco.maxGold, statsx, 2, SIDEBAR_W-3, cw.YELLOW, cw.DARK_YELLOW, false)
 }
 
 func (r *rendererStruct) renderStatusbar(name string, curvalue, maxvalue, x, y, width, fillColor, emptyColor int, hideNumericValues bool) {

@@ -10,6 +10,7 @@ import (
 
 const (
 	TICKS_PER_TURN = 10
+	CLEANUP_BIDS_EACH = 5000 // ticks 
 )
 
 var (
@@ -26,7 +27,7 @@ var (
 	CURRENT_MAP       *gameMap
 	CHEAT_IGNORE_FOW  bool
 	DEBUG_OUTPUT      bool
-	LOG_HEIGHT        = 5
+	LOG_HEIGHT        = 8
 )
 
 func getCurrentTurn() int {
@@ -50,6 +51,10 @@ func startGameLoop() {
 				PLAYER_CONTROLLER.controlAsFaction(currFaction)
 			}
 			time.Sleep(15 * time.Millisecond)
+		}
+
+		if CURRENT_TICK % CLEANUP_BIDS_EACH == 0 {
+			CURRENT_MAP.cleanupBids()
 		}
 
 		for _, curpawn := range CURRENT_MAP.pawns {

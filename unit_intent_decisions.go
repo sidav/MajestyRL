@@ -11,6 +11,20 @@ func (ul *unitLogic) decideNewIntent(p *pawn) {
 	if p.asUnit.intent == nil {
 		static := staticUnitDataTable[p.asUnit.code]
 
+		startingBid := rnd.Rand(len(CURRENT_MAP.pawns))
+		for i := range CURRENT_MAP.bids {
+			consideredBid := CURRENT_MAP.bids[(i+startingBid) % len(CURRENT_MAP.bids)]
+			if consideredBid.isFulfilled {
+				continue // skip fulfilled bids 
+			}
+			switch consideredBid.intent_type_for_this_bid {
+			case INTENT_BUILD:
+				if static.canBuild {
+					p.asUnit.intent = consideredBid.createIntentForThisBid()
+				}
+			}
+		}
+
 		if static.canBuild { // try to build and/or repair building
 			startingPawnIndex := rnd.Rand(len(CURRENT_MAP.pawns))
 			for i := range CURRENT_MAP.pawns {

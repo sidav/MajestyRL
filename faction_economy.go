@@ -1,5 +1,5 @@
 package main 
 
 type factionEconomy struct {
-	currentGold int 
+	currentGold, maxGold int 
 }

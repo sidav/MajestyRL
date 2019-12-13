@@ -12,4 +12,12 @@ type intent struct {
 	itype      intentType
 	x, y       int
 	targetPawn *pawn
+
+	sourceBid *bid
+}
+
+func (i *intent) fulfillBidIfExists() {
+	if i.sourceBid != nil {
+		i.sourceBid.isFulfilled = true 
+	}
 }

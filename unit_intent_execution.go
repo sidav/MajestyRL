@@ -22,10 +22,14 @@ func (u *pawn) executeBuildIntent() {
 			tBld.asBuilding.beingConstructed = nil
 			reportToPlayer("our new building is complete!", u.faction)
 		}
+		u.asUnit.intent.fulfillBidIfExists()
 		u.asUnit.intent = nil
 		return
 	}
 	if tBld.IsCloseupToCoords(ux, uy) {
+		if !tBld.asBuilding.hasBeenPlaced {
+			CURRENT_MAP.addBuilding(tBld, true)
+		}
 		tBld.asBuilding.beingConstructed.currentConstructedAmount += builderCoeff
 		tBld.hitpoints += tBld.getMaxHitpoints() / (tBld.asBuilding.beingConstructed.maxConstructedAmount / builderCoeff)
 		if tBld.hitpoints > tBld.getMaxHitpoints() {
