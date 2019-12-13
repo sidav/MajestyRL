@@ -46,6 +46,11 @@ func (r *rendererStruct) renderScreen(f *faction) {
 	r.renderPawnsInViewport(CURRENT_MAP)
 	r.renderUI()
 	LOG.Render(CONSOLE_H - LOG_HEIGHT)
+
+	if DEBUG_OUTPUT {
+		PrintMemUsage()
+	}
+
 	cw.Flush_console()
 }
 

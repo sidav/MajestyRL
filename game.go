@@ -26,7 +26,7 @@ var (
 	CURRENT_TICK      = 1
 	CURRENT_MAP       *gameMap
 	CHEAT_IGNORE_FOW  bool
-	DEBUG_OUTPUT      bool
+	DEBUG_OUTPUT      = true 
 	LOG_HEIGHT        = 8
 )
 
