@@ -59,6 +59,7 @@ func (b *building) removePawnFromInside(p *pawn) {
 	for i, pi := range b.pawnsInside {
 		if p == pi {
 			b.pawnsInside = append(b.pawnsInside[:i], b.pawnsInside[i+1:]...) // ow it's fucking... magic!
+			return 
 		}
 	}
 }
@@ -71,6 +72,7 @@ func (b *building) removePawnFromRegistered(p *pawn) {
 	for i, pi := range b.pawnsRegistered {
 		if p == pi {
 			b.pawnsRegistered = append(b.pawnsRegistered[:i], b.pawnsRegistered[i+1:]...) // ow it's fucking... magic!
+			return 
 		}
 	}
 }
