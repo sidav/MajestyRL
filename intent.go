@@ -5,6 +5,8 @@ type intentType byte
 const (
 	INTENT_BUILD intentType = iota
 	INTENT_RETURN_HOME
+
+	DROP_INTENT_AFTER byte = 3
 )
 
 // Represents anything that the unit is going to do
@@ -15,7 +17,7 @@ type intent struct {
 
 	sourceBid *bid
 
-	insuccessCount int
+	insuccessCount byte
 }
 
 

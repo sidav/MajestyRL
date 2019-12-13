@@ -26,22 +26,22 @@ func (ul *unitLogic) decideNewIntent(p *pawn) {
 			}
 		}
 
-		if static.canBuild { // try to build and/or repair building
-			startingPawnIndex := rnd.Rand(len(CURRENT_MAP.pawns))
-			for i := range CURRENT_MAP.pawns {
-				consideredPawn := CURRENT_MAP.pawns[(i+startingPawnIndex) % len(CURRENT_MAP.pawns)]
-				if consideredPawn.isBuilding() && p.faction == consideredPawn.faction {
-					// should we build it?
-					if consideredPawn.asBuilding.beingConstructed != nil {
-						x, y := consideredPawn.getCenter()
-						p.asUnit.intent = &intent{itype: INTENT_BUILD, targetPawn: consideredPawn, x: x, y: y}
-						return
-					}
-					// should we repair it?
-					// TODO
-				}
-			}
-		}
+		// if static.canBuild { // try to build and/or repair building
+		// 	startingPawnIndex := rnd.Rand(len(CURRENT_MAP.pawns))
+		// 	for i := range CURRENT_MAP.pawns {
+		// 		consideredPawn := CURRENT_MAP.pawns[(i+startingPawnIndex) % len(CURRENT_MAP.pawns)]
+		// 		if consideredPawn.isBuilding() && p.faction == consideredPawn.faction {
+		// 			// should we build it?
+		// 			if consideredPawn.asBuilding.beingConstructed != nil {
+		// 				x, y := consideredPawn.getCenter()
+		// 				p.asUnit.intent = &intent{itype: INTENT_BUILD, targetPawn: consideredPawn, x: x, y: y}
+		// 				return
+		// 			}
+		// 			// should we repair it?
+		// 			// TODO
+		// 		}
+		// 	}
+		// }
 	}
 
 }
