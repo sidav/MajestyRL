@@ -20,8 +20,7 @@ func (ul *unitLogic) decideNewIntent(p *pawn) {
 			switch consideredBid.intent_type_for_this_bid {
 			case INTENT_BUILD:
 				if static.canBuild {
-					consideredBid.take()
-					p.asUnit.intent = consideredBid.createIntentForThisBid()
+					p.asUnit.intent = consideredBid.dispatchIntent()
 					return 
 				}
 			}

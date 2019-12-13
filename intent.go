@@ -14,10 +14,17 @@ type intent struct {
 	targetPawn *pawn
 
 	sourceBid *bid
+
+	insuccessCount int
+}
+
+
+func (i *intent) isDispatchedFromBid() bool {
+	return i.sourceBid != nil 
 }
 
 func (i *intent) fulfillBidIfExists() {
 	if i.sourceBid != nil {
-		i.sourceBid.isFulfilled = true 
+		i.sourceBid.isFulfilled = true
 	}
 }

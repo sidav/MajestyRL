@@ -32,7 +32,8 @@ func (bl *buildingLogic) generatePawns(bld *pawn) {
 
 func (bl *buildingLogic) actForEachPawnInside(bld *pawn) {
 	// bstatic := staticBuildingDataTable[bld.asBuilding.code]
-	for _, p := range bld.asBuilding.pawnsInside {
+	for i := 0; i < len(bld.asBuilding.pawnsInside); i++ {
+		p := bld.asBuilding.pawnsInside[i]
 		ULOGIC.decideNewIntent(p)
 		if ULOGIC.wantsToLeaveBuilding(p) {
 			// remove unit from unitsInside and place it outside the building 
@@ -40,6 +41,7 @@ func (bl *buildingLogic) actForEachPawnInside(bld *pawn) {
 			CURRENT_MAP.addPawn(p)
 			CURRENT_MAP.placePawnNearPawn(p, bld)
 			LOG.AppendMessage("Pawn moved out.")
+			i-- 
 		}
 	}
 }

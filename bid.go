@@ -14,6 +14,11 @@ func (b *bid) isVacant() bool {
 	return b.maxTaken == 0 || b.currTaken < b.maxTaken
 }
 
+func (b *bid) dispatchIntent() *intent {
+	b.take()
+	return b._createIntentForThisBid()
+}
+
 func (b *bid) take() {
 	b.currTaken++
 }
@@ -22,7 +27,7 @@ func (b *bid) drop() {
 	b.currTaken--
 }
 
-func (b *bid) createIntentForThisBid() *intent {
+func (b *bid) _createIntentForThisBid() *intent {
 	x, y := b.x, b.y
 	if x == -1 || y == -1 {
 		x, y = b.targetPawn.getCenter()
