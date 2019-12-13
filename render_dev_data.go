@@ -14,13 +14,13 @@ func updateMemUsage() {
 	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
 	memStrings = []string{
         fmt.Sprintf("Alloc      = %v MiB", bToMb(m.Alloc)),
-        fmt.Sprintf("HeapAlloc  = %v MiB", bToMb(m.HeapAlloc)),
-		fmt.Sprintf("TotalAlloc = %v MiB", bToMb(m.TotalAlloc)),
+        // fmt.Sprintf("HeapAlloc  = %v MiB", bToMb(m.HeapAlloc)),
+		// fmt.Sprintf("TotalAlloc = %v MiB", bToMb(m.TotalAlloc)),
 		fmt.Sprintf("Sys        = %v MiB", bToMb(m.Sys)),
 		fmt.Sprintf("NumGC      = %v\n", m.NumGC),
-        fmt.Sprintf("Lookups    = %d", m.Lookups),
-        fmt.Sprintf("Mallocs    = %d", m.Mallocs),
-        fmt.Sprintf("Frees      = %d", m.Frees),
+        // fmt.Sprintf("Lookups    = %d", m.Lookups),
+        // fmt.Sprintf("Mallocs    = %d", m.Mallocs),
+        // fmt.Sprintf("Frees      = %d", m.Frees),
 	}
 }
 

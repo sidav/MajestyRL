@@ -10,7 +10,7 @@ import (
 
 const (
 	TICKS_PER_TURN = 10
-	CLEANUP_BIDS_EACH = 5000 // ticks 
+	CLEANUP_BIDS_EACH = 500 // ticks 
 )
 
 var (

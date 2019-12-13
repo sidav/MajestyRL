@@ -14,13 +14,15 @@ func (ul *unitLogic) decideNewIntent(p *pawn) {
 		startingBid := rnd.Rand(len(CURRENT_MAP.pawns))
 		for i := range CURRENT_MAP.bids {
 			consideredBid := CURRENT_MAP.bids[(i+startingBid) % len(CURRENT_MAP.bids)]
-			if consideredBid.isFulfilled {
-				continue // skip fulfilled bids 
+			if consideredBid.isFulfilled || !consideredBid.isVacant() {
+				continue // skip fulfilled bids (they are cleared automatically)
 			}
 			switch consideredBid.intent_type_for_this_bid {
 			case INTENT_BUILD:
 				if static.canBuild {
+					consideredBid.take()
 					p.asUnit.intent = consideredBid.createIntentForThisBid()
+					return 
 				}
 			}
 		}

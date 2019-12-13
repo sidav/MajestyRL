@@ -7,6 +7,19 @@ type bid struct {
 	targetPawn               *pawn
 	factionCreatedBid        *faction
 	isFulfilled              bool
+	currTaken, maxTaken      byte 
+}
+
+func (b *bid) isVacant() bool {
+	return b.maxTaken == 0 || b.currTaken < b.maxTaken
+}
+
+func (b *bid) take() {
+	b.currTaken++
+}
+
+func (b *bid) drop() {
+	b.currTaken--
 }
 
 func (b *bid) createIntentForThisBid() *intent {
@@ -16,9 +29,9 @@ func (b *bid) createIntentForThisBid() *intent {
 	}
 	i := intent{
 		itype: b.intent_type_for_this_bid,
-		x: x, y: y, 
+		x:     x, y: y,
 		targetPawn: b.targetPawn,
-		sourceBid: b,
+		sourceBid:  b,
 	}
 	return &i
 }
