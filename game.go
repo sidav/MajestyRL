@@ -1,6 +1,12 @@
 package main
 
-import "time"
+import (
+	"github.com/sidav/golibrl/random/additive_random"
+	"time"
+	// "strconv"
+	// "time"
+	"Majesty/log"
+)
 
 const (
 	TICKS_PER_TURN = 10
@@ -9,10 +15,31 @@ const (
 var (
 	BLOGIC = &buildingLogic{}
 	ULOGIC = &unitLogic{}
+
+	rnd               = additive_random.FibRandom{}
+	GAME_IS_RUNNING   = true
+	IS_PAUSED         = false
+	LOG               *log.GameLog
+	RENDERER          rendererStruct
+	PLAYER_CONTROLLER playerController
+	CURRENT_TICK      = 1
+	CURRENT_MAP       *gameMap
+	CHEAT_IGNORE_FOW  bool
+	DEBUG_OUTPUT      bool
+	LOG_HEIGHT        = 5
 )
 
 func getCurrentTurn() int {
 	return CURRENT_TICK/TICKS_PER_TURN + 1
+}
+
+func initGame() {
+	rnd.InitDefault()
+	LOG = &log.GameLog{}
+	LOG.Init(LOG_HEIGHT)
+	// load test mission
+	initTestMission()
+	LOG.AppendMessage("Test mission initialized.")
 }
 
 func startGameLoop() {
