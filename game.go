@@ -1,16 +1,18 @@
 package main
 
 import (
-	"github.com/sidav/golibrl/random/additive_random"
 	"time"
+
+	"github.com/sidav/golibrl/random/additive_random"
+
 	// "strconv"
 	// "time"
 	"Majesty/log"
 )
 
 const (
-	TICKS_PER_TURN = 10
-	CLEANUP_BIDS_EACH = 500 // ticks 
+	TICKS_PER_TURN    = 10
+	CLEANUP_BIDS_EACH = 500 // ticks
 )
 
 var (
@@ -26,7 +28,7 @@ var (
 	CURRENT_TICK      = 1
 	CURRENT_MAP       *gameMap
 	CHEAT_IGNORE_FOW  bool
-	DEBUG_OUTPUT      = true 
+	DEBUG_OUTPUT      = true
 	LOG_HEIGHT        = 8
 )
 
@@ -53,16 +55,18 @@ func startGameLoop() {
 			time.Sleep(15 * time.Millisecond)
 		}
 
-		if CURRENT_TICK % CLEANUP_BIDS_EACH == 0 {
+		if CURRENT_TICK%CLEANUP_BIDS_EACH == 0 {
 			CURRENT_MAP.cleanupBids()
 		}
 
 		for _, curpawn := range CURRENT_MAP.pawns {
-			if curpawn.isTimeToAct() {
-				if curpawn.isBuilding() {
+			if curpawn.isBuilding() {
+				if CURRENT_TICK%TICKS_PER_TURN == 0 {
 					BLOGIC.act(curpawn)
-					continue
 				}
+				continue
+			}
+			if curpawn.isTimeToAct() {
 				ULOGIC.decideNewIntent(curpawn)
 				curpawn.act()
 			}
