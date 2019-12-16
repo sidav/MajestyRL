@@ -71,4 +71,30 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// misc
 		maxWorkers: 1,
 	},
+	"GOLDVAULT": &buildingStaticData{
+		// appearance
+		app: &buildingAppearance{
+			chars: []string{
+				"|-|",
+				"|=|",
+				"-O-",
+			},
+			colors: [][]int{
+				{7, 7, 7},
+				{7, -1, 7},
+				{7, 7, 7},
+			},
+		},
+		name: "Gold vault",
+		// construction
+		underConstructionData: underConstructionData{
+			maxConstructedAmount: 250,
+		},
+		maxHitpoints: 300,
+		// cost
+		cost: 1000,
+		// misc
+		goldStorage:      5000,
+		maxRoyalGuards:   1,
+	},
 }

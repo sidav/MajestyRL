@@ -22,7 +22,7 @@ func (pc *playerController) controlAsFaction(f *faction) {
 	case " ":
 		for i := 0; i < 10; i++ {
 			x, y := rnd.Rand(mapW), rnd.Rand(mapH)
-			newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: x, y: y, targetPawn: createBuildingAtCoords("HUT", false, x, y, f)}
+			newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: x, y: y, targetPawn: createBuildingAtCoords("GOLDVAULT", false, x, y, f)}
 			CURRENT_MAP.addBid(newbid)
 			reportToPlayer("cheats done", f)
 		}
