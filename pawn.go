@@ -65,3 +65,7 @@ func (p *pawn) getMaxHitpoints() int {
 func (p *pawn) isBuilding() bool {
 	return p.asBuilding != nil 
 }
+
+func (p *pawn) isUnit() bool {
+	return p.asUnit != nil 
+}

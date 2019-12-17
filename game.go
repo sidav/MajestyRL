@@ -1,13 +1,10 @@
 package main
 
 import (
-	"time"
-
 	"github.com/sidav/golibrl/random/additive_random"
-
 	// "strconv"
 	// "time"
-	"Majesty/log"
+	"MajestyRL/log"
 )
 
 const (
@@ -40,6 +37,8 @@ func initGame() {
 	rnd.InitDefault()
 	LOG = &log.GameLog{}
 	LOG.Init(LOG_HEIGHT)
+	PLAYER_CONTROLLER.init()
+
 	// load test mission
 	initTestMission()
 	LOG.AppendMessage("Test mission initialized.")
@@ -52,7 +51,6 @@ func startGameLoop() {
 			for _, currFaction := range CURRENT_MAP.factions {
 				PLAYER_CONTROLLER.controlAsFaction(currFaction)
 			}
-			time.Sleep(15 * time.Millisecond)
 		}
 
 		if CURRENT_TICK%CLEANUP_BIDS_EACH == 0 {

@@ -20,6 +20,23 @@ type rendererStruct struct {
 	currentFactionSeeingTheScreen *faction
 }
 
+func (r *rendererStruct) renderScreen(f *faction) {
+	r.currentFactionSeeingTheScreen = f
+	r.updateBoundsIfNeccessary(false)
+	cw.Clear_console()
+	r.renderMapInViewport(CURRENT_MAP)
+	r.renderPawnsInViewport(CURRENT_MAP)
+	r.renderUI()
+	r.renderCursor()
+	LOG.Render(CONSOLE_H - LOG_HEIGHT)
+
+	if DEBUG_OUTPUT {
+		PrintMemUsage()
+	}
+
+	cw.Flush_console()
+}
+
 func (r *rendererStruct) setFgColorByCcell(c *ccell) {
 	cw.SetFgColor(c.color)
 	// cw.SetFgColorRGB(c.r, c.g, c.b)
@@ -36,22 +53,6 @@ func (r *rendererStruct) updateBoundsIfNeccessary(force bool) {
 		SIDEBAR_FLOOR_2 = 7  // y-coord right below resources info
 		SIDEBAR_FLOOR_3 = 11 // y-coord right below "floor 2"
 	}
-}
-
-func (r *rendererStruct) renderScreen(f *faction) {
-	r.currentFactionSeeingTheScreen = f
-	r.updateBoundsIfNeccessary(false)
-	cw.Clear_console()
-	r.renderMapInViewport(CURRENT_MAP)
-	r.renderPawnsInViewport(CURRENT_MAP)
-	r.renderUI()
-	LOG.Render(CONSOLE_H - LOG_HEIGHT)
-
-	if DEBUG_OUTPUT {
-		PrintMemUsage()
-	}
-
-	cw.Flush_console()
 }
 
 func (r *rendererStruct) renderMapInViewport(g *gameMap) {
