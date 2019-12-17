@@ -31,3 +31,16 @@ func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true 
 	}
 	return true
 }
+
+func (u *unit) getCurrentIntentDescription() string {
+	if u.intent == nil {
+		return "Thinking..."
+	}
+	switch u.intent.itype {
+	case INTENT_BUILD: 
+	return "Building..."
+	case INTENT_RETURN_HOME:
+		return "Going to rest..."
+	}
+	return "NO DESCRIPTION FOR INTENT"
+}

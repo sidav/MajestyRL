@@ -17,3 +17,8 @@ func (ucd *underConstructionData) clone() *underConstructionData {
 func (ucd *underConstructionData) isCompleted() bool {
 	return ucd.currentConstructedAmount >= ucd.maxConstructedAmount
 }
+
+//returns current, max and percent 
+func (ucd *underConstructionData) getCompletionValues() (int, int, int) { 
+	return ucd.currentConstructedAmount, ucd.maxConstructedAmount, 100*ucd.currentConstructedAmount / ucd.maxConstructedAmount
+}

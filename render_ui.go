@@ -1,13 +1,15 @@
-package main 
+package main
 
 import (
-	cw "github.com/sidav/golibrl/console"
 	"fmt"
+	cw "github.com/sidav/golibrl/console"
+	cmenu "github.com/sidav/golibrl/console_menu"
 )
 
 func (r *rendererStruct) renderUI() {
 	r.renderUIOutline()
 	r.renderFactionStats()
+	r.renderInfoOnCursor()
 }
 
 func (r *rendererStruct) renderUIOutline() {
@@ -68,5 +70,42 @@ func (r *rendererStruct) renderStatusbar(name string, curvalue, maxvalue, x, y, 
 			cw.SetFgColor(emptyColor)
 			cw.PutChar('-', i+barStartX, y)
 		}
+	}
+}
+
+func (r *rendererStruct) renderInfoOnCursor() {
+
+	title := "Unidentified Object"
+	color := 2
+	details := make([]string, 0)
+	// var res *pawnResourceInformation
+	sp := r.currentFactionSeeingTheScreen.cursor.snappedPawn
+
+	if sp != nil {
+		color = sp.faction.getFactionColor()
+		if r.currentFactionSeeingTheScreen.areCoordsInSight(sp.x, sp.y) {
+			title = "IMPLEMENT PAWN NAMES GETTER"
+			// enemy pawn 
+			if sp.faction != r.currentFactionSeeingTheScreen {
+				if sp.isBuilding() {
+					details = append(details, "(Enemy building)")
+				} else {
+					details = append(details, "(Enemy unit)")
+				}
+			} else { // our pawn 
+				if sp.isBuilding() {
+					if sp.asBuilding.isUnderConstruction() {
+						curr, max, perc := sp.asBuilding.beingConstructed.getCompletionValues()
+						details = append(details, fmt.Sprintf("Under construction: %d/%d (%d%%)", curr, max, perc))
+					}
+				}
+				if sp.isUnit() {
+					details = append(details, sp.asUnit.getCurrentIntentDescription())
+				}
+			}
+		}
+	}
+	if len(details) > 0 {
+		cmenu.DrawSidebarInfoMenu(title, color, SIDEBAR_X, SIDEBAR_FLOOR_2, SIDEBAR_W, details)
 	}
 }

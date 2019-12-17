@@ -26,6 +26,7 @@ func (pc *playerController) controlAsFaction(f *faction) {
 		pc.snapCursorToPawn(f)
 		if pc.rerenderNeeded {
 			RENDERER.renderScreen(f)
+			pc.rerenderNeeded = false
 		}
 		keyPressed := cw.ReadKeyAsync()
 		switch keyPressed {
