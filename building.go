@@ -39,6 +39,7 @@ func (bld *pawn) registerPawnHere(p *pawn) {
 	}
 	b.pawnsRegistered = append(b.pawnsRegistered, p)
 	p.asUnit.registeredIn = bld 
+	bld.asBuilding.recalculateCurrResidents()
 }
 
 func (bld *pawn) AddAndRegisterNewPawn(p *pawn) {
@@ -46,7 +47,7 @@ func (bld *pawn) AddAndRegisterNewPawn(p *pawn) {
 	bld.registerPawnHere(p)
 }
 
-func (b *building) recalculateCurrValues() {
+func (b *building) recalculateCurrResidents() {
 	b.currWorkers = 0
 	for _, p := range b.pawnsRegistered {
 		if !p.isBuilding() {

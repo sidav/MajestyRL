@@ -15,8 +15,9 @@ func (p *pawn) act() {
 
 func (u *pawn) executeBuildIntent() {
 	tBld := u.asUnit.intent.targetPawn
+	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
 	ux, uy := u.getCoords()
-	builderCoeff := 10
+	builderCoeff := 1
 	if !tBld.asBuilding.isUnderConstruction() {
 		if tBld.asBuilding.beingConstructed != nil {
 			tBld.asBuilding.beingConstructed = nil
@@ -44,9 +45,9 @@ func (u *pawn) executeBuildIntent() {
 func (u *pawn) executeReturnHome() {
 	ux, uy := u.getCenter()
 	if u.asUnit.registeredIn == nil {
-		// find home 
+		// find new home 
 		for _, p := range CURRENT_MAP.pawns {
-			if p.isBuilding() {
+			if p.isBuilding() && !p.asBuilding.isUnderConstruction() {
 				bsd := getBuildingStaticDataFromTable(p.asBuilding.code)
 				// TODO: register not only the workers 
 				if p.asBuilding.currWorkers < bsd.maxWorkers {
@@ -58,6 +59,7 @@ func (u *pawn) executeReturnHome() {
 	}
 	tBld := u.asUnit.registeredIn
 	if tBld == nil {
+		u.asUnit.intent = nil // unit decides to maybe search for other things to do 
 		return 
 	}
 	u.asUnit.intent.targetPawn = tBld

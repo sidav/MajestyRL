@@ -84,8 +84,9 @@ func (r *rendererStruct) renderInfoOnCursor() {
 	if sp != nil {
 		color = sp.faction.getFactionColor()
 		if r.currentFactionSeeingTheScreen.areCoordsInSight(sp.x, sp.y) {
-			title = "IMPLEMENT PAWN NAMES GETTER"
+			title = sp.getName()
 			details = append(details, fmt.Sprintf("HP: %d/%d", sp.hitpoints, sp.getMaxHitpoints()))
+
 			// enemy pawn 
 			if sp.faction != r.currentFactionSeeingTheScreen {
 				if sp.isBuilding() {
@@ -93,13 +94,22 @@ func (r *rendererStruct) renderInfoOnCursor() {
 				} else {
 					details = append(details, "(Enemy unit)")
 				}
+
 			} else { // our pawn 
 				if sp.isBuilding() {
+
 					if sp.asBuilding.isUnderConstruction() {
 						curr, max, perc := sp.asBuilding.beingConstructed.getCompletionValues()
 						details = append(details, fmt.Sprintf("Under construction: %d/%d (%d%%)", curr, max, perc))
+					} else {
+
+						static := getBuildingStaticDataFromTable(sp.asBuilding.code)
+						if static.maxWorkers > 0 {
+							details = append(details, fmt.Sprintf("Workers: %d/%d", sp.asBuilding.currWorkers, static.maxWorkers))
+						}
 					}
 				}
+
 				if sp.isUnit() {
 					details = append(details, sp.asUnit.getCurrentIntentDescription())
 				}

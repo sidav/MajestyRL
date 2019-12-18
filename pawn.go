@@ -16,6 +16,16 @@ func (p *pawn) isTimeToAct() bool {
 	return CURRENT_TICK >= p.nextTickToAct
 }
 
+func (p *pawn) getName() string {
+	if p.isBuilding() {
+		return getBuildingStaticDataFromTable(p.asBuilding.code).name
+	}
+	if p.isUnit() {
+		return getUnitStaticDataFromTable(p.asUnit.code).name
+	}
+	return "getName() did some strange garbage"
+}
+
 func (p *pawn) getCoords() (int, int) {
 	return p.x, p.y
 }

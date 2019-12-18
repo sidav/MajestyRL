@@ -1,6 +1,6 @@
-package main 
+package main
 
-var TEST_MAP = &[]string {
+var TEST_MAP = &[]string{
 	"....................................................................................................",
 	"....................................................................................................",
 	"....................................................................................................",
@@ -40,5 +40,7 @@ func initTestMission() {
 	playerFaction := createFaction("Your Majesty", 0, true, false)
 	CURRENT_MAP.factions = append(CURRENT_MAP.factions, playerFaction)
 	CURRENT_MAP.addBid(&bid{intent_type_for_this_bid: INTENT_BUILD, targetPawn: createBuildingAtCoords("PALACE", false, mapW/2, mapH/2, playerFaction)})
-	CURRENT_MAP.addPawn(createUnitAtCoords("WORKER", mapW/2, mapH/2+5, playerFaction))
+	for i := 10; i < 15; i++ {
+		CURRENT_MAP.addPawn(createUnitAtCoords("PEASANT", 3*i, 0, playerFaction))
+	}
 }

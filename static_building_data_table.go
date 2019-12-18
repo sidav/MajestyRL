@@ -35,7 +35,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		name: "Palace",
 		// construction
 		underConstructionData: underConstructionData{
-			maxConstructedAmount: 1000,
+			maxConstructedAmount: 500,
 		},
 		maxHitpoints: 1000,
 		// cost

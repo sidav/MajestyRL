@@ -19,13 +19,13 @@ func (bl *buildingLogic) act(bld *pawn) {
 
 func (bl *buildingLogic) generatePawns(bld *pawn) {
 	bstatic := getBuildingStaticDataFromTable(bld.asBuilding.code)
-	bld.asBuilding.recalculateCurrValues()
+	bld.asBuilding.recalculateCurrResidents()
 	// LOG.AppendMessage(fmt.Sprintf("Peasant (%d/%d)", bld.asBuilding.currWorkers, bstatic.maxWorkers))
 	if bld.asBuilding.currWorkers < bstatic.maxWorkers && CURRENT_TICK % REGENERATE_WORKERS_EACH == 0 {
 		// spawn one more worker 
 		newWorker := createUnitAtCoords("PEASANT", bld.x, bld.y, bld.faction)
 		bld.AddAndRegisterNewPawn(newWorker)
-		bld.asBuilding.recalculateCurrValues()
+		bld.asBuilding.recalculateCurrResidents()
 		LOG.AppendMessage(fmt.Sprintf("Peasant created (%d/%d) at turn %d", bld.asBuilding.currWorkers, bstatic.maxWorkers, CURRENT_TICK))
 	} 
 }

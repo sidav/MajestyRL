@@ -1,6 +1,7 @@
 package main
 
 type unitStaticData struct {
+	name                             string
 	app                              *ccell
 	maxHitpointsMin, maxHitpointsMax int
 
@@ -14,11 +15,12 @@ type unitStaticData struct {
 var staticUnitDataTable = map[string]*unitStaticData{
 	// non-heroes
 	"PEASANT": &unitStaticData{
+		name: "Peasant",
 		// appearance
 		app: &ccell{
 			char: 'p', color: 7,
 		},
-		// hp 
+		// hp
 		maxHitpointsMin: 5, maxHitpointsMax: 5,
 		// construction
 		timeToConstruct: 100,
@@ -30,11 +32,12 @@ var staticUnitDataTable = map[string]*unitStaticData{
 	},
 
 	"NULL": &unitStaticData{
+		name: "UNKNOWN UNIT",
 		// appearance
 		app: &ccell{
 			char: 'p', color: 7,
 		},
-		// hp 
+		// hp
 		maxHitpointsMin: 5, maxHitpointsMax: 5,
 		// construction
 		timeToConstruct: 100,
@@ -51,5 +54,5 @@ func getUnitStaticDataFromTable(code string) *unitStaticData {
 	if unitsd == nil {
 		return staticUnitDataTable["NULL"]
 	}
-	return unitsd 
+	return unitsd
 }
