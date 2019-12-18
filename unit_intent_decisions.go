@@ -22,7 +22,7 @@ func (ul *unitLogic) decideNewIntent(p *pawn) {
 
 func (ul *unitLogic) considerBids(p *pawn) {
 	startingBid := rnd.Rand(len(CURRENT_MAP.bids))
-	static := staticUnitDataTable[p.asUnit.code]
+	static := getUnitStaticDataFromTable(p.asUnit.code)
 	for i := range CURRENT_MAP.bids {
 		consideredBid := CURRENT_MAP.bids[(i+startingBid) % len(CURRENT_MAP.bids)]
 		if consideredBid.isFulfilled || !consideredBid.isVacant() {
@@ -40,7 +40,7 @@ func (ul *unitLogic) considerBids(p *pawn) {
 }
 
 func (ul *unitLogic) considerSituation(p *pawn) {
-	static := staticUnitDataTable[p.asUnit.code]
+	static := getUnitStaticDataFromTable(p.asUnit.code)
 			if static.canBuild { // try to build and/or repair building
 			startingPawnIndex := rnd.Rand(len(CURRENT_MAP.pawns))
 			for i := range CURRENT_MAP.pawns {

@@ -11,7 +11,7 @@ type building struct {
 }
 
 func (b *building) getAppearance() *buildingAppearance {
-	return staticBuildingDataTable[b.code].app
+	return getBuildingStaticDataFromTable(b.code).app
 }
 
 func (b *building) isUnderConstruction() bool {

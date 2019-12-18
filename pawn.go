@@ -57,7 +57,7 @@ func (p *pawn) IsCloseupToCoords(x, y int) bool {
 
 func (p *pawn) getMaxHitpoints() int {
 	if p.isBuilding() {
-		return staticBuildingDataTable[p.asBuilding.code].maxHitpoints
+		return getBuildingStaticDataFromTable(p.asBuilding.code).maxHitpoints
 	}
 	return 1 // TODO 
 }

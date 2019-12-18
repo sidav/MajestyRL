@@ -98,3 +98,11 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		maxRoyalGuards:   1,
 	},
 }
+
+func getBuildingStaticDataFromTable(code string) *buildingStaticData {
+	bldsd := staticBuildingDataTable[code]
+	if bldsd == nil {
+		return staticBuildingDataTable["NULL"]
+	}
+	return bldsd 
+}

@@ -28,4 +28,28 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		canBuild:    true,
 		carriesGold: false,
 	},
+
+	"NULL": &unitStaticData{
+		// appearance
+		app: &ccell{
+			char: 'p', color: 7,
+		},
+		// hp 
+		maxHitpointsMin: 5, maxHitpointsMax: 5,
+		// construction
+		timeToConstruct: 100,
+		// cost
+		cost: 0,
+		// misc
+		canBuild:    true,
+		carriesGold: false,
+	},
+}
+
+func getUnitStaticDataFromTable(code string) *unitStaticData {
+	unitsd := staticUnitDataTable[code]
+	if unitsd == nil {
+		return staticUnitDataTable["NULL"]
+	}
+	return unitsd 
 }

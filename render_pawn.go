@@ -21,7 +21,7 @@ func (r *rendererStruct) renderPawnsInViewport(g *gameMap) {
 
 func (r *rendererStruct) renderUnit(f *faction, p *pawn, vx, vy int, inverse bool) {
 	if r.areGlobalCoordsOnScreen(p.x, p.y) && f.areCoordsInSight(p.x, p.y){
-		static := staticUnitDataTable[p.asUnit.code]
+		static := getUnitStaticDataFromTable(p.asUnit.code)
 		tileApp := static.app.char
 		colorToRender := p.faction.getFactionColor()
 		if inverse {
@@ -38,7 +38,7 @@ func (r *rendererStruct) renderUnit(f *faction, p *pawn, vx, vy int, inverse boo
 func (r *rendererStruct) renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
 	b_w, b_h := p.getSize()
 	code := p.asBuilding.code
-	app := staticBuildingDataTable[code].app
+	app := getBuildingStaticDataFromTable(code).app
 	bx, by := p.getCoords()
 	colorToRender := 0
 	for x := 0; x < b_w; x++ {

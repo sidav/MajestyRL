@@ -18,7 +18,7 @@ func (bl *buildingLogic) act(bld *pawn) {
 }
 
 func (bl *buildingLogic) generatePawns(bld *pawn) {
-	bstatic := staticBuildingDataTable[bld.asBuilding.code]
+	bstatic := getBuildingStaticDataFromTable(bld.asBuilding.code)
 	bld.asBuilding.recalculateCurrValues()
 	// LOG.AppendMessage(fmt.Sprintf("Peasant (%d/%d)", bld.asBuilding.currWorkers, bstatic.maxWorkers))
 	if bld.asBuilding.currWorkers < bstatic.maxWorkers && CURRENT_TICK % REGENERATE_WORKERS_EACH == 0 {
