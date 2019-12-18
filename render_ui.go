@@ -85,6 +85,7 @@ func (r *rendererStruct) renderInfoOnCursor() {
 		color = sp.faction.getFactionColor()
 		if r.currentFactionSeeingTheScreen.areCoordsInSight(sp.x, sp.y) {
 			title = "IMPLEMENT PAWN NAMES GETTER"
+			details = append(details, fmt.Sprintf("HP: %d/%d", sp.hitpoints, sp.getMaxHitpoints()))
 			// enemy pawn 
 			if sp.faction != r.currentFactionSeeingTheScreen {
 				if sp.isBuilding() {
