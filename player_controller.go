@@ -16,7 +16,7 @@ func (pc *playerController) init() {
 	pc.exit = false
 	pc.last_time = time.Now()
 	pc.rerenderNeeded = true
-	pc.endTurnPeriod = 100
+	pc.endTurnPeriod = 50
 }
 
 func (pc *playerController) controlAsFaction(f *faction) {

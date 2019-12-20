@@ -4,9 +4,13 @@ import (
 	"fmt"
 	cw "github.com/sidav/golibrl/console"
 	"runtime"
+	"time"
 )
 
 var memStrings []string 
+var totalPathfindingTimes time.Duration
+var avgPathfindingTime time.Duration
+var totalPathfindings int 
 
 func updateMemUsage() {
     var m runtime.MemStats
@@ -20,7 +24,8 @@ func updateMemUsage() {
 		fmt.Sprintf("NumGC      = %v\n", m.NumGC),
         // fmt.Sprintf("Lookups    = %d", m.Lookups),
         // fmt.Sprintf("Mallocs    = %d", m.Mallocs),
-        // fmt.Sprintf("Frees      = %d", m.Frees),
+		// fmt.Sprintf("Frees      = %d", m.Frees),
+		fmt.Sprintf("Avg Pathfinding = %v\n", avgPathfindingTime),
 	}
 }
 

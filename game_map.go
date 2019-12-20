@@ -10,7 +10,9 @@ var (
 )
 
 type gameMap struct {
-	tileMap  [][]*tile
+	tileMap [][]*tile
+	costMap [][]int // pathfinding related  
+
 	factions []*faction
 	pawns    []*pawn
 	bids     []*bid
