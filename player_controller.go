@@ -68,16 +68,16 @@ func (pc *playerController) doUnconditionalKeyActions(f *faction, keyPressed str
 	case "=":
 		if pc.endTurnPeriod > 25 {
 			pc.endTurnPeriod -= 25
-			LOG.AppendMessagef("Game speed increased to %d", 10-(pc.endTurnPeriod/25))
+			log.AppendMessagef("Game speed increased to %d", 10-(pc.endTurnPeriod/25))
 		} else {
-			LOG.AppendMessage("Can't increase game speed any further.")
+			log.AppendMessage("Can't increase game speed any further.")
 		}
 	case "-":
 		if pc.endTurnPeriod < 2000 {
 			pc.endTurnPeriod += 25
-			LOG.AppendMessagef("Game speed decreased to %d", 10-(pc.endTurnPeriod/25))
+			log.AppendMessagef("Game speed decreased to %d", 10-(pc.endTurnPeriod/25))
 		} else {
-			LOG.AppendMessage("Can't decrease game speed any further.")
+			log.AppendMessage("Can't decrease game speed any further.")
 		}
 
 	// case "ENTER", "RETURN":

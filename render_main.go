@@ -29,7 +29,7 @@ func (r *rendererStruct) renderScreen(f *faction) {
 	r.renderPawnsInViewport(CURRENT_MAP)
 	r.renderUI()
 	r.renderCursor()
-	LOG.Render(CONSOLE_H - LOG_HEIGHT)
+	log.Render(CONSOLE_H - LOG_HEIGHT)
 
 	if DEBUG_OUTPUT {
 		PrintMemUsage()

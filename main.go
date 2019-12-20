@@ -11,7 +11,7 @@ var (
 
 func debug_write(text string) {
 	if DEBUG_OUTPUT {
-		LOG.AppendMessage("DEBUG: " + text)
+		log.AppendMessage("DEBUG: " + text)
 	}
 }
 

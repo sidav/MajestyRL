@@ -4,7 +4,7 @@ import (
 	"github.com/sidav/golibrl/random/additive_random"
 	// "strconv"
 	// "time"
-	"MajestyRL/log"
+	"MajestyRL/game_log"
 )
 
 const (
@@ -19,7 +19,7 @@ var (
 	rnd               = additive_random.FibRandom{}
 	GAME_IS_RUNNING   = true
 	IS_PAUSED         = false
-	LOG               *log.GameLog
+	log               *game_log.GameLog
 	RENDERER          rendererStruct
 	PLAYER_CONTROLLER playerController
 	CURRENT_TICK      = 1
@@ -35,13 +35,13 @@ func getCurrentTurn() int {
 
 func initGame() {
 	rnd.InitDefault()
-	LOG = &log.GameLog{}
-	LOG.Init(LOG_HEIGHT)
+	log = &game_log.GameLog{}
+	log.Init(LOG_HEIGHT)
 	PLAYER_CONTROLLER.init()
 
 	// load test mission
 	initTestMission()
-	LOG.AppendMessage("Test mission initialized.")
+	log.AppendMessage("Test mission initialized.")
 }
 
 func startGameLoop() {

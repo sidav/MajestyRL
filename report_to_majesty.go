@@ -5,5 +5,5 @@ func reportToPlayer(text string, f *faction) {
 	if f != nil {
 		plrname = f.name
 	}
-	LOG.AppendMessage(plrname + ", " + text)
+	log.AppendMessage(plrname + ", " + text)
 }

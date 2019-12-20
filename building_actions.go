@@ -26,7 +26,7 @@ func (bl *buildingLogic) generatePawns(bld *pawn) {
 		newWorker := createUnitAtCoords("PEASANT", bld.x, bld.y, bld.faction)
 		bld.AddAndRegisterNewPawn(newWorker)
 		bld.asBuilding.recalculateCurrResidents()
-		LOG.AppendMessage(fmt.Sprintf("Peasant created (%d/%d) at turn %d", bld.asBuilding.currWorkers, bstatic.maxWorkers, CURRENT_TICK))
+		log.AppendMessage(fmt.Sprintf("Peasant created (%d/%d) at turn %d", bld.asBuilding.currWorkers, bstatic.maxWorkers, CURRENT_TICK))
 	} 
 }
 
@@ -40,7 +40,7 @@ func (bl *buildingLogic) actForEachPawnInside(bld *pawn) {
 			bld.asBuilding.removePawnFromInside(p)
 			CURRENT_MAP.addPawn(p)
 			CURRENT_MAP.placePawnNearPawn(p, bld)
-			LOG.AppendMessage("Pawn moved out.")
+			log.AppendMessage("Pawn moved out.")
 			i-- 
 		}
 	}

@@ -1,4 +1,4 @@
-package log
+package game_log
 
 import (
 	"fmt"
