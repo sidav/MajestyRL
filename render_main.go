@@ -25,6 +25,7 @@ func (r *rendererStruct) renderScreen(f *faction) {
 	r.updateBoundsIfNeccessary(false)
 	cw.Clear_console()
 	r.renderMapInViewport(CURRENT_MAP)
+	r.renderBidsInViewport(CURRENT_MAP)
 	r.renderPawnsInViewport(CURRENT_MAP)
 	r.renderUI()
 	r.renderCursor()

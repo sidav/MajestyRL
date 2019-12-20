@@ -21,71 +21,35 @@ func (pc *playerController) init() {
 
 func (pc *playerController) controlAsFaction(f *faction) {
 	pc.last_time = time.Now()
-	for !pc.isTimeToAutoEndTurn() || IS_PAUSED {
+	for !pc.isTimeToAutoEndTurn() || (IS_PAUSED && pc.playerInControl) {
 		pc.rerenderNeeded = true
+		pc.playerInControl = true
 		pc.snapCursorToPawn(f)
 		if pc.rerenderNeeded {
 			RENDERER.renderScreen(f)
 			pc.rerenderNeeded = false
 		}
 		pc.mainControlLoop(f)
-		// keyPressed := cw.ReadKeyAsync()
-		// switch keyPressed {
-		// // testing
-		// case "ENTER":
-		// 	for i := 0; i < 10; i++ {
-		// 		CURRENT_MAP.addBuilding(createBuildingAtCoords("HUT", false, rnd.Rand(mapW), rnd.Rand(mapH), f), true)
-		// 		reportToPlayer("cheats done", f)
-		// 	}
-		// case " ":
-		// 	for i := 0; i < 10; i++ {
-		// 		x, y := rnd.Rand(mapW), rnd.Rand(mapH)
-		// 		newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: x, y: y, targetPawn: createBuildingAtCoords("GOLDVAULT", false, x, y, f)}
-		// 		CURRENT_MAP.addBid(newbid)
-		// 		reportToPlayer("cheats done", f)
-		// 	}
-		// default:
-		// 	pc.moveCursorWithMouse(f)
-		// }
 		if pc.exit {
-			return 
+			return
 		}
 	}
 }
 
-// func (pc *playerController)
-
-func (pc *playerController) mainControlLoop(f *faction) *[]*pawn { // returns a pointer to an array of selected pawns.
-	f.cursor.currentCursorMode = CURSOR_SELECT
-	keyPressed := cw.ReadKeyAsync()
-	click := cw.GetMouseClickedButton()
-	pc.moveCursorWithMouse(f)
-
-	if pc.moveCameraIfNeeded(f) {
-		return nil
-	}
-
-	u := f.cursor.snappedPawn
-	if u != nil && click == "LEFT" {
-		if u.faction.factionNumber != f.factionNumber {
-			reportToPlayer("those fools won't obey you!", f)
-			return nil
-		}
-		return nil
-	}
+func (pc *playerController) doUnconditionalKeyActions(f *faction, keyPressed string) {
 	switch keyPressed {
 	case "NOTHING", "NON-KEY":
 		if !IS_PAUSED && pc.isTimeToAutoEndTurn() {
 			// pc.last_time = time.Now()
 			// pc.PLR_LOOP = false // end turn
-			return nil
+			return 
 		} else {
 			pc.rerenderNeeded = false
 		}
 	case ".": // end turn without unpausing the game
 		if IS_PAUSED {
 			pc.playerInControl = false
-			return nil
+			return 
 		}
 	// case "`":
 	// 	mouseEnabled = !mouseEnabled
@@ -137,11 +101,15 @@ func (pc *playerController) mainControlLoop(f *faction) *[]*pawn { // returns a 
 	// 	}
 	case "ESCAPE":
 		pc.exit = true
-		return nil
+		return 
 
-	// case "DELETE": // cheat
-	// 	f.economy.minerals += 10000
-	// 	f.economy.vespene += 10000
+	case "DELETE": // test
+		for i := 0; i < 3; i++ {
+			x, y := rnd.Rand(mapW), rnd.Rand(mapH)
+			newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: x, y: y, targetPawn: createBuildingAtCoords("GOLDVAULT", false, x, y, f)}
+			CURRENT_MAP.addBid(newbid)
+			reportToPlayer("cheats done", f)
+		}
 	// case "E": // test
 	// 	CURRENT_MAP.addBuilding(createBuilding("testsmall", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
 	// 	LOG.appendMessage("Test enemy building created.")
@@ -165,5 +133,26 @@ func (pc *playerController) mainControlLoop(f *faction) *[]*pawn { // returns a 
 	default:
 		pc.moveCursorWithMouse(f)
 	}
+}
+
+func (pc *playerController) mainControlLoop(f *faction) *pawn { // returns a pointer to selected pawn.
+	f.cursor.currentCursorMode = CURSOR_SELECT
+	keyPressed := cw.ReadKeyAsync()
+	click := cw.GetMouseClickedButton()
+	pc.moveCursorWithMouse(f)
+
+	if pc.moveCameraIfNeeded(f) {
+		return nil
+	}
+
+	u := f.cursor.snappedPawn
+	if u != nil && click == "LEFT" {
+		if u.faction.factionNumber != f.factionNumber {
+			reportToPlayer("those fools won't obey you!", f)
+			return nil
+		}
+		return u
+	}
+	pc.doUnconditionalKeyActions(f, keyPressed)
 	return nil
 }

@@ -11,7 +11,7 @@ func (r *rendererStruct) renderPawnsInViewport(g *gameMap) {
 			if p.asBuilding.isUnderConstruction() {
 				r.renderBuildingUnderConstruction(f, p, vx, vy, false)
 			} else {
-				r.renderBuilding(f, p, g, vx, vy, false)
+				r.renderBuilding(f, p, vx, vy, false, false)
 			}
 		} else {
 			r.renderUnit(f, p, vx, vy, false)
@@ -35,7 +35,7 @@ func (r *rendererStruct) renderUnit(f *faction, p *pawn, vx, vy int, inverse boo
 	}
 } 
 
-func (r *rendererStruct) renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
+func (r *rendererStruct) renderBuilding(f *faction, p *pawn, vx, vy int, inverse, asBid bool) {
 	b_w, b_h := p.getSize()
 	code := p.asBuilding.code
 	app := getBuildingStaticDataFromTable(code).app
@@ -43,7 +43,7 @@ func (r *rendererStruct) renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy 
 	colorToRender := 0
 	for x := 0; x < b_w; x++ {
 		for y := 0; y < b_h; y++ {
-			if true { // p.currentConstructionStatus == nil {
+			if !asBid { // p.currentConstructionStatus == nil {
 				color := app.colors[x][y]
 				if f.areCoordsInSight(bx+x, by+y) {
 					if color == -1 {
