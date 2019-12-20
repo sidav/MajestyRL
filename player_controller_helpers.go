@@ -58,6 +58,7 @@ func (pc *playerController) moveCameraIfNeeded(f *faction) bool { // true if cam
 	if moved {
 		time.Sleep(PC_CAMERA_MOVE_DELAY*time.Millisecond)
 	}
+	pc.rerenderNeeded = moved 
 	return moved 
 }
 

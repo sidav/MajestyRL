@@ -13,11 +13,11 @@ func (r *rendererStruct) renderUI() {
 }
 
 func (r *rendererStruct) renderUIOutline() {
-	// if IS_PAUSED {
-	// 	cw.SetBgColor(f.getFactionColor())
-	// } else {
-	// 	cw.SetFgColor(f.getFactionColor())
-	// }
+	if IS_PAUSED {
+		cw.SetBgColor(r.currentFactionSeeingTheScreen.getFactionColor())
+	} else {
+		cw.SetFgColor(r.currentFactionSeeingTheScreen.getFactionColor())
+	}
 	cw.SetFgColor(r.currentFactionSeeingTheScreen.getFactionColor())
 	for y := 0; y < VIEWPORT_H; y++ {
 		cw.PutChar('|', VIEWPORT_W, y)
