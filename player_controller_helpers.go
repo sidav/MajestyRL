@@ -5,6 +5,10 @@ import (
 	cw "github.com/sidav/golibrl/console"
 )
 
+const (
+	PC_CAMERA_MOVE_MARGIN = 2
+	PC_CAMERA_MOVE_DELAY = 20 // ms
+)
 
 func (pc *playerController) snapCursorToPawn(f *faction) {
 	if !(f.areCoordsInSight(f.cursor.x, f.cursor.y)) {
@@ -29,6 +33,32 @@ func (pc *playerController) moveCursorWithMouse(f *faction) {
 		f.cursor.x, f.cursor.y = camx+cx, camy+cy
 		pc.snapCursorToPawn(f)
 	}
+}
+
+func (pc *playerController) moveCameraIfNeeded(f *faction) bool { // true if camera was moved 
+	cx, cy := cw.GetMouseCoords()
+	crs := f.cursor
+	moved := false 
+	if cx - PC_CAMERA_MOVE_MARGIN < 0 {
+		crs.cameraX -= 1 
+		moved = true 
+	}
+	if cy - PC_CAMERA_MOVE_MARGIN < 0 {
+		crs.cameraY -= 1 
+		moved = true 
+	}
+	if cx + PC_CAMERA_MOVE_MARGIN >= CONSOLE_W {
+		crs.cameraX += 1 
+		moved = true 
+	}
+	if cy + PC_CAMERA_MOVE_MARGIN >= CONSOLE_H {
+		crs.cameraY += 1 
+		moved = true 
+	}
+	if moved {
+		time.Sleep(PC_CAMERA_MOVE_DELAY*time.Millisecond)
+	}
+	return moved 
 }
 
 func (pc *playerController) isTimeToAutoEndTurn() bool {
