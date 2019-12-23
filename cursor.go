@@ -12,14 +12,18 @@ const (
 )
 
 type cursor struct {
-	cameraX, cameraY                     int // global space coords for upper-left (0, 0) point of screen space
-	x, y                                 int
-	xorig, yorig                         int // for bandbox selection
-	snappedPawn                          *pawn
-	currentCursorMode                    CURSOR_MODE_ENUM
-	w, h, radius                         int  // Used for certain modes only.
-	buildOnMetalOnly, buildOnThermalOnly bool // for build mode only
-	lastSelectedIdlePawnIndex            int  // for selecting the next idle unit
+	cameraX, cameraY int // global space coords for upper-left (0, 0) point of screen space
+	x, y             int
+	xorig, yorig     int // for bandbox selection
+	snappedPawn      *pawn
+
+	currentCursorMode CURSOR_MODE_ENUM
+
+	w, h, radius int // Used for certain modes only.
+
+	buildingToConstruct *pawn
+
+	lastSelectedIdlePawnIndex int // for selecting the next idle unit
 }
 
 func (c *cursor) getCoords() (int, int) {
