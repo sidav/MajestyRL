@@ -14,6 +14,8 @@ func (r *rendererStruct) renderCursor() {
 	switch c.currentCursorMode {
 	case CURSOR_SELECT:
 		r.renderSelectCursor()
+	case CURSOR_BUILD:
+		r.renderBuildCursor()
 	}
 }
 
@@ -64,4 +66,44 @@ func (r *rendererStruct) renderSelectCursor() {
 	//cw.PutChar(16*12, x-1, y+1)
 	//cw.PutChar(16*13+9, x+1, y+1)
 	// flushView()
+}
+
+func (r *rendererStruct) renderBuildCursor() {
+	c := r.currentFactionSeeingTheScreen.cursor
+	x, y := c.getOnScreenCoords()
+
+	// if c.radius > 0 {
+	// 	cw.SetFgColor(cw.RED)
+	// 	renderCircle(c.x, c.y, c.radius, '.', false)
+	// }
+
+	for i := 0; i < c.w; i++ {
+		for j := 0; j < c.h; j++ {
+			if false { // (c.buildOnMetalOnly && totalMetalUnderCursor == 0) ||
+				// (c.buildOnThermalOnly && totalThermalUnderCursor == 0) {
+				cw.SetBgColor(cw.RED)
+			} else {
+				if CURRENT_MAP.areCoordsValid(c.x+i-c.w/2, c.y+j-c.h/2) && CURRENT_MAP.tileMap[c.x+i-c.w/2][c.y+j-c.h/2].isPassable() &&
+					CURRENT_MAP.getPawnAtCoordinates(c.x+i-c.w/2, c.y+j-c.h/2) == nil {
+					cw.SetBgColor(cw.GREEN)
+				} else {
+					cw.SetBgColor(cw.RED)
+				}
+			}
+			cw.PutChar(' ', x+i-c.w/2, y+j-c.h/2)
+		}
+	}
+	// resInfoString := ""
+	// if totalMetalUnderCursor > 0 {
+	// 	resInfoString += fmt.Sprintf(" %dx METAL ", totalMetalUnderCursor)
+	// }
+	// if totalThermalUnderCursor > 0 {
+	// 	resInfoString += fmt.Sprintf(" %dx THERMAL ", totalThermalUnderCursor)
+	// }
+	// if len(resInfoString) > 0 {
+	// 	cw.SetBgColor(cw.DARK_GRAY)
+	// 	cw.SetFgColor(cw.WHITE)
+	// 	cw.PutString(resInfoString, x-c.w/2+c.w, y-c.h/2+c.h)
+	// }
+	cw.SetBgColor(cw.BLACK)
 }

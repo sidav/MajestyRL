@@ -113,52 +113,54 @@ func (g *gameMap) placePawnNearPawn(spawnThis, nearThis *pawn) {
 // 	return nil
 // }
 
-// func (g *gameMap) isConstructionSiteBlockedByUnitOrBuilding(x, y, w, h int, tight bool) bool {
-// 	for _, p := range g.pawns {
-// 		if p.isBuilding() {
-// 			si := p.buildingInfo.getBuildingStaticInfo()
-// 			if si.allowsTightPlacement && tight {
-// 				if geometry.AreTwoCellRectsOverlapping(x, y, w, h, p.x, p.y, si.w, si.h) {
-// 					return true
-// 				}
-// 			} else if geometry.AreTwoCellRectsOverlapping(x-1, y-1, w+2, h+2, p.x, p.y, si.w, si.h) {
-// 				// -1s and +2s are to prevent tight placement...
-// 				// ..and ensure that there always will be at least 1 cell between buildings.
-// 				return true
-// 			}
-// 		} else {
-// 			cx, cy := p.getCenter()
-// 			if geometry.AreCoordsInRect(cx, cy, x, y, w, h) {
-// 				return true
-// 			}
-// 		}
-// 	}
-// 	return false
-// }
+func (g *gameMap) isConstructionSiteBlockedByUnitOrBuilding(x, y, w, h int, tight bool) bool {
+	for _, p := range g.pawns {
+		if p.isBuilding() {
+			si := getBuildingStaticDataFromTable(p.asBuilding.code)
+			px, py := p.getCoords()
+			pw, ph := p.getSize()
+			if si.allowsTightPlacement && tight {
+				if geometry.AreTwoCellRectsOverlapping(x, y, w, h, px, py, pw, ph) {
+					return true
+				}
+			} else if geometry.AreTwoCellRectsOverlapping(x-1, y-1, w+2, h+2, px, py, pw, ph) {
+				// -1s and +2s are to prevent tight placement...
+				// ..and ensure that there always will be at least 1 cell between buildings.
+				return true
+			}
+		} else {
+			cx, cy := p.getCenter()
+			if geometry.AreCoordsInRect(cx, cy, x, y, w, h) {
+				return true
+			}
+		}
+	}
+	return false
+}
 
-// func (g *gameMap) canBuildingBeBuiltAt(b *pawn, cx, cy int) bool {
-// 	b_w, b_h := b.getSize()
-// 	si := b.buildingInfo.getBuildingStaticInfo()
-// 	bx := cx - b_w/2
-// 	by := cy - b_h/2
-// 	if bx < 0 || by < 0 || bx+b_w >= mapW || by+b_h >= mapH {
-// 		return false
-// 	}
-// 	if si.canBeBuiltOnMetalOnly && g.getNumberOfMetalDepositsInRect(bx, by, b_w, b_h) == 0 {
-// 		return false
-// 	}
-// 	if si.canBeBuiltOnThermalOnly && g.getNumberOfThermalDepositsInRect(bx, by, b_w, b_h) == 0 {
-// 		return false
-// 	}
-// 	for x := bx; x < bx+b_w; x++ {
-// 		for y := by; y < by+b_h; y++ {
-// 			if !g.tileMap[x][y].isPassable {
-// 				return false
-// 			}
-// 		}
-// 	}
-// 	if g.isConstructionSiteBlockedByUnitOrBuilding(bx, by, b_w, b_h, si.allowsTightPlacement) {
-// 		return false
-// 	}
-// 	return true
-// }
+func (g *gameMap) canBuildingBeBuiltAt(b *pawn, cx, cy int) bool {
+	b_w, b_h := b.getSize()
+
+	bx := cx - b_w/2
+	by := cy - b_h/2
+	if bx < 0 || by < 0 || bx+b_w >= mapW || by+b_h >= mapH {
+		return false
+	}
+	// if si.canBeBuiltOnMetalOnly && g.getNumberOfMetalDepositsInRect(bx, by, b_w, b_h) == 0 {
+	// 	return false
+	// }
+	// if si.canBeBuiltOnThermalOnly && g.getNumberOfThermalDepositsInRect(bx, by, b_w, b_h) == 0 {
+	// 	return false
+	// }
+	for x := bx; x < bx+b_w; x++ {
+		for y := by; y < by+b_h; y++ {
+			if !g.tileMap[x][y].isPassable() {
+				return false
+			}
+		}
+	}
+	if g.isConstructionSiteBlockedByUnitOrBuilding(bx, by, b_w, b_h, false) {
+		return false
+	}
+	return true
+}

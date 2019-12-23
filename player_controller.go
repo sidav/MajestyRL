@@ -163,5 +163,6 @@ func (pc *playerController) mainControlLoop() *pawn { // returns a pointer to se
 }
 
 func (pc *playerController) constructBuilding() {
-
+	bld := createBuildingAtCoords(pc.selectBuidingToConstruct(), false, 0, 0, pc.curFaction)
+	pc.selectBuildingSiteWithMouse(bld)
 }

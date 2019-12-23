@@ -1,14 +1,15 @@
-package main 
+package main
 
 import (
 	"time"
+
 	cw "github.com/sidav/golibrl/console"
 	cmenu "github.com/sidav/golibrl/console_menu"
 )
 
 const (
 	PC_CAMERA_MOVE_MARGIN = 2
-	PC_CAMERA_MOVE_DELAY = 20 // ms
+	PC_CAMERA_MOVE_DELAY  = 20 // ms
 )
 
 func (pc *playerController) snapCursorToPawn() {
@@ -36,32 +37,32 @@ func (pc *playerController) moveCursorWithMouse() {
 	}
 }
 
-func (pc *playerController) moveCameraIfNeeded() bool { // true if camera was moved 
-	const scrollSpeed = 2 
+func (pc *playerController) moveCameraIfNeeded() bool { // true if camera was moved
+	const scrollSpeed = 2
 	cx, cy := cw.GetMouseCoords()
 	crs := pc.curFaction.cursor
-	moved := false 
-	if cx - PC_CAMERA_MOVE_MARGIN < 0  && crs.cameraX > -VIEWPORT_W / 2 {
-		crs.cameraX -= scrollSpeed 
-		moved = true 
+	moved := false
+	if cx-PC_CAMERA_MOVE_MARGIN < 0 && crs.cameraX > -VIEWPORT_W/2 {
+		crs.cameraX -= scrollSpeed
+		moved = true
 	}
-	if cy - PC_CAMERA_MOVE_MARGIN < 0 && crs.cameraY > -VIEWPORT_H / 2{
-		crs.cameraY -= scrollSpeed 
-		moved = true 
+	if cy-PC_CAMERA_MOVE_MARGIN < 0 && crs.cameraY > -VIEWPORT_H/2 {
+		crs.cameraY -= scrollSpeed
+		moved = true
 	}
-	if cx + PC_CAMERA_MOVE_MARGIN >= CONSOLE_W && crs.cameraX < mapW - VIEWPORT_W / 2 {
-		crs.cameraX += scrollSpeed 
-		moved = true 
+	if cx+PC_CAMERA_MOVE_MARGIN >= CONSOLE_W && crs.cameraX < mapW-VIEWPORT_W/2 {
+		crs.cameraX += scrollSpeed
+		moved = true
 	}
-	if cy + PC_CAMERA_MOVE_MARGIN >= CONSOLE_H && crs.cameraY < mapH - VIEWPORT_H / 2 {
-		crs.cameraY += scrollSpeed 
-		moved = true 
+	if cy+PC_CAMERA_MOVE_MARGIN >= CONSOLE_H && crs.cameraY < mapH-VIEWPORT_H/2 {
+		crs.cameraY += scrollSpeed
+		moved = true
 	}
 	if moved {
-		time.Sleep(PC_CAMERA_MOVE_DELAY*time.Millisecond)
+		time.Sleep(PC_CAMERA_MOVE_DELAY * time.Millisecond)
 	}
-	pc.rerenderNeeded = moved 
-	return moved 
+	pc.rerenderNeeded = moved
+	return moved
 }
 
 func (pc *playerController) isTimeToAutoEndTurn() bool {
@@ -73,14 +74,14 @@ func (pc *playerController) selectBuidingToConstruct() string {
 
 	names := make([]string, 0)
 	descriptions := make([]string, 0)
-	// for _, code := range *allAvailableBuildingCodes {
-	// 	if p.faction.tech.areRequirementsSatisfiedForCode(code) {
-	// 		allowedBuildingCodes = append(allowedBuildingCodes, code)
-	// 		name, desc := getBuildingNameAndDescription(code)
-	// 		names = append(names, name)
-	// 		descriptions = append(descriptions, desc)
-	// 	}
-	// }
+	for code, allowed := range pc.curFaction.allowedBuildings {
+		if allowed == TECH_ALLOWED {
+			allowedBuildingCodes = append(allowedBuildingCodes, code)
+			// name, desc := getBuildingNameAndDescription(code)
+			names = append(names, getBuildingStaticDataFromTable(code).name)
+			descriptions = append(descriptions, "desc")
+		}
+	}
 
 	index := cmenu.ShowSidebarSingleChoiceMenu("BUILD:", pc.curFaction.getFactionColor(),
 		SIDEBAR_X, SIDEBAR_FLOOR_2, SIDEBAR_W, SIDEBAR_H-SIDEBAR_FLOOR_2, names, descriptions)
@@ -90,10 +91,12 @@ func (pc *playerController) selectBuidingToConstruct() string {
 	return ""
 }
 
-func (pc *playerController) selectBuildingSiteWithMouse(b *pawn, m *gameMap) {
+func (pc *playerController) selectBuildingSiteWithMouse(b *pawn) {
 	pc.curFaction.reportToPlayer("Select construction site for " + b.getName())
 	pc.rerenderNeeded = true
 	for {
+		pc.moveCursorWithMouse()
+		pc.moveCameraIfNeeded()
 		f := pc.curFaction
 		cursor := f.cursor
 		// cx, cy := cursor.getCoords()
@@ -103,8 +106,8 @@ func (pc *playerController) selectBuildingSiteWithMouse(b *pawn, m *gameMap) {
 		cursor.buildingToConstruct = b
 
 		cursor.w, cursor.h = b.getSize()
-		cursor.w += 2 
-		cursor.h += 2 
+		cursor.w += 2
+		cursor.h += 2
 
 		// if b.buildingInfo.allowsTightPlacement {
 		// 	cursor.w = b.buildingInfo.w
@@ -113,32 +116,34 @@ func (pc *playerController) selectBuildingSiteWithMouse(b *pawn, m *gameMap) {
 		// 	cursor.w = b.buildingInfo.w + 2
 		// 	cursor.h = b.buildingInfo.h + 2
 		// }
-		
 
 		// cursor.radius = b.getMaxRadiusToFire()
-
-		if pc.rerenderNeeded { // TODO: move all that "if reRenderNeeded" to the renderer itself to keep code more clean.
-			RENDERER.renderScreen(f)
-		}
 
 		keyPressed := cw.ReadKeyAsync()
 
 		pc.moveCursorWithMouse()
 
+		if pc.rerenderNeeded { // TODO: move all that "if reRenderNeeded" to the renderer itself to keep code more clean.
+			RENDERER.renderScreen(f)
+		}
+
 		if pc.moveCameraIfNeeded() {
 			continue
 		}
 
+		bw, bh := b.getSize()
+
 		if click == "LEFT" {
-			// if m.canBuildingBeBuiltAt(b, cx, cy) {
-			// 	b.x = cx - b.buildingInfo.w/2
-			// 	b.y = cy - b.buildingInfo.h/2
-			// 	p.setOrder(&order{orderType: order_build, x: cx, y: cy, buildingToConstruct: b})
-			// 	reRenderNeeded = true
-			// 	return
-			// } else {
-			// 	f.reportToPlayer("This building can't be placed here!")
-			// }
+			if CURRENT_MAP.canBuildingBeBuiltAt(b, cursor.x, cursor.y) {
+				b.x = cursor.x - bw/2
+				b.y = cursor.y - bh/2
+				newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: b.x, y: b.y, targetPawn: b}
+				CURRENT_MAP.addBid(newbid)
+				pc.rerenderNeeded = true
+				return
+			} else {
+				f.reportToPlayer("This building can't be placed here!")
+			}
 		}
 		if click == "RIGHT" {
 			pc.rerenderNeeded = true

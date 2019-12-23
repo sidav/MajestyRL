@@ -11,10 +11,11 @@ type buildingStaticData struct {
 	goldStorage int
 
 	maxWorkers, maxTaxCollectors, maxGuards, maxRoyalGuards int
+	allowsTightPlacement                                    bool
 
-	//tech 
-	allowsBuildings []string 
-	deniesBuildings []string 
+	//tech
+	allowsBuildings []string
+	deniesBuildings []string
 }
 
 var staticBuildingDataTable = map[string]*buildingStaticData{
@@ -44,7 +45,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		maxHitpoints: 1000,
 		// cost
 		cost: 100000,
-		// tech 
+		// tech
 		allowsBuildings: []string{"HUT", "GOLDVAULT"},
 		// misc
 		goldStorage:      5000,
@@ -100,8 +101,8 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// cost
 		cost: 1000,
 		// misc
-		goldStorage:      5000,
-		maxRoyalGuards:   1,
+		goldStorage:    5000,
+		maxRoyalGuards: 1,
 	},
 }
 
@@ -110,5 +111,5 @@ func getBuildingStaticDataFromTable(code string) *buildingStaticData {
 	if bldsd == nil {
 		return staticBuildingDataTable["NULL"]
 	}
-	return bldsd 
+	return bldsd
 }
