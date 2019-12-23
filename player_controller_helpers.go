@@ -36,23 +36,24 @@ func (pc *playerController) moveCursorWithMouse(f *faction) {
 }
 
 func (pc *playerController) moveCameraIfNeeded(f *faction) bool { // true if camera was moved 
+	const scrollSpeed = 2 
 	cx, cy := cw.GetMouseCoords()
 	crs := f.cursor
 	moved := false 
-	if cx - PC_CAMERA_MOVE_MARGIN < 0 {
-		crs.cameraX -= 1 
+	if cx - PC_CAMERA_MOVE_MARGIN < 0  && crs.cameraX > -VIEWPORT_W / 2 {
+		crs.cameraX -= scrollSpeed 
 		moved = true 
 	}
-	if cy - PC_CAMERA_MOVE_MARGIN < 0 {
-		crs.cameraY -= 1 
+	if cy - PC_CAMERA_MOVE_MARGIN < 0 && crs.cameraY > -VIEWPORT_H / 2{
+		crs.cameraY -= scrollSpeed 
 		moved = true 
 	}
-	if cx + PC_CAMERA_MOVE_MARGIN >= CONSOLE_W {
-		crs.cameraX += 1 
+	if cx + PC_CAMERA_MOVE_MARGIN >= CONSOLE_W && crs.cameraX < mapW - VIEWPORT_W / 2 {
+		crs.cameraX += scrollSpeed 
 		moved = true 
 	}
-	if cy + PC_CAMERA_MOVE_MARGIN >= CONSOLE_H {
-		crs.cameraY += 1 
+	if cy + PC_CAMERA_MOVE_MARGIN >= CONSOLE_H && crs.cameraY < mapH - VIEWPORT_H / 2 {
+		crs.cameraY += scrollSpeed 
 		moved = true 
 	}
 	if moved {
