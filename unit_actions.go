@@ -20,7 +20,7 @@ func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true 
 
 	if true { // TODO: if canMove() 
 		if vx == 0 && vy == 0 {
-			reportToPlayer("no path to target!", u.faction)
+			u.faction.reportToPlayer("no path to target!")
 			u.spendTime(10*TICKS_PER_TURN)
 			u.asUnit.handleIntentUnsuccess()
 			return false 

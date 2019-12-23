@@ -60,6 +60,7 @@ func startGameLoop() {
 		for _, curpawn := range CURRENT_MAP.pawns {
 			if curpawn.isBuilding() {
 				if CURRENT_TICK%TICKS_PER_TURN == 0 {
+					curpawn.setFactionTechAllowance() // TODO: call this less frequently. 
 					BLOGIC.act(curpawn)
 				}
 				continue

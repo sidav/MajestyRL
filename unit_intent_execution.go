@@ -21,7 +21,7 @@ func (u *pawn) executeBuildIntent() {
 	if !tBld.asBuilding.isUnderConstruction() {
 		if tBld.asBuilding.beingConstructed != nil {
 			tBld.asBuilding.beingConstructed = nil
-			reportToPlayer("our new building is complete!", u.faction)
+			u.faction.reportToPlayer("our new building is complete!")
 		}
 		u.asUnit.intent.fulfillBidIfExists()
 		u.asUnit.intent = nil

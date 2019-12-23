@@ -10,35 +10,35 @@ const (
 	PC_CAMERA_MOVE_DELAY = 20 // ms
 )
 
-func (pc *playerController) snapCursorToPawn(f *faction) {
-	if !(f.areCoordsInSight(f.cursor.x, f.cursor.y)) {
+func (pc *playerController) snapCursorToPawn() {
+	if !(pc.curFaction.areCoordsInSight(pc.curFaction.cursor.x, pc.curFaction.cursor.y)) {
 		return
 	}
-	b := CURRENT_MAP.getPawnAtCoordinates(f.cursor.x, f.cursor.y)
+	b := CURRENT_MAP.getPawnAtCoordinates(pc.curFaction.cursor.x, pc.curFaction.cursor.y)
 	if b == nil {
-		f.cursor.snappedPawn = nil
+		pc.curFaction.cursor.snappedPawn = nil
 	} else {
-		f.cursor.x, f.cursor.y = b.getCenter()
-		f.cursor.snappedPawn = b
+		pc.curFaction.cursor.x, pc.curFaction.cursor.y = b.getCenter()
+		pc.curFaction.cursor.snappedPawn = b
 	}
 }
 
-func (pc *playerController) moveCursorWithMouse(f *faction) {
+func (pc *playerController) moveCursorWithMouse() {
 	cx, cy := cw.GetMouseCoords()
-	camx, camy := f.cursor.getCameraCoords()
+	camx, camy := pc.curFaction.cursor.getCameraCoords()
 
-	pc.rerenderNeeded = !(f.cursor.x == camx+cx && f.cursor.y == camy+cy) // rerender is needed if cursor was _actually_ moved
+	pc.rerenderNeeded = !(pc.curFaction.cursor.x == camx+cx && pc.curFaction.cursor.y == camy+cy) // rerender is needed if cursor was _actually_ moved
 
 	if CURRENT_MAP.areCoordsValid(camx+cx, camy+cy) {
-		f.cursor.x, f.cursor.y = camx+cx, camy+cy
-		pc.snapCursorToPawn(f)
+		pc.curFaction.cursor.x, pc.curFaction.cursor.y = camx+cx, camy+cy
+		pc.snapCursorToPawn()
 	}
 }
 
-func (pc *playerController) moveCameraIfNeeded(f *faction) bool { // true if camera was moved 
+func (pc *playerController) moveCameraIfNeeded() bool { // true if camera was moved 
 	const scrollSpeed = 2 
 	cx, cy := cw.GetMouseCoords()
-	crs := f.cursor
+	crs := pc.curFaction.cursor
 	moved := false 
 	if cx - PC_CAMERA_MOVE_MARGIN < 0  && crs.cameraX > -VIEWPORT_W / 2 {
 		crs.cameraX -= scrollSpeed 

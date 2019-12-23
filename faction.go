@@ -1,18 +1,10 @@
 package main
 
-// func getFactionRGB(fn int) (uint8, uint8, uint8) {
-// 	switch fn {
-// 	case 0:
-// 		return 0, 0, 255
-// 	case 1:
-// 		return 255, 0, 0
-// 	case 2:
-// 		return 0, 255, 0
-// 	case 3:
-// 		return 255, 255, 0
-// 	}
-// 	return 32, 32, 32
-// }
+const (
+	TECH_NOTSET uint8 = iota 
+	TECH_DENIED
+	TECH_ALLOWED 
+)
 
 type faction struct {
 	cursor                                 *cursor // cursor position
@@ -22,6 +14,9 @@ type faction struct {
 	playerControlled, aiControlled         bool // used as a stub for now
 	// aiData                                 *aiData // for AI-controlled factions
 	seenTiles, tilesInSight [][] bool
+
+	//tech 
+	allowedBuildings map[string]uint8 
 }
 
 func createFaction(name string, n int, playerControlled, aiControlled bool) *faction { // temporary
@@ -40,6 +35,7 @@ func createFaction(name string, n int, playerControlled, aiControlled bool) *fac
 	for i := range fctn.tilesInSight {
 		fctn.tilesInSight[i] = make([]bool, mapH)
 	}
+	fctn.allowedBuildings = make(map[string]uint8, len(staticBuildingDataTable))
 	return fctn
 }
 
@@ -51,6 +47,14 @@ func (f *faction) wereCoordsSeen(x, y int) bool {
 func (f *faction) areCoordsInSight(x, y int) bool {
 	return true 
 	return f.tilesInSight[x][y]
+}
+
+func (f *faction) reportToPlayer(text string) {
+	plrname := "Unknown One"
+	if f != nil {
+		plrname = f.name
+	}
+	log.AppendMessage(plrname + ", " + text)
 }
 
 func (f *faction) getFactionColor() int {

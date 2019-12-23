@@ -11,6 +11,10 @@ type buildingStaticData struct {
 	goldStorage int
 
 	maxWorkers, maxTaxCollectors, maxGuards, maxRoyalGuards int
+
+	//tech 
+	allowsBuildings []string 
+	deniesBuildings []string 
 }
 
 var staticBuildingDataTable = map[string]*buildingStaticData{
@@ -40,6 +44,8 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		maxHitpoints: 1000,
 		// cost
 		cost: 100000,
+		// tech 
+		allowsBuildings: []string{"HUT", "GOLDVAULT"},
 		// misc
 		goldStorage:      5000,
 		maxWorkers:       2,

@@ -26,15 +26,29 @@ func (p *pawn) getName() string {
 	return "getName() did some strange garbage"
 }
 
+func (p *pawn) setFactionTechAllowance() {
+	if p.isBuilding() {
+		bsd := getBuildingStaticDataFromTable(p.asBuilding.code)
+		for _, allows := range bsd.allowsBuildings {
+			if p.faction.allowedBuildings[allows] != TECH_DENIED {
+				p.faction.allowedBuildings[allows] = TECH_ALLOWED
+			}
+		}
+		for _, denies := range bsd.deniesBuildings {
+			p.faction.allowedBuildings[denies] = TECH_DENIED 
+		}
+	}
+}
+
 func (p *pawn) getCoords() (int, int) {
 	return p.x, p.y
 }
 
-func (p *pawn) getSize() (int, int) { 
+func (p *pawn) getSize() (int, int) {
 	if p.isBuilding() {
 		return p.asBuilding.getSize()
 	}
-	return 1, 1 
+	return 1, 1
 }
 
 func (p *pawn) getCenter() (int, int) {
@@ -42,7 +56,7 @@ func (p *pawn) getCenter() (int, int) {
 		b_w, b_h := p.getSize()
 		return p.x + b_w/2, p.y + b_h/2
 	} else {
-		return p.x, p.y 
+		return p.x, p.y
 	}
 }
 
@@ -52,7 +66,7 @@ func (p *pawn) isOccupyingCoords(x, y int) bool {
 		w, h := p.getSize()
 		return geometry.AreCoordsInRect(x, y, bx, by, w, h)
 	}
-	return p.x == x && p.y == y 
+	return p.x == x && p.y == y
 }
 
 func (p *pawn) IsCloseupToCoords(x, y int) bool {
@@ -69,13 +83,13 @@ func (p *pawn) getMaxHitpoints() int {
 	if p.isBuilding() {
 		return getBuildingStaticDataFromTable(p.asBuilding.code).maxHitpoints
 	}
-	return 1 // TODO 
+	return 1 // TODO
 }
 
 func (p *pawn) isBuilding() bool {
-	return p.asBuilding != nil 
+	return p.asBuilding != nil
 }
 
 func (p *pawn) isUnit() bool {
-	return p.asUnit != nil 
+	return p.asUnit != nil
 }

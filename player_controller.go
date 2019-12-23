@@ -10,6 +10,7 @@ type playerController struct {
 	last_time             time.Time
 	rerenderNeeded        bool
 	endTurnPeriod         int
+	curFaction            *faction
 }
 
 func (pc *playerController) init() {
@@ -20,36 +21,37 @@ func (pc *playerController) init() {
 }
 
 func (pc *playerController) controlAsFaction(f *faction) {
+	pc.curFaction  = f 
 	pc.last_time = time.Now()
 	for !pc.isTimeToAutoEndTurn() || (IS_PAUSED && pc.playerInControl) {
 		pc.rerenderNeeded = true
 		pc.playerInControl = true
-		pc.snapCursorToPawn(f)
+		pc.snapCursorToPawn()
 		if pc.rerenderNeeded {
-			RENDERER.renderScreen(f)
+			RENDERER.renderScreen(pc.curFaction)
 			pc.rerenderNeeded = false
 		}
-		pc.mainControlLoop(f)
+		pc.mainControlLoop()
 		if pc.exit {
 			return
 		}
 	}
 }
 
-func (pc *playerController) doUnconditionalKeyActions(f *faction, keyPressed string) {
+func (pc *playerController) doUnconditionalKeyActions(keyPressed string) {
 	switch keyPressed {
 	case "NOTHING", "NON-KEY":
 		if !IS_PAUSED && pc.isTimeToAutoEndTurn() {
 			// pc.last_time = time.Now()
 			// pc.PLR_LOOP = false // end turn
-			return 
+			return
 		} else {
 			pc.rerenderNeeded = false
 		}
 	case ".": // end turn without unpausing the game
 		if IS_PAUSED {
 			pc.playerInControl = false
-			return 
+			return
 		}
 	// case "`":
 	// 	mouseEnabled = !mouseEnabled
@@ -61,9 +63,9 @@ func (pc *playerController) doUnconditionalKeyActions(f *faction, keyPressed str
 	case "SPACE", " ":
 		IS_PAUSED = !IS_PAUSED
 		if IS_PAUSED {
-			reportToPlayer("tactical pause engaged.", f)
+			pc.curFaction.reportToPlayer("tactical pause engaged.")
 		} else {
-			reportToPlayer("switched to real-time mode.", f)
+			pc.curFaction.reportToPlayer("switched to real-time mode.")
 		}
 	case "=":
 		if pc.endTurnPeriod > 25 {
@@ -83,7 +85,7 @@ func (pc *playerController) doUnconditionalKeyActions(f *faction, keyPressed str
 	// case "ENTER", "RETURN":
 	// 	u := f.cursor.snappedPawn //m.getUnitAtCoordinates(cx, cy)
 	// 	if u == nil {
-	// 		return plr_bandboxSelectionWithMouse(f) // select multiple units
+	// 		return plr_bandboxSelectionWithMouse() // select multiple units
 	// 	}
 	// 	if u.faction.factionNumber != f.factionNumber {
 	// 		LOG.appendMessage("Enemy units can't be selected, Commander.")
@@ -91,9 +93,9 @@ func (pc *playerController) doUnconditionalKeyActions(f *faction, keyPressed str
 	// 	}
 	// 	return &[]*pawn{f.cursor.snappedPawn}
 	// case "TAB":
-	// 	trySelectNextIdlePawn(f)
+	// 	trySelectNextIdlePawn()
 	// case "C":
-	// 	trySnapCursorToCommander(f)
+	// 	trySnapCursorToCommander()
 	// 	return &[]*pawn{f.cursor.snappedPawn}
 	// case "?":
 	// 	if f.cursor.snappedPawn != nil {
@@ -101,14 +103,14 @@ func (pc *playerController) doUnconditionalKeyActions(f *faction, keyPressed str
 	// 	}
 	case "ESCAPE":
 		pc.exit = true
-		return 
+		return
 
 	case "DELETE": // test
 		for i := 0; i < 3; i++ {
 			x, y := rnd.Rand(mapW), rnd.Rand(mapH)
-			newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: x, y: y, targetPawn: createBuildingAtCoords("GOLDVAULT", false, x, y, f)}
+			newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: x, y: y, targetPawn: createBuildingAtCoords("GOLDVAULT", false, x, y, pc.curFaction)}
 			CURRENT_MAP.addBid(newbid)
-			reportToPlayer("cheats done", f)
+			pc.curFaction.reportToPlayer("cheats done")
 		}
 	// case "E": // test
 	// 	CURRENT_MAP.addBuilding(createBuilding("testsmall", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
@@ -131,28 +133,35 @@ func (pc *playerController) doUnconditionalKeyActions(f *faction, keyPressed str
 	// 	CHEAT_IGNORE_FOW = !CHEAT_IGNORE_FOW
 
 	default:
-		pc.moveCursorWithMouse(f)
+		pc.moveCursorWithMouse()
 	}
 }
 
-func (pc *playerController) mainControlLoop(f *faction) *pawn { // returns a pointer to selected pawn.
-	f.cursor.currentCursorMode = CURSOR_SELECT
+func (pc *playerController) mainControlLoop() *pawn { // returns a pointer to selected pawn.
+	pc.curFaction.cursor.currentCursorMode = CURSOR_SELECT
 	keyPressed := cw.ReadKeyAsync()
 	click := cw.GetMouseClickedButton()
-	pc.moveCursorWithMouse(f)
+	pc.moveCursorWithMouse()
 
-	if pc.moveCameraIfNeeded(f) {
+	if pc.moveCameraIfNeeded() {
 		return nil
 	}
 
-	u := f.cursor.snappedPawn
+	u := pc.curFaction.cursor.snappedPawn
 	if u != nil && click == "LEFT" {
-		if u.faction.factionNumber != f.factionNumber {
-			reportToPlayer("those fools won't obey you!", f)
+		if u.faction.factionNumber != pc.curFaction.factionNumber {
+			pc.curFaction.reportToPlayer("those fools won't obey you!")
 			return nil
 		}
 		return u
 	}
-	pc.doUnconditionalKeyActions(f, keyPressed)
+	pc.doUnconditionalKeyActions(keyPressed)
+	if keyPressed == "b" {
+		pc.constructBuilding()
+	}
 	return nil
+}
+
+func (pc *playerController) constructBuilding() {
+
 }
