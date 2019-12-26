@@ -44,7 +44,7 @@ func (r *rendererStruct) renderBuilding(f *faction, p *pawn, vx, vy int, inverse
 	for x := 0; x < b_w; x++ {
 		for y := 0; y < b_h; y++ {
 			if !asBid { // p.currentConstructionStatus == nil {
-				color := app.colors[x][y]
+				color := app.colors[y][x]
 				if f.areCoordsInSight(bx+x, by+y) {
 					if color == -1 {
 						colorToRender = p.faction.getFactionColor()

@@ -19,8 +19,8 @@ func (b *building) isUnderConstruction() bool {
 }
 
 func (b *building) getSize() (int, int) {
-	w := len(b.getAppearance().chars)
-	h := len(b.getAppearance().chars[0])
+	h := len(b.getAppearance().chars)
+	w := len(b.getAppearance().chars[0])
 	return w, h
 }
 
