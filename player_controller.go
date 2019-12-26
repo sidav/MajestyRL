@@ -21,7 +21,7 @@ func (pc *playerController) init() {
 }
 
 func (pc *playerController) controlAsFaction(f *faction) {
-	pc.curFaction  = f 
+	pc.curFaction = f
 	pc.last_time = time.Now()
 	for !pc.isTimeToAutoEndTurn() || (IS_PAUSED && pc.playerInControl) {
 		pc.rerenderNeeded = true
@@ -163,6 +163,9 @@ func (pc *playerController) mainControlLoop() *pawn { // returns a pointer to se
 }
 
 func (pc *playerController) constructBuilding() {
-	bld := createBuildingAtCoords(pc.selectBuidingToConstruct(), false, 0, 0, pc.curFaction)
-	pc.selectBuildingSiteWithMouse(bld)
+	bld_code := pc.selectBuidingToConstruct()
+	if bld_code != "" {
+		bld := createBuildingAtCoords(bld_code, false, 0, 0, pc.curFaction)
+		pc.selectBuildingSiteWithMouse(bld)
+	}
 }

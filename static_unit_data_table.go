@@ -30,6 +30,22 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		canBuild:    true,
 		carriesGold: false,
 	},
+	"GUARD": &unitStaticData{
+		name: "Guardian",
+		// appearance
+		app: &ccell{
+			char: 'G', color: 7,
+		},
+		// hp
+		maxHitpointsMin: 30, maxHitpointsMax: 30,
+		// construction
+		timeToConstruct: 100,
+		// cost
+		cost: 0,
+		// misc
+		canBuild:    false,
+		carriesGold: false,
+	},
 
 	"NULL": &unitStaticData{
 		name: "UNKNOWN UNIT",

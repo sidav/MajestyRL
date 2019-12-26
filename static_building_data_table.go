@@ -23,18 +23,18 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// appearance
 		app: &buildingAppearance{
 			chars: []string{
-				"O---O",
-				"|/|\\|",
-				"|-O-|",
-				"|\\|/|",
-				"O---O",
+				"O----O",
+				"|/||\\|",
+				"|-OO-|",
+				"|\\||/|",
+				"O----O",
 			},
 			colors: [][]int{
-				{-1, 7, 7, 7, -1},
-				{7, 7, 7, 7, 7},
-				{7, 7, -1, 7, 7},
-				{7, 7, 7, 7, 7},
-				{-1, 7, 7, 7, -1},
+				{-1, 7, 7, 7, 7, -1},
+				{7, 7, 7, 7, 7, 7},
+				{7, 7, -1, -1, 7, 7},
+				{7, 7, 7, 7, 7,7},
+				{-1, 7, 7, 7, 7, -1},
 			},
 		},
 		name: "Palace",

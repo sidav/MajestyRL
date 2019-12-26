@@ -4,7 +4,6 @@ import (
 	"time"
 
 	cw "github.com/sidav/golibrl/console"
-	cmenu "github.com/sidav/golibrl/console_menu"
 )
 
 const (
@@ -67,97 +66,4 @@ func (pc *playerController) moveCameraIfNeeded() bool { // true if camera was mo
 
 func (pc *playerController) isTimeToAutoEndTurn() bool {
 	return time.Since(pc.last_time) >= time.Duration(pc.endTurnPeriod)*time.Millisecond
-}
-
-func (pc *playerController) selectBuidingToConstruct() string {
-	allowedBuildingCodes := make([]string, 0)
-
-	names := make([]string, 0)
-	descriptions := make([]string, 0)
-	for code, allowed := range pc.curFaction.allowedBuildings {
-		if allowed == TECH_ALLOWED {
-			allowedBuildingCodes = append(allowedBuildingCodes, code)
-			// name, desc := getBuildingNameAndDescription(code)
-			names = append(names, getBuildingStaticDataFromTable(code).name)
-			descriptions = append(descriptions, "desc")
-		}
-	}
-
-	index := cmenu.ShowSidebarSingleChoiceMenu("BUILD:", pc.curFaction.getFactionColor(),
-		SIDEBAR_X, SIDEBAR_FLOOR_2, SIDEBAR_W, SIDEBAR_H-SIDEBAR_FLOOR_2, names, descriptions)
-	if index != -1 {
-		return allowedBuildingCodes[index]
-	}
-	return ""
-}
-
-func (pc *playerController) selectBuildingSiteWithMouse(b *pawn) {
-	pc.curFaction.reportToPlayer("Select construction site for " + b.getName())
-	pc.rerenderNeeded = true
-	for {
-		pc.moveCursorWithMouse()
-		pc.moveCameraIfNeeded()
-		f := pc.curFaction
-		cursor := f.cursor
-		// cx, cy := cursor.getCoords()
-		click := cw.GetMouseClickedButton()
-		cursor.currentCursorMode = CURSOR_BUILD
-
-		cursor.buildingToConstruct = b
-
-		cursor.w, cursor.h = b.getSize()
-		cursor.w += 2
-		cursor.h += 2
-
-		// if b.buildingInfo.allowsTightPlacement {
-		// 	cursor.w = b.buildingInfo.w
-		// 	cursor.h = b.buildingInfo.h
-		// } else {
-		// 	cursor.w = b.buildingInfo.w + 2
-		// 	cursor.h = b.buildingInfo.h + 2
-		// }
-
-		// cursor.radius = b.getMaxRadiusToFire()
-
-		keyPressed := cw.ReadKeyAsync()
-
-		pc.moveCursorWithMouse()
-
-		if pc.rerenderNeeded { // TODO: move all that "if reRenderNeeded" to the renderer itself to keep code more clean.
-			RENDERER.renderScreen(f)
-		}
-
-		if pc.moveCameraIfNeeded() {
-			continue
-		}
-
-		bw, bh := b.getSize()
-
-		if click == "LEFT" {
-			if CURRENT_MAP.canBuildingBeBuiltAt(b, cursor.x, cursor.y) {
-				b.x = cursor.x - bw/2
-				b.y = cursor.y - bh/2
-				newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: b.x, y: b.y, targetPawn: b}
-				CURRENT_MAP.addBid(newbid)
-				pc.rerenderNeeded = true
-				return
-			} else {
-				f.reportToPlayer("This building can't be placed here!")
-			}
-		}
-		if click == "RIGHT" {
-			pc.rerenderNeeded = true
-			f.reportToPlayer("Construction cancelled: " + b.getName())
-			return
-		}
-
-		switch keyPressed {
-		case "ESCAPE":
-			pc.rerenderNeeded = true
-			f.reportToPlayer("construction cancelled: " + b.getName())
-			return
-		default:
-			pc.rerenderNeeded = false
-		}
-	}
 }

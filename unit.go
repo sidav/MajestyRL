@@ -6,6 +6,10 @@ type unit struct {
 	code         string
 }
 
+func (u *unit) getStaticData() *unitStaticData {
+	return getUnitStaticDataFromTable(u.code)
+}
+
 func (u *unit) handleIntentUnsuccess() {
 	u.intent.insuccessCount++
 	if u.intent.insuccessCount > DROP_INTENT_AFTER {

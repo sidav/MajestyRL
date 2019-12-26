@@ -14,6 +14,10 @@ func (b *building) getAppearance() *buildingAppearance {
 	return getBuildingStaticDataFromTable(b.code).app
 }
 
+func (b *building) getStaticData() *buildingStaticData {
+	return getBuildingStaticDataFromTable(b.code)
+}
+
 func (b *building) isUnderConstruction() bool {
 	return b.beingConstructed != nil && !b.beingConstructed.isCompleted()
 }
