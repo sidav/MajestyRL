@@ -33,7 +33,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 				{-1, 7, 7, 7, 7, -1},
 				{7, 7, 7, 7, 7, 7},
 				{7, 7, -1, -1, 7, 7},
-				{7, 7, 7, 7, 7,7},
+				{7, 7, 7, 7, 7, 7},
 				{-1, 7, 7, 7, 7, -1},
 			},
 		},
@@ -46,7 +46,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// cost
 		cost: 100000,
 		// tech
-		allowsBuildings: []string{"HUT", "GOLDVAULT", "MARKETPLACE"},
+		allowsBuildings: []string{"HUT", "GOLDVAULT", "MARKETPLACE", "WALL"},
 		// misc
 		goldStorage:      5000,
 		maxWorkers:       2,
@@ -127,7 +127,26 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// cost
 		cost: 1000,
 		// misc
-		deniesBuildings: []string{"GOLDVAULT"},
+	},
+	"WALL": &buildingStaticData{
+		// appearance
+		app: &buildingAppearance{
+			chars: []string{
+				"#",
+			},
+			colors: [][]int{
+				{7},
+			},
+		},
+		name: "Wall",
+		// construction
+		allowsTightPlacement: true,
+		underConstructionData: underConstructionData{
+			maxConstructedAmount: 250,
+		},
+		maxHitpoints: 100,
+		// cost
+		cost: 100,
 	},
 }
 

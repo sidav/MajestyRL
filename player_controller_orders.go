@@ -50,16 +50,11 @@ func (pc *playerController) selectBuildingSiteWithMouse(b *pawn) {
 		cursor.buildingToConstruct = b
 
 		cursor.w, cursor.h = b.getSize()
-		cursor.w += 2
-		cursor.h += 2
 
-		// if b.buildingInfo.allowsTightPlacement {
-		// 	cursor.w = b.buildingInfo.w
-		// 	cursor.h = b.buildingInfo.h
-		// } else {
-		// 	cursor.w = b.buildingInfo.w + 2
-		// 	cursor.h = b.buildingInfo.h + 2
-		// }
+		if !b.asBuilding.getStaticData().allowsTightPlacement  {
+			cursor.w += 2
+			cursor.h += 2
+		}
 
 		// cursor.radius = b.getMaxRadiusToFire()
 
