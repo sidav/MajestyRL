@@ -4,6 +4,7 @@ import "fmt"
 
 const (
 	REGENERATE_WORKERS_EACH = 1000 // ticks 
+	REGENERATE_GUARDS_EACH = 2500 
 )
 
 type buildingLogic struct {
@@ -17,16 +18,26 @@ func (bl *buildingLogic) act(bld *pawn) {
 	bl.actForEachPawnInside(bld)
 }
 
+func (bl *buildingLogic) generatePawn(bld *pawn, code string) {
+	bstatic := getBuildingStaticDataFromTable(bld.asBuilding.code)
+	// spawn one more worker 
+	newPawn := createUnitAtCoords(code, bld.x, bld.y, bld.faction)
+	bld.AddAndRegisterNewPawn(newPawn)
+	bld.asBuilding.recalculateCurrResidents()
+	log.AppendMessage(fmt.Sprintf("%s created (%d/%d) at turn %d", code, bld.asBuilding.currWorkers, bstatic.maxWorkers, CURRENT_TICK))
+}
+
 func (bl *buildingLogic) generatePawns(bld *pawn) {
 	bstatic := getBuildingStaticDataFromTable(bld.asBuilding.code)
 	bld.asBuilding.recalculateCurrResidents()
 	// LOG.AppendMessage(fmt.Sprintf("Peasant (%d/%d)", bld.asBuilding.currWorkers, bstatic.maxWorkers))
 	if bld.asBuilding.currWorkers < bstatic.maxWorkers && CURRENT_TICK % REGENERATE_WORKERS_EACH == 0 {
 		// spawn one more worker 
-		newWorker := createUnitAtCoords("PEASANT", bld.x, bld.y, bld.faction)
-		bld.AddAndRegisterNewPawn(newWorker)
-		bld.asBuilding.recalculateCurrResidents()
-		log.AppendMessage(fmt.Sprintf("Peasant created (%d/%d) at turn %d", bld.asBuilding.currWorkers, bstatic.maxWorkers, CURRENT_TICK))
+		bl.generatePawn(bld, "PEASANT")
+	} 
+	if bld.asBuilding.currGuards < bstatic.maxGuards && CURRENT_TICK % REGENERATE_GUARDS_EACH == 0 {
+		// spawn one more guard
+		bl.generatePawn(bld, "GUARD")
 	} 
 }
 
