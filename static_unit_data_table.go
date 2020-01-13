@@ -1,9 +1,20 @@
 package main
 
+type UTYPE uint8
+
+const (
+	UTYPE_UNKNOWN UTYPE = iota
+	UTYPE_WORKER
+	UTYPE_GUARD
+	UTYPE_ROYAL_GUARD
+)
+
 type unitStaticData struct {
 	name                             string
 	app                              *ccell
 	maxHitpointsMin, maxHitpointsMax int
+
+	unitType UTYPE
 
 	timeToConstruct int
 	cost            int
@@ -16,6 +27,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 	// non-heroes
 	"PEASANT": &unitStaticData{
 		name: "Peasant",
+		unitType: UTYPE_WORKER,
 		// appearance
 		app: &ccell{
 			char: 'p', color: 7,
@@ -32,6 +44,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 	},
 	"GUARD": &unitStaticData{
 		name: "Guardian",
+		unitType: UTYPE_GUARD,
 		// appearance
 		app: &ccell{
 			char: 'G', color: 7,

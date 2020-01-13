@@ -42,7 +42,7 @@ func (bld *pawn) registerPawnHere(p *pawn) {
 		b.pawnsRegistered = make([]*pawn, 0)
 	}
 	b.pawnsRegistered = append(b.pawnsRegistered, p)
-	p.asUnit.registeredIn = bld 
+	p.asUnit.registeredIn = bld
 	bld.asBuilding.recalculateCurrResidents()
 }
 
@@ -53,9 +53,17 @@ func (bld *pawn) AddAndRegisterNewPawn(p *pawn) {
 
 func (b *building) recalculateCurrResidents() {
 	b.currWorkers = 0
+	b.currGuards = 0 
+	b.currRoyalGurads = 0 
 	for _, p := range b.pawnsRegistered {
-		if !p.isBuilding() {
+		psd := p.asUnit.getStaticData()
+		switch psd.unitType {
+		case UTYPE_WORKER:
 			b.currWorkers++
+		case UTYPE_GUARD:
+			b.currGuards++
+		default:
+			panic("Oh noes!")
 		}
 	}
 }
@@ -64,7 +72,7 @@ func (b *building) removePawnFromInside(p *pawn) {
 	for i, pi := range b.pawnsInside {
 		if p == pi {
 			b.pawnsInside = append(b.pawnsInside[:i], b.pawnsInside[i+1:]...) // ow it's fucking... magic!
-			return 
+			return
 		}
 	}
 }
@@ -77,7 +85,7 @@ func (b *building) removePawnFromRegistered(p *pawn) {
 	for i, pi := range b.pawnsRegistered {
 		if p == pi {
 			b.pawnsRegistered = append(b.pawnsRegistered[:i], b.pawnsRegistered[i+1:]...) // ow it's fucking... magic!
-			return 
+			return
 		}
 	}
 }

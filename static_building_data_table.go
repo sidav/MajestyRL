@@ -51,6 +51,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		goldStorage:      5000,
 		maxWorkers:       2,
 		maxTaxCollectors: 1,
+		maxGuards:        1,
 		maxRoyalGuards:   1,
 	},
 	"HUT": &buildingStaticData{
