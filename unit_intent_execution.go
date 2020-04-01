@@ -32,7 +32,12 @@ func (u *pawn) executeBuildIntent() {
 			CURRENT_MAP.addBuilding(tBld, true)
 		}
 		tBld.asBuilding.beingConstructed.currentConstructedAmount += builderCoeff
-		tBld.hitpoints += tBld.getMaxHitpoints() / (tBld.asBuilding.beingConstructed.maxConstructedAmount / builderCoeff)
+		// BUG: insufficient HP added for buildings with too large maxHitpoints
+		hpToAdd := tBld.getMaxHitpoints() / (tBld.asBuilding.beingConstructed.maxConstructedAmount / builderCoeff)
+		if hpToAdd == 0 {
+			hpToAdd = 1 
+		}
+		tBld.hitpoints += hpToAdd 
 		if tBld.hitpoints > tBld.getMaxHitpoints() {
 			tBld.hitpoints = tBld.getMaxHitpoints()
 		}
