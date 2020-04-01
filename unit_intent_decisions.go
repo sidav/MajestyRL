@@ -35,7 +35,7 @@ func (ul *unitLogic) considerBids(p *pawn) {
 				return 
 			}
 		case INTENT_MINE:
-			if static.canMine {
+			if static.canMine && p.faction.economy.currentGold < p.faction.economy.maxGold {
 				p.asUnit.intent = consideredBid.dispatchIntent()
 				return 
 			}

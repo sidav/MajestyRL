@@ -86,6 +86,11 @@ func (u *pawn) executeMineIntent() {
 	}
 	
 	if u.currentGold == 0 {
+		if CURRENT_MAP.getResourcesAtCoords(ix, iy).amount <= 0 {
+			currIntent.sourceBid.drop()
+			u.asUnit.intent = nil 
+			return 
+		}
 		if u.IsCloseupToCoords(ix, iy) {
 			u.spendTime(TIME_FOR_MINING)
 			u.currentGold = AMOUNT_MINED
