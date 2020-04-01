@@ -86,7 +86,7 @@ func (u *pawn) executeMineIntent() {
 	}
 	
 	if u.currentGold == 0 {
-		if CURRENT_MAP.getResourcesAtCoords(ix, iy).amount <= 0 {
+		if CURRENT_MAP.getResourcesAtCoords(ix, iy).amount <= 0 || u.faction.economy.currentGold >= u.faction.economy.maxGold {
 			currIntent.sourceBid.drop()
 			u.asUnit.intent = nil 
 			return 

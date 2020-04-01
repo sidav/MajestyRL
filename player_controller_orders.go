@@ -3,6 +3,7 @@ package main
 import (
 	cw "github.com/sidav/golibrl/console"
 	cmenu "github.com/sidav/golibrl/console_menu"
+	"sort"
 )
 
 func (pc *playerController) selectBuidingToConstruct() string {
@@ -13,11 +14,15 @@ func (pc *playerController) selectBuidingToConstruct() string {
 		for code, allowed := range pc.curFaction.allowedBuildings {
 			if allowed == TECH_ALLOWED {
 				allowedBuildingCodes = append(allowedBuildingCodes, code)
-				// name, desc := getBuildingNameAndDescription(code)
-				names = append(names, getBuildingStaticDataFromTable(code).name)
-				descriptions = append(descriptions, "desc")
 			}
 		}
+
+		sort.Strings(allowedBuildingCodes) 
+		for i := range allowedBuildingCodes {
+			// name, desc := getBuildingNameAndDescription(code)
+			names = append(names, getBuildingStaticDataFromTable(allowedBuildingCodes[i]).name)
+			descriptions = append(descriptions, "desc")
+		} 
 
 		index := cmenu.ShowSidebarSingleChoiceMenu("BUILD:", pc.curFaction.getFactionColor(),
 			SIDEBAR_X, SIDEBAR_FLOOR_2, SIDEBAR_W, SIDEBAR_H-SIDEBAR_FLOOR_2, names, descriptions)
