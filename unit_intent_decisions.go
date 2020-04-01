@@ -57,4 +57,7 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 				}
 			}
 		}
+		if p.weapon != nil {
+			p.asUnit.intent = &intent{itype: INTENT_PATROL}
+		}
 }

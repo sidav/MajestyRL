@@ -17,6 +17,9 @@ func createUnitAtCoords(code string, centerX, centerY int, f *faction) *pawn {
 	newPawn.asUnit = &unit{code: code}
 	staticData := getUnitStaticDataFromTable(code)
 	newPawn.hitpoints = staticData.maxHitpointsMin // TODO: use random here 
+	if staticData.defaultWeaponCode != "" {
+		newPawn.weapon = createWeaponByCode(staticData.defaultWeaponCode)
+	}
 	w, h := newPawn.getSize()
 	newPawn.x, newPawn.y = centerX-w/2, centerY-h/2
 	return newPawn

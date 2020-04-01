@@ -13,6 +13,7 @@ type unitStaticData struct {
 	name                             string
 	app                              *ccell
 	maxHitpointsMin, maxHitpointsMax int
+	defaultWeaponCode                string
 
 	unitType UTYPE
 
@@ -26,7 +27,7 @@ type unitStaticData struct {
 var staticUnitDataTable = map[string]*unitStaticData{
 	// non-heroes
 	"PEASANT": &unitStaticData{
-		name: "Peasant",
+		name:     "Peasant",
 		unitType: UTYPE_WORKER,
 		// appearance
 		app: &ccell{
@@ -43,7 +44,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		carriesGold: false,
 	},
 	"GUARD": &unitStaticData{
-		name: "Guardian",
+		name:     "Guardian",
 		unitType: UTYPE_GUARD,
 		// appearance
 		app: &ccell{
@@ -56,6 +57,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		// cost
 		cost: 0,
 		// misc
+		defaultWeaponCode: "HALBERD",
 		canBuild:    false,
 		carriesGold: false,
 	},
@@ -73,6 +75,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		// cost
 		cost: 0,
 		// misc
+		defaultWeaponCode: "HALBERD",
 		canBuild:    true,
 		carriesGold: false,
 	},

@@ -35,9 +35,9 @@ func (u *pawn) executeBuildIntent() {
 		// BUG: insufficient HP added for buildings with too large maxHitpoints
 		hpToAdd := tBld.getMaxHitpoints() / (tBld.asBuilding.beingConstructed.maxConstructedAmount / builderCoeff)
 		if hpToAdd == 0 {
-			hpToAdd = 1 
+			hpToAdd = 1
 		}
-		tBld.hitpoints += hpToAdd 
+		tBld.hitpoints += hpToAdd
 		if tBld.hitpoints > tBld.getMaxHitpoints() {
 			tBld.hitpoints = tBld.getMaxHitpoints()
 		}
@@ -49,23 +49,31 @@ func (u *pawn) executeBuildIntent() {
 
 func (u *pawn) executeReturnHome() {
 	ux, uy := u.getCenter()
+	static := getUnitStaticDataFromTable(u.asUnit.code)
 	if u.asUnit.registeredIn == nil {
-		// find new home 
+		// find new home
 		for _, p := range CURRENT_MAP.pawns {
 			if p.isBuilding() && !p.asBuilding.isUnderConstruction() {
 				bsd := getBuildingStaticDataFromTable(p.asBuilding.code)
-				// TODO: register not only the workers 
-				if p.asBuilding.currWorkers < bsd.maxWorkers {
-					u.asUnit.registeredIn = p 
-					p.registerPawnHere(u)
+				// TODO: register not only the workers
+				if static.unitType == UTYPE_WORKER {
+					if p.asBuilding.currWorkers < bsd.maxWorkers {
+						u.asUnit.registeredIn = p
+						p.registerPawnHere(u)
+					}
+				} else if static.unitType == UTYPE_GUARD {
+					if p.asBuilding.currGuards < bsd.maxGuards {
+						u.asUnit.registeredIn = p
+						p.registerPawnHere(u)
+					}
 				}
 			}
 		}
 	}
 	tBld := u.asUnit.registeredIn
 	if tBld == nil {
-		u.asUnit.intent = nil // unit decides to maybe search for other things to do 
-		return 
+		u.asUnit.intent = nil // unit decides to maybe search for other things to do
+		return
 	}
 	u.asUnit.intent.targetPawn = tBld
 	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()

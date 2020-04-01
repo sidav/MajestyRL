@@ -10,6 +10,8 @@ type pawn struct {
 	x, y          int
 	faction       *faction
 	nextTickToAct int
+
+	weapon *item
 }
 
 func (p *pawn) isTimeToAct() bool {
@@ -35,7 +37,7 @@ func (p *pawn) setFactionTechAllowance() {
 			}
 		}
 		for _, denies := range bsd.deniesBuildings {
-			p.faction.allowedBuildings[denies] = TECH_DENIED 
+			p.faction.allowedBuildings[denies] = TECH_DENIED
 		}
 	}
 }

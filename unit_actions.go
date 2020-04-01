@@ -41,6 +41,8 @@ func (u *unit) getCurrentIntentDescription() string {
 	return "Building..."
 	case INTENT_RETURN_HOME:
 		return "Going to rest..."
+	case INTENT_PATROL:
+		return "Patrolling..."
 	}
 	return "NO DESCRIPTION FOR INTENT"
 }
