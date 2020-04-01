@@ -3,12 +3,12 @@ package main
 import cw "github.com/sidav/golibrl/console"
 
 const (
-	TTYPE_GRASS byte = iota 
-	TTYPE_WATER 
+	TTYPE_GRASS byte = iota
+	TTYPE_WATER
 	TTYPE_UNKNOWN
 )
 
-var tileAppearances = map[byte]*ccell {
+var tileAppearances = map[byte]*ccell{
 	TTYPE_GRASS: &ccell{char: '.', color: cw.GREEN},
 	TTYPE_WATER: &ccell{char: '~', color: cw.DARK_BLUE},
 
@@ -16,10 +16,14 @@ var tileAppearances = map[byte]*ccell {
 }
 
 type tile struct {
-	tiletype byte 
+	tiletype  byte
+	resources *tileResource
 }
 
 func (t *tile) getAppearance() *ccell {
+	if t.resources != nil {
+		return t.resources.getAppearance()
+	}
 	return tileAppearances[t.tiletype]
 }
 

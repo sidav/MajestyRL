@@ -1,8 +1,6 @@
 package main
 
-import (
-	// cw "github.com/sidav/golibrl/console"
-)
+// cw "github.com/sidav/golibrl/console"
 
 func (g *gameMap) init() {
 	g.pawns = make([]*pawn, 0)
@@ -18,9 +16,15 @@ func (g *gameMap) initTileMap(strmap *[]string) {
 		g.tileMap[i] = make([]*tile, mapH)
 	}
 
-	for y, str := range *strmap{
+	for y, str := range *strmap {
 		for x, chr := range str {
-			g.tileMap[x][y] = &tile{tiletype: mapinit_getTiletypeByChar(chr)}
+			if chr == '*' {
+				g.tileMap[x][y] = &tile{tiletype: TTYPE_GRASS, resources: &tileResource {
+					amount: 1000, resType: RESTYPE_GOLD,
+				}}
+			} else {
+				g.tileMap[x][y] = &tile{tiletype: mapinit_getTiletypeByChar(chr)}
+			}
 		}
 	}
 }

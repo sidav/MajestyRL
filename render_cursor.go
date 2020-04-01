@@ -2,6 +2,7 @@ package main
 
 import (
 	cw "github.com/sidav/golibrl/console"
+	"fmt"
 	// geometry "github.com/sidav/golibrl/geometry"
 )
 
@@ -58,6 +59,7 @@ func (r *rendererStruct) renderSelectCursor() {
 		cw.SetFgColor(cw.WHITE)
 		cw.PutString(resInfoString, x+2, y-1)
 	}
+	r.renderResourceLine()
 	cw.SetBgColor(cw.BLACK)
 
 	// outcommented for non-SDL console
@@ -93,17 +95,23 @@ func (r *rendererStruct) renderBuildCursor() {
 			cw.PutChar(' ', x+i-c.w/2, y+j-c.h/2)
 		}
 	}
-	// resInfoString := ""
-	// if totalMetalUnderCursor > 0 {
-	// 	resInfoString += fmt.Sprintf(" %dx METAL ", totalMetalUnderCursor)
-	// }
-	// if totalThermalUnderCursor > 0 {
-	// 	resInfoString += fmt.Sprintf(" %dx THERMAL ", totalThermalUnderCursor)
-	// }
-	// if len(resInfoString) > 0 {
-	// 	cw.SetBgColor(cw.DARK_GRAY)
-	// 	cw.SetFgColor(cw.WHITE)
-	// 	cw.PutString(resInfoString, x-c.w/2+c.w, y-c.h/2+c.h)
-	// }
+	cw.SetBgColor(cw.BLACK)
+}
+
+func (r *rendererStruct) renderResourceLine() {
+	c := r.currentFactionSeeingTheScreen.cursor
+	x, y := c.getOnScreenCoords()
+	cx, cy := c.getCoords()
+	resInfoString := ""
+	res := CURRENT_MAP.getResourcesAtCoords(cx, cy)
+	if res != nil {
+		resInfoString = fmt.Sprintf(" %dx %s ", res.amount, res.getResourceName())
+	}
+	
+	if len(resInfoString) > 0 {
+		cw.SetBgColor(cw.DARK_GRAY)
+		cw.SetFgColor(cw.WHITE)
+		cw.PutString(resInfoString, x-c.w/2+c.w, y-1)
+	}
 	cw.SetBgColor(cw.BLACK)
 }

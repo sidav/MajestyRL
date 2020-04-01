@@ -73,6 +73,12 @@ func (g *gameMap) placePawnNearPawn(spawnThis, nearThis *pawn) {
 	spawnThis.y = nearThis.y + h
 }
 
+func (g *gameMap) getResourcesAtCoords(x, y int) *tileResource {
+	if !g.areCoordsValid(x, y) {
+		return nil 
+	}
+	return g.tileMap[x][y].resources
+}
 // func (g *gameMap) getPawnsInRect(x, y, w, h int) []*pawn {
 // 	var arr []*pawn
 // 	for _, p := range g.pawns {
