@@ -54,8 +54,8 @@ func (u *pawn) executeBuildIntent() {
 func (u *pawn) executeMineIntent() {
 	const (
 		// TODO: both should be removed 
-		TIME_FOR_MINING = 50
-		AMOUNT_MINED = 10 
+		TIME_FOR_MINING = 10
+		AMOUNT_MINED = 5
 	)
 	ux, uy := u.getCoords()
 	currIntent := u.asUnit.intent

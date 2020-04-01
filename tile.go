@@ -21,12 +21,15 @@ type tile struct {
 }
 
 func (t *tile) getAppearance() *ccell {
-	if t.resources != nil {
+	if t.resources != nil && t.resources.amount > 0 {
 		return t.resources.getAppearance()
 	}
 	return tileAppearances[t.tiletype]
 }
 
 func (t *tile) isPassable() bool {
+	if t.resources != nil && t.resources.amount > 0 {
+		return false 
+	}
 	return t.tiletype == TTYPE_GRASS
 }
