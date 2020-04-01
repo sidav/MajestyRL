@@ -1,8 +1,9 @@
 package main
 
 import (
-	cw "github.com/sidav/golibrl/console"
 	"time"
+
+	cw "github.com/sidav/golibrl/console"
 )
 
 type playerController struct {
@@ -148,12 +149,16 @@ func (pc *playerController) mainControlLoop() *pawn { // returns a pointer to se
 	}
 
 	u := pc.curFaction.cursor.snappedPawn
-	if u != nil && click == "LEFT" {
-		if u.faction.factionNumber != pc.curFaction.factionNumber {
-			pc.curFaction.reportToPlayer("those fools won't obey you!")
-			return nil
+	if click == "LEFT" {
+		if u != nil {
+			if u.faction.factionNumber != pc.curFaction.factionNumber {
+				pc.curFaction.reportToPlayer("those fools won't obey you!")
+				return nil
+			}
+			return u
+		} else { // maybe the resource was clicked on? Create bid if so. 
+			pc.createMineBidIfNeeded()
 		}
-		return u
 	}
 	pc.doUnconditionalKeyActions(keyPressed)
 	if keyPressed == "b" {

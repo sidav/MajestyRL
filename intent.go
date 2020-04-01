@@ -6,6 +6,7 @@ const (
 	INTENT_BUILD intentType = iota
 	INTENT_RETURN_HOME
 	INTENT_PATROL
+	INTENT_MINE
 
 	DROP_INTENT_AFTER byte = 3
 )

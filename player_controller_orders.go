@@ -24,11 +24,11 @@ func (pc *playerController) selectBuidingToConstruct() string {
 		if index != -1 {
 			code := allowedBuildingCodes[index]
 			if getBuildingStaticDataFromTable(code).cost <= pc.curFaction.economy.currentGold {
-				return code 
+				return code
 			} else {
 				pc.curFaction.reportToPlayer("we do not have enough gold!")
 				RENDERER.renderScreen(pc.curFaction)
-				continue 
+				continue
 			}
 		}
 		return ""
@@ -51,7 +51,7 @@ func (pc *playerController) selectBuildingSiteWithMouse(b *pawn) {
 
 		cursor.w, cursor.h = b.getSize()
 
-		if !b.asBuilding.getStaticData().allowsTightPlacement  {
+		if !b.asBuilding.getStaticData().allowsTightPlacement {
 			cursor.w += 2
 			cursor.h += 2
 		}
@@ -78,7 +78,7 @@ func (pc *playerController) selectBuildingSiteWithMouse(b *pawn) {
 				b.y = cursor.y - bh/2
 				newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: b.x, y: b.y, targetPawn: b}
 				CURRENT_MAP.addBid(newbid)
-				pc.curFaction.economy.currentGold -= b.asBuilding.getStaticData().cost 
+				pc.curFaction.economy.currentGold -= b.asBuilding.getStaticData().cost
 				pc.rerenderNeeded = true
 				return
 			} else {
@@ -99,6 +99,21 @@ func (pc *playerController) selectBuildingSiteWithMouse(b *pawn) {
 		default:
 			pc.rerenderNeeded = false
 		}
+	}
+}
+
+func (pc *playerController) createMineBidIfNeeded() {
+	cx, cy := pc.curFaction.cursor.getCoords()
+	if CURRENT_MAP.getResourcesAtCoords(cx, cy) != nil {
+		for i := 0; i < len(CURRENT_MAP.bids); i++ {
+			cbid := CURRENT_MAP.bids[i]
+			if cbid.factionCreatedBid == pc.curFaction && cbid.x == cx && cbid.y == cy {
+				CURRENT_MAP.removeBid(cbid)
+				return 
+			}
+		}
+		newbid := &bid{intent_type_for_this_bid: INTENT_MINE, maxTaken: 2, x: cx, y: cy, factionCreatedBid: pc.curFaction}
+		CURRENT_MAP.addBid(newbid)
 	}
 }
 
