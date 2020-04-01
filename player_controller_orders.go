@@ -112,7 +112,7 @@ func (pc *playerController) createMineBidIfNeeded() {
 				return 
 			}
 		}
-		newbid := &bid{intent_type_for_this_bid: INTENT_MINE, maxTaken: 2, x: cx, y: cy, factionCreatedBid: pc.curFaction}
+		newbid := &bid{intent_type_for_this_bid: INTENT_MINE, maxTaken: 3, x: cx, y: cy, factionCreatedBid: pc.curFaction}
 		CURRENT_MAP.addBid(newbid)
 	}
 }

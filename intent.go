@@ -22,6 +22,9 @@ type intent struct {
 	insuccessCount byte
 }
 
+func (i *intent) getCoords() (int, int) {
+	return i.x, i.y 
+}
 
 func (i *intent) isDispatchedFromBid() bool {
 	return i.sourceBid != nil 
@@ -29,6 +32,6 @@ func (i *intent) isDispatchedFromBid() bool {
 
 func (i *intent) fulfillBidIfExists() {
 	if i.sourceBid != nil {
-		i.sourceBid.isFulfilled = true
+		i.sourceBid.markFulfilled()
 	}
 }

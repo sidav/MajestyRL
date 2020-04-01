@@ -11,7 +11,8 @@ type pawn struct {
 	faction       *faction
 	nextTickToAct int
 
-	weapon *item
+	weapon      *item
+	currentGold int
 }
 
 func (p *pawn) isTimeToAct() bool {
@@ -77,7 +78,7 @@ func (p *pawn) IsCloseupToCoords(x, y int) bool {
 		return !geometry.AreCoordsInRect(x, y, p.x, p.y, w, h) &&
 			geometry.AreCoordsInRect(x, y, p.x-1, p.y-1, w+2, h+2)
 	} else {
-		return x != p.x && y != p.y && geometry.AreCoordsInRect(x, y, p.x-1, p.y-1, 3, 3)
+		return (x != p.x || y != p.y) && geometry.AreCoordsInRect(x, y, p.x-1, p.y-1, 3, 3)
 	}
 }
 

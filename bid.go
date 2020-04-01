@@ -6,7 +6,7 @@ type bid struct {
 	x, y                     int
 	targetPawn               *pawn
 	factionCreatedBid        *faction
-	isFulfilled              bool
+	_markedAsFulfilled              bool
 	currTaken, maxTaken      byte 
 }
 
@@ -25,6 +25,17 @@ func (b *bid) take() {
 
 func (b *bid) drop() {
 	b.currTaken--
+}
+
+func (b *bid) markFulfilled() { 
+	b._markedAsFulfilled = true 
+}
+
+func (b *bid) isFulfilled() bool {
+	if b.intent_type_for_this_bid == INTENT_MINE {
+		return CURRENT_MAP.getResourcesAtCoords(b.x, b.y).amount <= 0 
+	}
+	return b._markedAsFulfilled
 }
 
 func (b *bid) _createIntentForThisBid() *intent {

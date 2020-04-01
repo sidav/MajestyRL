@@ -25,12 +25,17 @@ func (ul *unitLogic) considerBids(p *pawn) {
 	static := getUnitStaticDataFromTable(p.asUnit.code)
 	for i := range CURRENT_MAP.bids {
 		consideredBid := CURRENT_MAP.bids[(i+startingBid) % len(CURRENT_MAP.bids)]
-		if consideredBid.isFulfilled || !consideredBid.isVacant() {
+		if consideredBid.isFulfilled() || !consideredBid.isVacant() {
 			continue // skip fulfilled bids (they are cleared automatically)
 		}
 		switch consideredBid.intent_type_for_this_bid {
 		case INTENT_BUILD:
 			if static.canBuild {
+				p.asUnit.intent = consideredBid.dispatchIntent()
+				return 
+			}
+		case INTENT_MINE:
+			if static.canMine {
 				p.asUnit.intent = consideredBid.dispatchIntent()
 				return 
 			}

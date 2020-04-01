@@ -11,7 +11,9 @@ func (p *pawn) act() {
 	case INTENT_RETURN_HOME:
 		p.executeReturnHome()
 	case INTENT_PATROL:
-		p.executePatrol()
+		p.executePatrolIntent()
+	case INTENT_MINE:
+		p.executeMineIntent()
 	}
 }
 
@@ -45,6 +47,61 @@ func (u *pawn) executeBuildIntent() {
 		}
 		u.spendTime(TICKS_PER_TURN)
 	} else {
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+	}
+}
+
+func (u *pawn) executeMineIntent() {
+	const (
+		// TODO: both should be removed 
+		TIME_FOR_MINING = 50
+		AMOUNT_MINED = 10 
+	)
+	ux, uy := u.getCoords()
+	currIntent := u.asUnit.intent
+	ix, iy := currIntent.getCoords()
+	// if intent has no target building, select closest TO THE MINING SITE building which can store gold 
+	// TODO: not only the gold, but anything (wood etc)
+	if currIntent.targetPawn == nil {
+		var buildingToReturn *pawn  
+		minDist := 999999999 // should be enough lol 
+		for _, bld := range CURRENT_MAP.pawns {
+			if bld.isBuilding() && bld.asBuilding.getStaticData().goldStorage > 0 {
+				if buildingToReturn == nil {
+					buildingToReturn = bld 
+				}
+				bldx, bldy := bld.getCenter()
+				cbx, cby := buildingToReturn.getCenter()
+				dist := (bldx-cbx)*(bldx-cbx) + (bldy-cby)*(bldy-cby)
+				if dist < minDist {
+					minDist = dist 
+					buildingToReturn = bld 
+				}
+			}
+		} 
+		currIntent.targetPawn = buildingToReturn
+		if buildingToReturn == nil {
+			u.asUnit.intent = nil 
+		}
+	}
+	
+	if u.currentGold == 0 {
+		if u.IsCloseupToCoords(ix, iy) {
+			u.spendTime(TIME_FOR_MINING)
+			u.currentGold = AMOUNT_MINED
+			CURRENT_MAP.getResourcesAtCoords(ix, iy).amount -= AMOUNT_MINED
+		} else {
+			u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+		}
+	} else { // return with gold and drop intent  
+		currIntent.x, currIntent.y = currIntent.targetPawn.getCenter()
+		if currIntent.targetPawn.IsCloseupToCoords(ux, uy) {
+			u.faction.economy.currentGold += u.currentGold
+			u.currentGold = 0 
+			currIntent.sourceBid.drop()
+			u.asUnit.intent = nil 
+			return 
+		} 
 		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
 	}
 }
@@ -87,7 +144,7 @@ func (u *pawn) executeReturnHome() {
 	}
 }
 
-func (u *pawn) executePatrol() {
+func (u *pawn) executePatrolIntent() {
 	ux, uy := u.getCenter()
 	// static := getUnitStaticDataFromTable(u.asUnit.code)
 	currIntent := u.asUnit.intent
@@ -100,29 +157,29 @@ func (u *pawn) executePatrol() {
 
 	w, h := tBld.getSize()
 	if currIntent.x == 0 && currIntent.y == 0 && tBld.x != 1 && tBld.y != 1 {
-		// set the initial patrol point 
-		currIntent.x, currIntent.y = tBld.x+w, tBld.y+h  	
+		// set the initial patrol point
+		currIntent.x, currIntent.y = tBld.x+w, tBld.y+h
 	}
 
 	if ux == currIntent.x && uy == currIntent.y {
-		// decide next patrol point, moving counter-clockwise 
+		// decide next patrol point, moving counter-clockwise
 		if ux == tBld.x-1 && uy == tBld.y-1 {
-			currIntent.y += h+1 
+			currIntent.y += h + 1
 		}
 		if ux == tBld.x-1 && uy == tBld.y+h {
-			currIntent.x += w+1 
+			currIntent.x += w + 1
 		}
 		if ux == tBld.x+w && uy == tBld.y+h {
-			currIntent.y -= h+1
+			currIntent.y -= h + 1
 		}
 		if ux == tBld.x+w && uy == tBld.y-1 {
-			currIntent.x -= w+1
+			currIntent.x -= w + 1
 		}
 	}
 	cx, _ := tBld.getCenter()
 	if ux == cx-1 && uy == tBld.y+h {
-		u.asUnit.intent = nil // finished patrolling 
-		return 
+		u.asUnit.intent = nil // finished patrolling
+		return
 	}
 	u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
 }

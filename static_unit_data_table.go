@@ -20,8 +20,9 @@ type unitStaticData struct {
 	timeToConstruct int
 	cost            int
 
-	carriesGold bool
+	carriesGold bool // TODO: rename to "collectTaxes or something."
 	canBuild    bool
+	canMine     bool
 }
 
 var staticUnitDataTable = map[string]*unitStaticData{
@@ -41,6 +42,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		cost: 0,
 		// misc
 		canBuild:    true,
+		canMine:     true,
 		carriesGold: false,
 	},
 	"GUARD": &unitStaticData{
@@ -58,8 +60,8 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		cost: 0,
 		// misc
 		defaultWeaponCode: "HALBERD",
-		canBuild:    false,
-		carriesGold: false,
+		canBuild:          false,
+		carriesGold:       false,
 	},
 
 	"NULL": &unitStaticData{
@@ -76,8 +78,8 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		cost: 0,
 		// misc
 		defaultWeaponCode: "HALBERD",
-		canBuild:    true,
-		carriesGold: false,
+		canBuild:          true,
+		carriesGold:       false,
 	},
 }
 
