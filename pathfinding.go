@@ -52,7 +52,7 @@ func (g *gameMap) getPathFromTo(fx, fy, tx, ty, accuracy int) *astar.Cell {
 	totalPathfindingTimes += time.Since(start) / time.Nanosecond
 	totalPathfindings += 1 
 	if totalPathfindings == 10 {
-		avgPathfindingTime = totalPathfindingTimes / 100 
+		avgPathfindingTime = totalPathfindingTimes / 10
 		totalPathfindingTimes = 0 
 		totalPathfindings = 0 
 	}

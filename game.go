@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/sidav/golibrl/random/additive_random"
 	// "strconv"
-	// "time"
+	"time"
 	"MajestyRL/game_log"
 )
 
@@ -45,9 +45,20 @@ func initGame() {
 }
 
 func startGameLoop() {
+	start := time.Now()
 	for !PLAYER_CONTROLLER.exit { // main game loop
 
 		if CURRENT_TICK%TICKS_PER_TURN == 0 {
+			currentGameLoopTime = time.Since(start) / time.Nanosecond
+			totalGameLoopTimes += currentGameLoopTime
+			totalGameLoops += 1 
+			if totalGameLoops == 10 {
+				averageGameLoopTime = totalGameLoopTimes / 10
+				totalGameLoopTimes = 0 
+				totalGameLoops = 0 
+			}
+			start = time.Now()
+
 			for _, currFaction := range CURRENT_MAP.factions {
 				PLAYER_CONTROLLER.controlAsFaction(currFaction)
 			}

@@ -113,6 +113,9 @@ func (pc *playerController) doUnconditionalKeyActions(keyPressed string) {
 			CURRENT_MAP.addBid(newbid)
 			pc.curFaction.reportToPlayer("cheats done")
 		}
+	case "INSERT": // test
+		pc.endTurnPeriod = 1
+
 	// case "E": // test
 	// 	CURRENT_MAP.addBuilding(createBuilding("testsmall", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
 	// 	LOG.appendMessage("Test enemy building created.")

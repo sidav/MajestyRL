@@ -12,6 +12,11 @@ var totalPathfindingTimes time.Duration
 var avgPathfindingTime time.Duration
 var totalPathfindings int 
 
+var currentGameLoopTime time.Duration
+var averageGameLoopTime time.Duration
+var totalGameLoopTimes time.Duration
+var totalGameLoops int 
+
 func updateMemUsage() {
     var m runtime.MemStats
 	runtime.ReadMemStats(&m)
@@ -26,6 +31,8 @@ func updateMemUsage() {
         // fmt.Sprintf("Mallocs    = %d", m.Mallocs),
 		// fmt.Sprintf("Frees      = %d", m.Frees),
 		fmt.Sprintf("Avg Pathfinding = %v\n", avgPathfindingTime),
+		fmt.Sprintf("Curr Game Loop  = %v\n", currentGameLoopTime),
+		fmt.Sprintf("Avg Game Loop   = %v\n", averageGameLoopTime),
 	}
 }
 
