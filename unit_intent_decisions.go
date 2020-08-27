@@ -63,6 +63,19 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 			}
 		}
 		if p.weapon != nil {
-			p.asUnit.intent = &intent{itype: INTENT_PATROL}
+			// should we attac something?
+			x, y := p.getCenter()
+			pir := CURRENT_MAP.getPawnsInRangeFrom(static.sightRange, x, y)
+			if len(*pir) > 0 {
+				for _, pawnInRange := range *pir {
+					if pawnInRange.faction == nil || pawnInRange.faction != p.faction {
+						log.AppendMessage("Target sighted, should attack now!")
+						px, py := pawnInRange.getCenter()
+						p.asUnit.intent = &intent{itype: INTENT_ATTACK, targetPawn: pawnInRange, x: px, y: py}
+					}
+				}
+			} else {
+				p.asUnit.intent = &intent{itype: INTENT_PATROL}
+			}
 		}
 }

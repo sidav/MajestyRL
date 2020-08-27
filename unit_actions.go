@@ -43,6 +43,8 @@ func (u *unit) getCurrentIntentDescription() string {
 		return "Going to rest..."
 	case INTENT_PATROL:
 		return "Patrolling..."
+	case INTENT_ATTACK:
+		return "Attacking!"
 	}
 	return "NO DESCRIPTION FOR INTENT"
 }

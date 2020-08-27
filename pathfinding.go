@@ -48,7 +48,7 @@ func (g *gameMap) getPathFromTo(fx, fy, tx, ty, accuracy int) *astar.Cell {
 		accuracy = astar.DEFAULT_PATHFINDING_STEPS
 	}
 	// return astar.FindPath(g.getCostMapForPathfinding(), fx, fy, tx, ty, true, accuracy, true, true)
-	res := astar.FindPath(g.getCostMapForPathfinding(), fx, fy, tx, ty, true, accuracy, true, true)
+	res := astar.FindPath(g.getCostMapForPathfinding(), fx, fy, tx, ty, true, accuracy, true, false)
 	totalPathfindingTimes += time.Since(start) / time.Nanosecond
 	totalPathfindings += 1 
 	if totalPathfindings == 10 {

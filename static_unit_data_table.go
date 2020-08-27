@@ -22,6 +22,8 @@ type unitStaticData struct {
 	timeToConstruct int
 	cost            int
 
+	sightRange int
+
 	carriesGold bool // TODO: rename to "collectTaxes or something."
 	canBuild    bool
 	canMine     bool
@@ -60,6 +62,8 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		timeToConstruct: 100,
 		// cost
 		cost: 0,
+		// sight range
+		sightRange: 5,
 		// misc
 		defaultWeaponCode: "HALBERD",
 		canBuild:          false,
@@ -78,6 +82,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		timeToConstruct: 200,
 		// cost
 		cost: 0,
+		sightRange: 7,
 		// misc
 		defaultWeaponCode: "HALBERD",
 		canBuild:          false,
@@ -86,7 +91,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 
 	// Neutrals
 	"GOBLIN": &unitStaticData{
-		name: "Goblin",
+		name:     "Goblin",
 		unitType: UTYPE_GOBLIN,
 		// appearance
 		app: &ccell{

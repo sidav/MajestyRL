@@ -14,6 +14,8 @@ func (p *pawn) act() {
 		p.executePatrolIntent()
 	case INTENT_MINE:
 		p.executeMineIntent()
+	case INTENT_ATTACK:
+		p.executeAttackIntent()
 	}
 }
 
@@ -186,5 +188,9 @@ func (u *pawn) executePatrolIntent() {
 		u.asUnit.intent = nil // finished patrolling
 		return
 	}
+	u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+}
+
+func (u *pawn) executeAttackIntent() {
 	u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
 }
