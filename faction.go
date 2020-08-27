@@ -74,6 +74,9 @@ func (f *faction) getFactionColor() int {
 	//MAGENTA      = 13
 	//CYAN         = 14
 	//WHITE        = 15
+	if f == nil {
+		return 1
+	}
 	switch f.factionNumber {
 	case 0:
 		return 14

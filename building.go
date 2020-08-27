@@ -62,6 +62,8 @@ func (b *building) recalculateCurrResidents() {
 			b.currWorkers++
 		case UTYPE_GUARD:
 			b.currGuards++
+		case UTYPE_ROYAL_GUARD:
+			b.currRoyalGurads++
 		default:
 			panic("Oh noes!")
 		}

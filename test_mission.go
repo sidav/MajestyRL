@@ -45,4 +45,5 @@ func initTestMission() {
 		CURRENT_MAP.addPawn(createUnitAtCoords("PEASANT", 3*i, 0, playerFaction))
 	}
 	CURRENT_MAP.addPawn(createUnitAtCoords("GUARD", 0, 0, playerFaction))
+	CURRENT_MAP.addPawn(createUnitAtCoords("GOBLIN", 5, 5, nil))
 }

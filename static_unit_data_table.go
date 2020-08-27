@@ -7,6 +7,8 @@ const (
 	UTYPE_WORKER
 	UTYPE_GUARD
 	UTYPE_ROYAL_GUARD
+
+	UTYPE_GOBLIN
 )
 
 type unitStaticData struct {
@@ -54,6 +56,44 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		},
 		// hp
 		maxHitpointsMin: 30, maxHitpointsMax: 30,
+		// construction
+		timeToConstruct: 100,
+		// cost
+		cost: 0,
+		// misc
+		defaultWeaponCode: "HALBERD",
+		canBuild:          false,
+		carriesGold:       false,
+	},
+	"ROYALGUARD": &unitStaticData{
+		name:     "Royal Guardian",
+		unitType: UTYPE_ROYAL_GUARD,
+		// appearance
+		app: &ccell{
+			char: 'R', color: 7,
+		},
+		// hp
+		maxHitpointsMin: 50, maxHitpointsMax: 50,
+		// construction
+		timeToConstruct: 200,
+		// cost
+		cost: 0,
+		// misc
+		defaultWeaponCode: "HALBERD",
+		canBuild:          false,
+		carriesGold:       false,
+	},
+
+	// Neutrals
+	"GOBLIN": &unitStaticData{
+		name: "Goblin",
+		unitType: UTYPE_GOBLIN,
+		// appearance
+		app: &ccell{
+			char: 'g', color: 3,
+		},
+		// hp
+		maxHitpointsMin: 10, maxHitpointsMax: 20,
 		// construction
 		timeToConstruct: 100,
 		// cost

@@ -38,7 +38,11 @@ func (bl *buildingLogic) generatePawns(bld *pawn) {
 	if bld.asBuilding.currGuards < bstatic.maxGuards && CURRENT_TICK % REGENERATE_GUARDS_EACH == 0 {
 		// spawn one more guard
 		bl.generatePawn(bld, "GUARD")
-	} 
+	}
+	if bld.asBuilding.currRoyalGurads < bstatic.maxRoyalGuards && CURRENT_TICK % REGENERATE_GUARDS_EACH == 0 {
+		// spawn one more guard
+		bl.generatePawn(bld, "ROYALGUARD")
+	}
 }
 
 func (bl *buildingLogic) actForEachPawnInside(bld *pawn) {
