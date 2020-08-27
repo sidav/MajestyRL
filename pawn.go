@@ -86,7 +86,7 @@ func (p *pawn) getMaxHitpoints() int {
 	if p.isBuilding() {
 		return getBuildingStaticDataFromTable(p.asBuilding.code).maxHitpoints
 	}
-	return 1 // TODO
+	return p.asUnit.maxHitpoints
 }
 
 func (p *pawn) isBuilding() bool {

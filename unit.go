@@ -4,6 +4,7 @@ type unit struct {
 	intent       *intent
 	registeredIn *pawn // building where the unit is registered, its "home"
 	code         string
+	maxHitpoints int
 }
 
 func (u *unit) getStaticData() *unitStaticData {
