@@ -96,3 +96,7 @@ func (p *pawn) isBuilding() bool {
 func (p *pawn) isUnit() bool {
 	return p.asUnit != nil
 }
+
+func (p *pawn) isAlive() bool {
+	return p.hitpoints > 0
+}

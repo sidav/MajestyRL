@@ -30,8 +30,8 @@ func (g *gameMap) getCostMapForPathfinding() *[][]int {
 		if w == 1 && h == 1 {
 			g.costMap[x][y] = -1
 		} else {
-			for i := x; i < x+w-1; i++ {
-				for j := y; j < y+h-1; j++ {
+			for i := x; i < x+w; i++ {
+				for j := y; j < y+h; j++ {
 					if g.areCoordsValid(i, j) {
 						g.costMap[i][j] = -1
 					}

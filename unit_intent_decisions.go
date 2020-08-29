@@ -8,6 +8,7 @@ type unitLogic struct{}
 
 // returns true if the unit wants to leave the building
 func (ul *unitLogic) wantsToLeaveBuilding(u *pawn) bool {
+
 	return u.asUnit.intent != nil 
 }
 
@@ -66,16 +67,14 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 			// should we attac something?
 			x, y := p.getCenter()
 			pir := CURRENT_MAP.getPawnsInRangeFrom(static.sightRange, x, y)
-			if len(*pir) > 0 {
-				for _, pawnInRange := range *pir {
-					if pawnInRange.faction == nil || pawnInRange.faction != p.faction {
-						log.AppendMessage("Target sighted, should attack now!")
-						px, py := pawnInRange.getCenter()
-						p.asUnit.intent = &intent{itype: INTENT_ATTACK, targetPawn: pawnInRange, x: px, y: py}
-					}
+			for _, pawnInRange := range *pir {
+				if pawnInRange.faction == nil || pawnInRange.faction != p.faction {
+					log.AppendMessage("Target sighted, should attack now!")
+					px, py := pawnInRange.getCenter()
+					p.asUnit.intent = &intent{itype: INTENT_ATTACK, targetPawn: pawnInRange, x: px, y: py}
+					return
 				}
-			} else {
-				p.asUnit.intent = &intent{itype: INTENT_PATROL}
 			}
+			p.asUnit.intent = &intent{itype: INTENT_PATROL}
 		}
 }

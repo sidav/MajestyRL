@@ -80,6 +80,10 @@ func startGameLoop() {
 				ULOGIC.decideNewIntent(curpawn)
 				curpawn.act()
 			}
+			if curpawn.hitpoints <= 0 {
+				CURRENT_MAP.removePawn(curpawn)
+				// TODO: drop items
+			}
 		}
 
 		CURRENT_TICK++
