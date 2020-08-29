@@ -192,5 +192,11 @@ func (u *pawn) executePatrolIntent() {
 }
 
 func (u *pawn) executeAttackIntent() {
-	u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+	ux, uy := u.getCoords()
+	// TODO: ranged and magic attacks
+	if u.asUnit.intent.targetPawn.IsCloseupToCoords(ux, uy) {
+		u.performMeleeAttack(u.asUnit.intent.targetPawn)
+	} else {
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+	}
 }

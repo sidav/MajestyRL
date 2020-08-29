@@ -1,4 +1,6 @@
-package main 
+package main
+
+import "fmt"
 
 // low level unit actions. 
 
@@ -27,9 +29,16 @@ func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true 
 		}
 		u.x += vx
 		u.y += vy
-		u.spendTime(TICKS_PER_TURN) 
+		u.spendTime(TICKS_PER_TURN)
 	}
 	return true
+}
+
+func (u *pawn) performMeleeAttack(target *pawn) {
+	damage := u.weapon.weaponData.rollMeleeDamageDice()
+	target.hitpoints -= damage
+	log.AppendMessage(fmt.Sprintf("%s hits %s for %d damage!", u.getName(), target.getName(), damage))
+	u.spendTime(u.weapon.weaponData.attackTime)
 }
 
 func (u *unit) getCurrentIntentDescription() string {
