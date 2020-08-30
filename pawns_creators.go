@@ -4,6 +4,11 @@ func createBuildingAtCoords(code string, constructed bool, centerX, centerY int,
 	newPawn := &pawn{faction: f}
 	newPawn.asBuilding = &building{code: code}
 	staticData := getBuildingStaticDataFromTable(code)
+	// assign residents array
+	newPawn.asBuilding.currentResidents = make(map[string]int)
+	for _, code := range staticData.housing_unittypes {
+		newPawn.asBuilding.currentResidents[code] = 0
+	}
 	w, h := newPawn.getSize()
 	newPawn.x, newPawn.y = centerX-w/2, centerY-h/2
 	if constructed {

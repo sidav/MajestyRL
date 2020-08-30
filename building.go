@@ -5,9 +5,9 @@ type building struct {
 	code             string
 	beingConstructed *underConstructionData
 
-	currWorkers, currTCs, currGuards, currRoyalGurads int
-	pawnsInside                                       []*pawn
-	pawnsRegistered                                   []*pawn
+	currentResidents map [string]int
+	pawnsInside      []*pawn
+	pawnsRegistered  []*pawn
 }
 
 func (b *building) getAppearance() *buildingAppearance {
@@ -52,22 +52,23 @@ func (bld *pawn) AddAndRegisterNewPawn(p *pawn) {
 }
 
 func (b *building) recalculateCurrResidents() {
-	b.currWorkers = 0
-	b.currGuards = 0 
-	b.currRoyalGurads = 0 
+	for i := range b.currentResidents {
+		b.currentResidents[i] = 0
+	}
 	for _, p := range b.pawnsRegistered {
-		psd := p.asUnit.getStaticData()
-		switch psd.unitType {
-		case UTYPE_WORKER:
-			b.currWorkers++
-		case UTYPE_GUARD:
-			b.currGuards++
-		case UTYPE_ROYAL_GUARD:
-			b.currRoyalGurads++
-		default:
-			panic("Oh noes!")
+		residentCode := p.asUnit.getStaticData().code
+		b.currentResidents[residentCode] += 1
+	}
+}
+
+func (b *building) canAffordNewResident(new_resident_code string) bool {
+	// TODO: optimize that bullshit
+	for index, code := range b.getStaticData().housing_unittypes {
+		if code == new_resident_code && b.currentResidents[code] < b.getStaticData().housing_max_residents[index] {
+			return true
 		}
 	}
+	return false
 }
 
 func (b *building) removePawnFromInside(p *pawn) {

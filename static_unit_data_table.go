@@ -1,23 +1,11 @@
 package main
 
-type UTYPE uint8
-
-const (
-	UTYPE_UNKNOWN UTYPE = iota
-	UTYPE_WORKER
-	UTYPE_GUARD
-	UTYPE_ROYAL_GUARD
-
-	UTYPE_GOBLIN
-)
-
 type unitStaticData struct {
 	name                             string
+	code                             string
 	app                              *ccell
 	maxHitpointsMin, maxHitpointsMax int
 	defaultWeaponCode                string
-
-	unitType UTYPE
 
 	timeToConstruct int
 	cost            int
@@ -33,7 +21,6 @@ var staticUnitDataTable = map[string]*unitStaticData{
 	// non-heroes
 	"PEASANT": &unitStaticData{
 		name:     "Peasant",
-		unitType: UTYPE_WORKER,
 		// appearance
 		app: &ccell{
 			char: 'p', color: 7,
@@ -51,7 +38,6 @@ var staticUnitDataTable = map[string]*unitStaticData{
 	},
 	"GUARD": &unitStaticData{
 		name:     "Guardian",
-		unitType: UTYPE_GUARD,
 		// appearance
 		app: &ccell{
 			char: 'G', color: 7,
@@ -71,7 +57,6 @@ var staticUnitDataTable = map[string]*unitStaticData{
 	},
 	"ROYALGUARD": &unitStaticData{
 		name:     "Royal Guardian",
-		unitType: UTYPE_ROYAL_GUARD,
 		// appearance
 		app: &ccell{
 			char: 'R', color: 7,
@@ -81,7 +66,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		// construction
 		timeToConstruct: 200,
 		// cost
-		cost: 0,
+		cost:       0,
 		sightRange: 7,
 		// misc
 		defaultWeaponCode: "HALBERD",
@@ -92,7 +77,6 @@ var staticUnitDataTable = map[string]*unitStaticData{
 	// Neutrals
 	"GOBLIN": &unitStaticData{
 		name:     "Goblin",
-		unitType: UTYPE_GOBLIN,
 		// appearance
 		app: &ccell{
 			char: 'g', color: 3,
@@ -133,5 +117,6 @@ func getUnitStaticDataFromTable(code string) *unitStaticData {
 	if unitsd == nil {
 		return staticUnitDataTable["NULL"]
 	}
+	unitsd.code = code
 	return unitsd
 }

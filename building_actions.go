@@ -19,29 +19,26 @@ func (bl *buildingLogic) act(bld *pawn) {
 }
 
 func (bl *buildingLogic) generatePawn(bld *pawn, code string) {
-	bstatic := getBuildingStaticDataFromTable(bld.asBuilding.code)
-	// spawn one more worker 
 	newPawn := createUnitAtCoords(code, bld.x, bld.y, bld.faction)
 	bld.AddAndRegisterNewPawn(newPawn)
 	bld.asBuilding.recalculateCurrResidents()
-	log.AppendMessage(fmt.Sprintf("%s created (%d/%d) at turn %d", code, bld.asBuilding.currWorkers, bstatic.maxWorkers, CURRENT_TICK))
 }
 
 func (bl *buildingLogic) generatePawns(bld *pawn) {
 	bstatic := getBuildingStaticDataFromTable(bld.asBuilding.code)
 	bld.asBuilding.recalculateCurrResidents()
-	// LOG.AppendMessage(fmt.Sprintf("Peasant (%d/%d)", bld.asBuilding.currWorkers, bstatic.maxWorkers))
-	if bld.asBuilding.currWorkers < bstatic.maxWorkers && CURRENT_TICK % REGENERATE_WORKERS_EACH == 0 {
-		// spawn one more worker 
-		bl.generatePawn(bld, "PEASANT")
-	} 
-	if bld.asBuilding.currGuards < bstatic.maxGuards && CURRENT_TICK % REGENERATE_GUARDS_EACH == 0 {
-		// spawn one more guard
-		bl.generatePawn(bld, "GUARD")
-	}
-	if bld.asBuilding.currRoyalGurads < bstatic.maxRoyalGuards && CURRENT_TICK % REGENERATE_GUARDS_EACH == 0 {
-		// spawn one more guard
-		bl.generatePawn(bld, "ROYALGUARD")
+	for i, code := range bstatic.housing_unittypes {
+		if bstatic.housing_respawn_period[i] == 0 {
+			continue
+		}
+		if CURRENT_TICK % (bstatic.housing_respawn_period[i] * TICKS_PER_TURN) == 0 &&
+			bld.asBuilding.canAffordNewResident(code) {
+
+			log.AppendMessage(fmt.Sprintf("Creating %s (%d/%d) at turn %d", code,
+				bld.asBuilding.currentResidents[code], bstatic.housing_max_residents[i], CURRENT_TICK))
+
+			bl.generatePawn(bld, code)
+		}
 	}
 }
 

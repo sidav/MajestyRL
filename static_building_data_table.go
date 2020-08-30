@@ -10,8 +10,13 @@ type buildingStaticData struct {
 
 	goldStorage int
 
-	maxWorkers, maxTaxCollectors, maxGuards, maxRoyalGuards int
-	allowsTightPlacement                                    bool
+	// next line is obsolete
+	// maxWorkers, maxTaxCollectors, maxGuards, maxRoyalGuards int
+	housing_unittypes      []string
+	housing_max_residents  []int
+	housing_respawn_period []int
+
+	allowsTightPlacement bool
 
 	//tech
 	allowsBuildings []string
@@ -48,11 +53,10 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// tech
 		allowsBuildings: []string{"HUT", "GOLDVAULT", "MARKETPLACE", "WALL"},
 		// misc
-		goldStorage:      5000,
-		maxWorkers:       2,
-		maxTaxCollectors: 1,
-		maxGuards:        1,
-		maxRoyalGuards:   1,
+		goldStorage:            5000,
+		housing_unittypes:      []string{"PEASANT", "GUARD", "ROYALGUARD"},
+		housing_max_residents:  []int {3, 1, 1},
+		housing_respawn_period: []int {100, 250, 300},
 	},
 	"HUT": &buildingStaticData{
 		// appearance
@@ -77,7 +81,9 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// cost
 		cost: 500,
 		// misc
-		maxWorkers: 1,
+		housing_unittypes:      []string{"PEASANT"},
+		housing_max_residents:  []int {2},
+		housing_respawn_period: []int {100},
 	},
 	"GOLDVAULT": &buildingStaticData{
 		// appearance
@@ -102,8 +108,10 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// cost
 		cost: 1000,
 		// misc
-		goldStorage:    5000,
-		maxRoyalGuards: 1,
+		goldStorage:            5000,
+		housing_unittypes:      []string{"GUARD"},
+		housing_max_residents:  []int {1},
+		housing_respawn_period: []int {250},
 	},
 	"MARKETPLACE": &buildingStaticData{
 		// appearance

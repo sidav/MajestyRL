@@ -57,7 +57,7 @@ func (u *pawn) executeMineIntent() {
 	const (
 		// TODO: both should be removed 
 		TIME_FOR_MINING = 10
-		AMOUNT_MINED = 5
+		AMOUNT_MINED    = 5
 	)
 	ux, uy := u.getCoords()
 	currIntent := u.asUnit.intent
@@ -65,33 +65,33 @@ func (u *pawn) executeMineIntent() {
 	// if intent has no target building, select closest TO THE MINING SITE building which can store gold 
 	// TODO: not only the gold, but anything (wood etc)
 	if currIntent.targetPawn == nil {
-		var buildingToReturn *pawn  
+		var buildingToReturn *pawn
 		minDist := 999999999 // should be enough lol 
 		for _, bld := range CURRENT_MAP.pawns {
 			if bld.isBuilding() && bld.asBuilding.getStaticData().goldStorage > 0 {
 				if buildingToReturn == nil {
-					buildingToReturn = bld 
+					buildingToReturn = bld
 				}
 				bldx, bldy := bld.getCenter()
 				cbx, cby := buildingToReturn.getCenter()
 				dist := (bldx-cbx)*(bldx-cbx) + (bldy-cby)*(bldy-cby)
 				if dist < minDist {
-					minDist = dist 
-					buildingToReturn = bld 
+					minDist = dist
+					buildingToReturn = bld
 				}
 			}
-		} 
+		}
 		currIntent.targetPawn = buildingToReturn
 		if buildingToReturn == nil {
-			u.asUnit.intent = nil 
+			u.asUnit.intent = nil
 		}
 	}
-	
+
 	if u.currentGold == 0 {
 		if CURRENT_MAP.getResourcesAtCoords(ix, iy).amount <= 0 || u.faction.economy.currentGold >= u.faction.economy.maxGold {
 			currIntent.sourceBid.drop()
-			u.asUnit.intent = nil 
-			return 
+			u.asUnit.intent = nil
+			return
 		}
 		if u.IsCloseupToCoords(ix, iy) {
 			u.spendTime(TIME_FOR_MINING)
@@ -104,11 +104,11 @@ func (u *pawn) executeMineIntent() {
 		currIntent.x, currIntent.y = currIntent.targetPawn.getCenter()
 		if currIntent.targetPawn.IsCloseupToCoords(ux, uy) {
 			u.faction.economy.currentGold += u.currentGold
-			u.currentGold = 0 
+			u.currentGold = 0
 			currIntent.sourceBid.drop()
-			u.asUnit.intent = nil 
-			return 
-		} 
+			u.asUnit.intent = nil
+			return
+		}
 		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
 	}
 }
@@ -120,18 +120,9 @@ func (u *pawn) executeReturnHome() {
 		// find new home
 		for _, p := range CURRENT_MAP.pawns {
 			if p.isBuilding() && !p.asBuilding.isUnderConstruction() {
-				bsd := getBuildingStaticDataFromTable(p.asBuilding.code)
-				// TODO: register not only the workers
-				if static.unitType == UTYPE_WORKER {
-					if p.asBuilding.currWorkers < bsd.maxWorkers {
-						u.asUnit.registeredIn = p
-						p.registerPawnHere(u)
-					}
-				} else if static.unitType == UTYPE_GUARD {
-					if p.asBuilding.currGuards < bsd.maxGuards {
-						u.asUnit.registeredIn = p
-						p.registerPawnHere(u)
-					}
+				if p.asBuilding.canAffordNewResident(static.code) {
+					u.asUnit.registeredIn = p
+					p.registerPawnHere(u)
 				}
 			}
 		}

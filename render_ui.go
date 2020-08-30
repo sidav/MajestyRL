@@ -104,14 +104,9 @@ func (r *rendererStruct) renderInfoOnCursor() {
 					} else {
 
 						static := getBuildingStaticDataFromTable(sp.asBuilding.code)
-						if static.maxWorkers > 0 {
-							details = append(details, fmt.Sprintf("Workers: %d/%d", sp.asBuilding.currWorkers, static.maxWorkers))
-						}
-						if static.maxGuards > 0 {
-							details = append(details, fmt.Sprintf("Guards: %d/%d", sp.asBuilding.currGuards, static.maxGuards))
-						}
-						if static.maxRoyalGuards > 0 {
-							details = append(details, fmt.Sprintf("Royal guards: %d/%d", sp.asBuilding.currRoyalGurads, static.maxRoyalGuards))
+						for i, code := range static.housing_unittypes {
+							details = append(details, fmt.Sprintf("%s: %d/%d",
+								getUnitStaticDataFromTable(code).name, sp.asBuilding.currentResidents[code], static.housing_max_residents[i]))
 						}
 					}
 				}
