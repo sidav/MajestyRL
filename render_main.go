@@ -18,20 +18,34 @@ var (
 
 type rendererStruct struct {
 	currentFactionSeeingTheScreen *faction
+	vx, vy                        int // current viewport coords
+	decalsBuffer                  []*decal
+
+	lastTurnRendered, rendersAtCurrentTurn int
 }
 
 func (r *rendererStruct) renderScreen(f *faction) {
 	r.currentFactionSeeingTheScreen = f
+	r.vx, r.vy = f.cursor.getCameraCoords()
+	r.cleanDecalsBuffer()
+
 	r.updateBoundsIfNeccessary(false)
 	cw.Clear_console()
 	r.renderMapInViewport(CURRENT_MAP)
 	r.renderBidsInViewport(CURRENT_MAP)
 	r.renderPawnsInViewport(CURRENT_MAP)
+	r.renderDecalsInViewport()
 	r.renderUI()
 	r.renderCursor()
 	log.Render(CONSOLE_H - LOG_HEIGHT)
 
 	if DEBUG_OUTPUT {
+		if r.lastTurnRendered < getCurrentTurn() {
+			r.lastTurnRendered = getCurrentTurn()
+			r.rendersAtCurrentTurn = 1
+		} else {
+			r.rendersAtCurrentTurn += 1
+		}
 		PrintMemUsage()
 	}
 
@@ -58,7 +72,6 @@ func (r *rendererStruct) updateBoundsIfNeccessary(force bool) {
 
 func (r *rendererStruct) renderMapInViewport(g *gameMap) {
 	f := r.currentFactionSeeingTheScreen
-	r.currentFactionSeeingTheScreen = f
 	vx, vy := f.cursor.getCameraCoords()
 	for x := vx; x < vx+VIEWPORT_W; x++ {
 		for y := vy; y < vy+VIEWPORT_H; y++ {
@@ -77,6 +90,11 @@ func (r *rendererStruct) renderMapInViewport(g *gameMap) {
 			}
 		}
 	}
+}
+
+func (r *rendererStruct) renderCcellOnScreenCoords(c *ccell, x, y int) {
+	r.setFgColorByCcell(c)
+	cw.PutChar(c.char, x, y)
 }
 
 func (r *rendererStruct) areGlobalCoordsOnScreen(gx, gy int) bool {

@@ -39,6 +39,9 @@ func (u *pawn) performMeleeAttack(target *pawn) {
 	target.hitpoints -= damage
 	log.AppendMessage(fmt.Sprintf("%s hits %s for %d damage!", u.getName(), target.getName(), damage))
 	u.spendTime(u.weapon.weaponData.attackTime)
+
+	x, y := target.getCoords()
+	addBasicDecalToRender(x, y, 2)
 }
 
 func (u *unit) getCurrentIntentDescription() string {

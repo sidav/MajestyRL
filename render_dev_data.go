@@ -33,6 +33,7 @@ func updateMemUsage() {
 		fmt.Sprintf("Avg Pathfinding = %v\n", avgPathfindingTime),
 		fmt.Sprintf("Curr Game Loop  = %v\n", currentGameLoopTime),
 		fmt.Sprintf("Avg Game Loop   = %v\n", averageGameLoopTime),
+		fmt.Sprintf("Renders at curr turn   = %v\n", RENDERER.rendersAtCurrentTurn),
 	}
 }
 
