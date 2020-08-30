@@ -157,6 +157,35 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// cost
 		cost: 100,
 	},
+
+	// ENEMY/NEUTRAL BUILDINGS
+	"GOBLINCAMP": &buildingStaticData{
+		// appearance
+		app: &buildingAppearance{
+			chars: []string{
+				"/-\\",
+				"|x|",
+				"\\v/",
+			},
+			colors: [][]int{
+				{7, 7, 7},
+				{7, -1, 7},
+				{7, -1, 7},
+			},
+		},
+		name: "Goblin camp",
+		// construction
+		underConstructionData: underConstructionData{
+			maxConstructedAmount: 250,
+		},
+		maxHitpoints: 300,
+		// cost
+		cost: 1000,
+		// misc
+		housing_unittypes:      []string{"GOBLIN"},
+		housing_max_residents:  []int {1},
+		housing_respawn_period: []int {50},
+	},
 }
 
 func getBuildingStaticDataFromTable(code string) *buildingStaticData {

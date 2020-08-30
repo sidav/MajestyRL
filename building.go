@@ -56,8 +56,12 @@ func (b *building) recalculateCurrResidents() {
 		b.currentResidents[i] = 0
 	}
 	for _, p := range b.pawnsRegistered {
-		residentCode := p.asUnit.getStaticData().code
-		b.currentResidents[residentCode] += 1
+		if p.isAlive() {
+			residentCode := p.asUnit.getStaticData().code
+			b.currentResidents[residentCode] += 1
+		} else {
+			b.removePawnFromRegistered(p)
+		}
 	}
 }
 

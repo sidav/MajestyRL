@@ -160,6 +160,9 @@ func (u *pawn) executePatrolIntent() {
 	}
 
 	if ux == currIntent.x && uy == currIntent.y {
+		if ULOGIC.checkForEnemiesAndAct(u) {
+			return
+		}
 		// decide next patrol point, moving counter-clockwise
 		if ux == tBld.x-1 && uy == tBld.y-1 {
 			currIntent.y += h + 1

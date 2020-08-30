@@ -83,6 +83,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		},
 		// hp
 		maxHitpointsMin: 10, maxHitpointsMax: 20,
+		sightRange: 15,
 		// construction
 		timeToConstruct: 100,
 		// cost

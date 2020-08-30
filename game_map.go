@@ -90,6 +90,16 @@ func (g *gameMap) getPawnsInRangeFrom(r, x, y int) *[]*pawn{
 	return &pawns
 }
 
+func (g *gameMap) getEnemyPawnsInRangeFrom(f *faction, r, x, y int) *[]*pawn{
+	var pawns []*pawn
+	for _, b := range g.pawns {
+		if b.faction != f && geometry.AreCoordsInRange(b.x, b.y, x, y, r) {
+			pawns = append(pawns, b)
+		}
+	}
+	return &pawns
+}
+
 // func (g *gameMap) getPawnsInRect(x, y, w, h int) []*pawn {
 // 	var arr []*pawn
 // 	for _, p := range g.pawns {

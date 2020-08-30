@@ -88,7 +88,7 @@ func (r *rendererStruct) renderInfoOnCursor() {
 			details = append(details, fmt.Sprintf("HP: %d/%d", sp.hitpoints, sp.getMaxHitpoints()))
 
 			// enemy pawn 
-			if sp.faction != r.currentFactionSeeingTheScreen {
+			if sp.faction != r.currentFactionSeeingTheScreen && !DEBUG_OUTPUT {
 				if sp.isBuilding() {
 					details = append(details, "(Enemy building)")
 				} else {
