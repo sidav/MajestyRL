@@ -12,6 +12,9 @@ func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true 
 	intent := u.asUnit.intent
 
 	ox, oy := intent.x, intent.y
+	if intent.targetPawn != nil {
+		ox, oy = intent.targetPawn.getCenter()
+	}
 	ux, uy := u.getCoords()
 	var vx, vy int
 

@@ -69,7 +69,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		cost:       0,
 		sightRange: 7,
 		// misc
-		defaultWeaponCode: "HALBERD",
+		defaultWeaponCode: "SWORD",
 		canBuild:          false,
 		carriesGold:       false,
 	},

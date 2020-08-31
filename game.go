@@ -74,11 +74,11 @@ func startGameLoop() {
 					curpawn.setFactionTechAllowance() // TODO: call this less frequently. 
 					BLOGIC.act(curpawn)
 				}
-				continue
-			}
-			if curpawn.isTimeToAct() {
-				ULOGIC.decideNewIntent(curpawn)
-				curpawn.act()
+			} else {
+				if curpawn.isTimeToAct() {
+					ULOGIC.decideNewIntent(curpawn)
+					curpawn.act()
+				}
 			}
 			if curpawn.hitpoints <= 0 {
 				CURRENT_MAP.removePawn(curpawn)

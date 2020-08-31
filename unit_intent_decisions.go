@@ -13,14 +13,16 @@ func (ul *unitLogic) wantsToLeaveBuilding(u *pawn) bool {
 }
 
 func (ul *unitLogic) decideNewIntent(p *pawn) {
-	if p.faction == nil {
-		// Neutral units act differently
-
-	}
-
 	if p.asUnit.intent == nil {
-		ul.considerBids(p)
+		ul.checkForEnemiesAndAct(p)
+		if p.faction == nil {
+			// Neutral units behave differently
+
+		} else {
+			ul.considerBids(p)
+		}
 	}
+
 	if p.asUnit.intent == nil && CURRENT_TICK%CONSIDER_NONBIDS_EVERY == 0 {
 		ul.considerSituation(p)
 	}
@@ -54,7 +56,7 @@ func (ul *unitLogic) checkForEnemiesAndAct(p *pawn) bool {
 	static := p.asUnit.getStaticData()
 	// should we attac something?
 	x, y := p.getCenter()
-	enemiesInRange := CURRENT_MAP.getEnemyPawnsInRangeFrom(p.faction, static.sightRange, x, y)
+	enemiesInRange := CURRENT_MAP.getAliveEnemyPawnsInRangeFrom(p.faction, static.sightRange, x, y)
 	if len(*enemiesInRange) > 0 {
 		if p.weapon != nil {
 			enemyInRange := (*enemiesInRange)[rnd.Rand(len(*enemiesInRange))]

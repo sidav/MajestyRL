@@ -191,7 +191,10 @@ func (u *pawn) executeAttackIntent() {
 	if u.asUnit.intent.targetPawn.IsCloseupToCoords(ux, uy) {
 		u.performMeleeAttack(u.asUnit.intent.targetPawn)
 		if !u.asUnit.intent.targetPawn.isAlive() {
-			u.asUnit.intent = nil
+			enemySet := ULOGIC.checkForEnemiesAndAct(u) // switch to another target
+			if !enemySet {
+				u.asUnit.intent = nil 
+			}
 		}
 	} else {
 		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
