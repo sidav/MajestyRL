@@ -114,6 +114,9 @@ func (r *rendererStruct) renderInfoOnCursor() {
 				}
 
 				if sp.isUnit() {
+					if sp.asUnit.carriedGold > 0 {
+						details = append(details, fmt.Sprintf("Carries %d gold", sp.asUnit.carriedGold))
+					}
 					details = append(details, sp.asUnit.getCurrentIntentDescription())
 				}
 			}

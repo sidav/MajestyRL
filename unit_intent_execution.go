@@ -12,6 +12,10 @@ func (p *pawn) act() {
 		p.executeRepairIntent()
 	case INTENT_RETURN_HOME:
 		p.executeReturnHome()
+	case INTENT_COLLECT_TAXES:
+		p.executeCollectTaxes()
+	case INTENT_RETURN_TAXES:
+		p.executeReturnTaxes()
 	case INTENT_PATROL:
 		p.executePatrolIntent()
 	case INTENT_MINE:
@@ -83,6 +87,37 @@ func (u *pawn) executeRepairIntent() {
 		u.spendTime(TICKS_PER_TURN)
 	} else {
 		log.AppendMessage("MOVING TO REPAIR")
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
+	}
+}
+
+func (u *pawn) executeCollectTaxes() {
+	tBld := u.asUnit.intent.targetPawn
+	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
+	ux, uy := u.getCoords()
+	if tBld.IsCloseupToCoords(ux, uy) {
+		u.asUnit.carriedGold += tBld.asBuilding.accumulatedGoldAmount
+		tBld.asBuilding.accumulatedGoldAmount = 0
+		u.spendTime(TICKS_PER_TURN)
+		ULOGIC.reconsiderSituation(u) // decide new intent
+	} else {
+		log.AppendMessage("MOVING TO COLLECT")
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
+	}
+}
+
+
+func (u *pawn) executeReturnTaxes() {
+	tBld := u.asUnit.intent.targetPawn
+	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
+	ux, uy := u.getCoords()
+	if tBld.IsCloseupToCoords(ux, uy) {
+		tBld.faction.economy.currentGold += u.asUnit.carriedGold
+		u.asUnit.carriedGold = 0
+		u.spendTime(TICKS_PER_TURN)
+		ULOGIC.reconsiderSituation(u) // decide new intent
+	} else {
+		log.AppendMessage("MOVING TO RETURN")
 		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
 	}
 }

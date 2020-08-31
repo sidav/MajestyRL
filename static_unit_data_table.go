@@ -12,9 +12,9 @@ type unitStaticData struct {
 
 	sightRange int
 
-	carriesGold bool // TODO: rename to "collectTaxes or something."
-	canBuild    bool
-	canMine     bool
+	canCollectTaxes bool
+	canBuild        bool
+	canMine         bool
 }
 
 var staticUnitDataTable = map[string]*unitStaticData{
@@ -32,9 +32,24 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		// cost
 		cost: 0,
 		// misc
-		canBuild:    true,
-		canMine:     true,
-		carriesGold: false,
+		canBuild:        true,
+		canMine:         true,
+		canCollectTaxes: false,
+	},
+	"TAXCOLLECTOR": &unitStaticData{
+		name:     "Tax collector",
+		// appearance
+		app: &ccell{
+			char: 't', color: 7,
+		},
+		// hp
+		maxHitpointsMin: 10, maxHitpointsMax: 10,
+		// construction
+		timeToConstruct: 100,
+		// cost
+		cost: 0,
+		// misc
+		canCollectTaxes: true,
 	},
 	"GUARD": &unitStaticData{
 		name:     "Guardian",
@@ -53,7 +68,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		// misc
 		defaultWeaponCode: "HALBERD",
 		canBuild:          false,
-		carriesGold:       false,
+		canCollectTaxes:   false,
 	},
 	"ROYALGUARD": &unitStaticData{
 		name:     "Royal Guardian",
@@ -71,7 +86,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		// misc
 		defaultWeaponCode: "SWORD",
 		canBuild:          false,
-		carriesGold:       false,
+		canCollectTaxes:   false,
 	},
 
 	// Neutrals
@@ -91,7 +106,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		// misc
 		defaultWeaponCode: "HALBERD",
 		canBuild:          false,
-		carriesGold:       false,
+		canCollectTaxes:   false,
 	},
 
 	"NULL": &unitStaticData{
@@ -109,7 +124,7 @@ var staticUnitDataTable = map[string]*unitStaticData{
 		// misc
 		defaultWeaponCode: "HALBERD",
 		canBuild:          true,
-		carriesGold:       false,
+		canCollectTaxes:   false,
 	},
 }
 

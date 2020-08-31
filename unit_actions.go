@@ -54,6 +54,10 @@ func (u *unit) getCurrentIntentDescription() string {
 	switch u.intent.itype {
 	case INTENT_BUILD:
 		return "Building..."
+	case INTENT_COLLECT_TAXES:
+		return "Collecting money..."
+	case INTENT_RETURN_TAXES:
+		return "Returning money..."
 	case INTENT_REPAIR:
 		return "Repairing..."
 	case INTENT_MINE:

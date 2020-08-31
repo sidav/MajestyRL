@@ -56,9 +56,9 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// misc
 		goldStorage: 5000,
 		// taxGoldGeneration:      25,
-		housing_unittypes:      []string{"PEASANT", "ROYALGUARD"},
-		housing_max_residents:  []int{3, 1},
-		housing_respawn_period: []int{100, 300},
+		housing_unittypes:      []string{"PEASANT", "TAXCOLLECTOR", "ROYALGUARD"},
+		housing_max_residents:  []int{2, 1, 1},
+		housing_respawn_period: []int{100, 200, 300},
 	},
 	"HUT": &buildingStaticData{
 		// appearance

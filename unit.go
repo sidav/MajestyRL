@@ -5,6 +5,7 @@ type unit struct {
 	registeredIn *pawn // building where the unit is registered, its "home"
 	code         string
 	maxHitpoints int
+	carriedGold  int
 }
 
 func (u *unit) getStaticData() *unitStaticData {

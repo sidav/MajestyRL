@@ -1,14 +1,13 @@
 package main
 
 const (
-	CONSIDER_NONBIDS_EVERY = 10*TICKS_PER_TURN // ticks
+	CONSIDER_NONBIDS_EVERY = 10 * TICKS_PER_TURN // ticks
 )
 
 type unitLogic struct{}
 
 // returns true if the unit wants to leave the building
 func (ul *unitLogic) wantsToLeaveBuilding(u *pawn) bool {
-
 	return u.asUnit.intent != nil
 }
 
@@ -77,11 +76,19 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 		return
 	}
 	static := getUnitStaticDataFromTable(p.asUnit.code)
-	if static.canBuild { // try to build and/or repair building
-		startingPawnIndex := rnd.Rand(len(CURRENT_MAP.pawns))
-		for i := range CURRENT_MAP.pawns {
-			consideredPawn := CURRENT_MAP.pawns[(i+startingPawnIndex)%len(CURRENT_MAP.pawns)]
-			if consideredPawn.isBuilding() && p.faction == consideredPawn.faction {
+	startingPawnIndex := rnd.Rand(len(CURRENT_MAP.pawns))
+	// should we return with collected gold?
+	if p.asUnit.getStaticData().canCollectTaxes && p.asUnit.carriedGold >= RETURN_MINIMUM_TAX {
+		p.asUnit.intent = &intent{itype: INTENT_RETURN_TAXES, targetPawn: p.asUnit.registeredIn}
+	}
+	for i := range CURRENT_MAP.pawns {
+		consideredPawn := CURRENT_MAP.pawns[(i+startingPawnIndex)%len(CURRENT_MAP.pawns)]
+		if consideredPawn.isBuilding() && p.faction == consideredPawn.faction {
+			// should we collect taxes from it?
+			if p.asUnit.getStaticData().canCollectTaxes && consideredPawn.asBuilding.accumulatedGoldAmount >= COLLECT_THAT_MINIMUM {
+				p.asUnit.intent = &intent{itype: INTENT_COLLECT_TAXES, targetPawn: consideredPawn}
+			}
+			if static.canBuild { // try to build and/or repair building
 				// should we build it?
 				if consideredPawn.asBuilding.asBeingConstructed != nil {
 					x, y := consideredPawn.getCenter()
@@ -100,4 +107,9 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 	if p.weapon != nil {
 		p.asUnit.intent = &intent{itype: INTENT_PATROL}
 	}
+}
+
+func (ul *unitLogic) reconsiderSituation(p *pawn) {
+	p.asUnit.intent = nil
+	ul.considerSituation(p)
 }
