@@ -186,7 +186,7 @@ func (u *pawn) executePatrolIntent() {
 	}
 
 	w, h := tBld.getSize()
-	if currIntent.x == 0 && currIntent.y == 0 && tBld.x != 1 && tBld.y != 1 {
+	if currIntent.x == 0 && currIntent.y == 0 && tBld.x != 0 && tBld.y != 0 {
 		// set the initial patrol point
 		currIntent.x, currIntent.y = tBld.x+w, tBld.y+h
 	}

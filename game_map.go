@@ -70,7 +70,7 @@ func (g *gameMap) getPawnAtCoordinates(x, y int) *pawn {
 func (g *gameMap) placePawnNearPawn(spawnThis, nearThis *pawn) {
 	w, h := nearThis.getSize()
 	spawnThis.x = nearThis.x + w/2
-	spawnThis.y = nearThis.y + h+1
+	spawnThis.y = nearThis.y + h
 }
 
 func (g *gameMap) getResourcesAtCoords(x, y int) *tileResource {
