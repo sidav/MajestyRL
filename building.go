@@ -1,9 +1,9 @@
 package main
 
 type building struct {
-	hasBeenPlaced    bool
-	code             string
-	beingConstructed *underConstructionData
+	hasBeenPlaced      bool
+	code               string
+	asBeingConstructed *underConstructionData
 
 	currentResidents map [string]int
 	pawnsInside      []*pawn
@@ -19,7 +19,7 @@ func (b *building) getStaticData() *buildingStaticData {
 }
 
 func (b *building) isUnderConstruction() bool {
-	return b.beingConstructed != nil && !b.beingConstructed.isCompleted()
+	return b.asBeingConstructed != nil && !b.asBeingConstructed.isCompleted()
 }
 
 func (b *building) getSize() (int, int) {
@@ -65,10 +65,10 @@ func (b *building) recalculateCurrResidents() {
 	}
 }
 
-func (b *building) canAffordNewResident(new_resident_code string) bool {
+func (b *building) canAffordNewResident(newResidentCode string) bool {
 	// TODO: optimize that bullshit
 	for index, code := range b.getStaticData().housing_unittypes {
-		if code == new_resident_code && b.currentResidents[code] < b.getStaticData().housing_max_residents[index] {
+		if code == newResidentCode && b.currentResidents[code] < b.getStaticData().housing_max_residents[index] {
 			return true
 		}
 	}

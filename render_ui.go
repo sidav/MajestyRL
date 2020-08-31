@@ -99,7 +99,7 @@ func (r *rendererStruct) renderInfoOnCursor() {
 				if sp.isBuilding() {
 
 					if sp.asBuilding.isUnderConstruction() {
-						curr, max, perc := sp.asBuilding.beingConstructed.getCompletionValues()
+						curr, max, perc := sp.asBuilding.asBeingConstructed.getCompletionValues()
 						details = append(details, fmt.Sprintf("Under construction: %d/%d (%d%%)", curr, max, perc))
 					} else {
 

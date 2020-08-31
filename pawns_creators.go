@@ -14,7 +14,7 @@ func createBuildingAtCoords(code string, constructed bool, centerX, centerY int,
 	if constructed {
 		newPawn.hitpoints = staticData.maxHitpoints
 	} else {
-		newPawn.asBuilding.beingConstructed = staticData.underConstructionData.clone()
+		newPawn.asBuilding.asBeingConstructed = staticData.underConstructionData.clone()
 	}
 	return newPawn
 }

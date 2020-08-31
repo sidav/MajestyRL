@@ -83,7 +83,7 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 			consideredPawn := CURRENT_MAP.pawns[(i+startingPawnIndex)%len(CURRENT_MAP.pawns)]
 			if consideredPawn.isBuilding() && p.faction == consideredPawn.faction {
 				// should we build it?
-				if consideredPawn.asBuilding.beingConstructed != nil {
+				if consideredPawn.asBuilding.asBeingConstructed != nil {
 					x, y := consideredPawn.getCenter()
 					p.asUnit.intent = &intent{itype: INTENT_BUILD, targetPawn: consideredPawn, x: x, y: y}
 					return

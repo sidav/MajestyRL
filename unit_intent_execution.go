@@ -27,8 +27,8 @@ func (u *pawn) executeBuildIntent() {
 	ux, uy := u.getCoords()
 	builderCoeff := 1
 	if !tBld.asBuilding.isUnderConstruction() {
-		if tBld.asBuilding.beingConstructed != nil {
-			tBld.asBuilding.beingConstructed = nil
+		if tBld.asBuilding.asBeingConstructed != nil {
+			tBld.asBuilding.asBeingConstructed = nil
 			u.faction.reportToPlayer("our new building is complete!")
 		}
 		u.asUnit.intent.fulfillBidIfExists()
@@ -39,12 +39,17 @@ func (u *pawn) executeBuildIntent() {
 		if !tBld.asBuilding.hasBeenPlaced {
 			CURRENT_MAP.addBuilding(tBld, true)
 		}
-		tBld.asBuilding.beingConstructed.currentConstructedAmount += builderCoeff
+		tBld.asBuilding.asBeingConstructed.currentConstructedAmount += builderCoeff
 		// BUG: insufficient HP added for buildings with too large maxHitpoints
-		hpToAdd := tBld.getMaxHitpoints() / (tBld.asBuilding.beingConstructed.maxConstructedAmount / builderCoeff)
+		hpToAdd := tBld.getMaxHitpoints() / (tBld.asBuilding.asBeingConstructed.maxConstructedAmount / builderCoeff)
 		if hpToAdd == 0 {
 			hpToAdd = 1
 		}
+		// Workaround fix (increasing starting HP) for the bug described above
+		if tBld.hitpoints == 0 && tBld.getMaxHitpoints() % (tBld.asBuilding.asBeingConstructed.maxConstructedAmount / builderCoeff) > 0 {
+			tBld.hitpoints = tBld.getMaxHitpoints() % (tBld.asBuilding.asBeingConstructed.maxConstructedAmount / builderCoeff)
+		}
+
 		tBld.hitpoints += hpToAdd
 		if tBld.hitpoints > tBld.getMaxHitpoints() {
 			tBld.hitpoints = tBld.getMaxHitpoints()
