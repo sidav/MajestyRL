@@ -4,6 +4,7 @@ type intentType byte
 
 const (
 	INTENT_BUILD intentType = iota
+	INTENT_REPAIR
 	INTENT_RETURN_HOME
 	INTENT_PATROL
 	INTENT_MINE

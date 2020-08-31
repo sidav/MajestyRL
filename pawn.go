@@ -89,6 +89,13 @@ func (p *pawn) getMaxHitpoints() int {
 	return p.asUnit.maxHitpoints
 }
 
+func (p *pawn) isDamaged() bool {
+	if p.isBuilding() {
+		return p.hitpoints < getBuildingStaticDataFromTable(p.asBuilding.code).maxHitpoints
+	}
+	return p.hitpoints < p.asUnit.maxHitpoints
+}
+
 func (p *pawn) isBuilding() bool {
 	return p.asBuilding != nil
 }

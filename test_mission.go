@@ -46,5 +46,5 @@ func initTestMission() {
 	}
 	CURRENT_MAP.addPawn(createUnitAtCoords("GUARD", 0, 0, playerFaction))
 
-	CURRENT_MAP.addPawn(createBuildingAtCoords("GOBLINCAMP", true, mapW/3, mapH/3, nil))
+	// CURRENT_MAP.addPawn(createBuildingAtCoords("GOBLINCAMP", true, 0, 1, nil))
 }

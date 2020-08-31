@@ -5,7 +5,7 @@ import "fmt"
 // low level unit actions. 
 
 func (u *pawn) spendTime(time int) {
-	u.nextTickToAct = CURRENT_TICK + time 
+	u.nextTickToAct = CURRENT_TICK + time
 }
 
 func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true if route exists. TODO: rewrite
@@ -26,9 +26,9 @@ func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true 
 	if true { // TODO: if canMove() 
 		if vx == 0 && vy == 0 {
 			u.faction.reportToPlayer("no path to target!")
-			u.spendTime(10*TICKS_PER_TURN)
+			u.spendTime(10 * TICKS_PER_TURN)
 			u.asUnit.handleIntentUnsuccess()
-			return false 
+			return false
 		}
 		u.x += vx
 		u.y += vy
@@ -52,8 +52,10 @@ func (u *unit) getCurrentIntentDescription() string {
 		return "Thinking..."
 	}
 	switch u.intent.itype {
-	case INTENT_BUILD: 
-	return "Building..."
+	case INTENT_BUILD:
+		return "Building..."
+	case INTENT_REPAIR:
+		return "Repairing..."
 	case INTENT_RETURN_HOME:
 		return "Going to rest..."
 	case INTENT_PATROL:
@@ -61,5 +63,5 @@ func (u *unit) getCurrentIntentDescription() string {
 	case INTENT_ATTACK:
 		return "Attacking!"
 	}
-	return "NO DESCRIPTION FOR INTENT"
+	return fmt.Sprintf("NO DESCRIPTION FOR INTENT %v", u.intent.itype)
 }

@@ -8,6 +8,8 @@ func (p *pawn) act() {
 	switch p.asUnit.intent.itype {
 	case INTENT_BUILD:
 		p.executeBuildIntent()
+	case INTENT_REPAIR:
+		p.executeRepairIntent()
 	case INTENT_RETURN_HOME:
 		p.executeReturnHome()
 	case INTENT_PATROL:
@@ -49,6 +51,33 @@ func (u *pawn) executeBuildIntent() {
 		}
 		u.spendTime(TICKS_PER_TURN)
 	} else {
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+	}
+}
+
+func (u *pawn) executeRepairIntent() {
+	tBld := u.asUnit.intent.targetPawn
+	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
+	ux, uy := u.getCoords()
+	builderCoeff := 1
+	if !tBld.isDamaged() {
+		u.faction.reportToPlayer("our building is repaired!")
+		u.asUnit.intent.fulfillBidIfExists()
+		u.asUnit.intent = nil
+		return
+	}
+	if tBld.IsCloseupToCoords(ux, uy) {
+		hpToAdd := tBld.getMaxHitpoints() / (tBld.getMaxHitpoints() / builderCoeff)
+		if hpToAdd == 0 {
+			hpToAdd = 1
+		}
+		tBld.hitpoints += hpToAdd
+		if tBld.hitpoints > tBld.getMaxHitpoints() {
+			tBld.hitpoints = tBld.getMaxHitpoints()
+		}
+		u.spendTime(TICKS_PER_TURN)
+	} else {
+		log.AppendMessage("MOVING TO REPAIR")
 		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
 	}
 }

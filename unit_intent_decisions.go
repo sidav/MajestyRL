@@ -89,7 +89,11 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 					return
 				}
 				// should we repair it?
-				// TODO
+				if consideredPawn.isDamaged() {
+					x, y := consideredPawn.getCenter()
+					p.asUnit.intent = &intent{itype: INTENT_REPAIR, targetPawn: consideredPawn, x: x, y: y}
+					return
+				}
 			}
 		}
 	}
