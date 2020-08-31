@@ -193,7 +193,7 @@ func (u *pawn) executeAttackIntent() {
 		if !u.asUnit.intent.targetPawn.isAlive() {
 			enemySet := ULOGIC.checkForEnemiesAndAct(u) // switch to another target
 			if !enemySet {
-				u.asUnit.intent = nil 
+				u.asUnit.intent = nil
 			}
 		}
 	} else {

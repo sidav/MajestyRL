@@ -28,11 +28,11 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// appearance
 		app: &buildingAppearance{
 			chars: []string{
-				"O----O",
-				"|/||\\|",
-				"|-OO-|",
-				"|\\||/|",
-				"O----O",
+				"O####O",
+				"#/||\\#",
+				"#-OO-#",
+				"#\\||/#",
+				"O####O",
 			},
 			colors: [][]int{
 				{-1, 7, 7, 7, 7, -1},
@@ -51,12 +51,12 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// cost
 		cost: 100000,
 		// tech
-		allowsBuildings: []string{"HUT", "GOLDVAULT", "MARKETPLACE", "WALL"},
+		allowsBuildings: []string{"HUT", "GOLDVAULT", "GUARDHOUSE", "MARKETPLACE", "WALL"},
 		// misc
 		goldStorage:            5000,
-		housing_unittypes:      []string{"PEASANT", "GUARD", "ROYALGUARD"},
-		housing_max_residents:  []int {3, 1, 1},
-		housing_respawn_period: []int {100, 250, 300},
+		housing_unittypes:      []string{"PEASANT", "ROYALGUARD"},
+		housing_max_residents:  []int {3, 1},
+		housing_respawn_period: []int {100, 300},
 	},
 	"HUT": &buildingStaticData{
 		// appearance
@@ -91,7 +91,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 			chars: []string{
 				"|-|",
 				"|=|",
-				"-O-",
+				"#O#",
 			},
 			colors: [][]int{
 				{7, 7, 7},
@@ -109,6 +109,33 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		cost: 1000,
 		// misc
 		goldStorage:            5000,
+		housing_unittypes:      []string{"ROYALGUARD"},
+		housing_max_residents:  []int {1},
+		housing_respawn_period: []int {350},
+	},
+	"GUARDHOUSE": &buildingStaticData{
+		// appearance
+		app: &buildingAppearance{
+			chars: []string{
+				"|-|",
+				"|=|",
+				"-O-",
+			},
+			colors: [][]int{
+				{7, 7, 7},
+				{7, -1, 7},
+				{7, 7, 7},
+			},
+		},
+		name: "Guardhouse",
+		// construction
+		underConstructionData: underConstructionData{
+			maxConstructedAmount: 250,
+		},
+		maxHitpoints: 300,
+		// cost
+		cost: 350,
+		// misc
 		housing_unittypes:      []string{"GUARD"},
 		housing_max_residents:  []int {1},
 		housing_respawn_period: []int {250},

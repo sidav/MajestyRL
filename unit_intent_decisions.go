@@ -1,7 +1,7 @@
 package main
 
 const (
-	CONSIDER_NONBIDS_EVERY = 1000 // ticks
+	CONSIDER_NONBIDS_EVERY = 10*TICKS_PER_TURN // ticks
 )
 
 type unitLogic struct{}
