@@ -8,7 +8,8 @@ type buildingStaticData struct {
 
 	cost int
 
-	goldStorage int
+	goldStorage       int
+	taxGoldGeneration int
 
 	// next line is obsolete
 	// maxWorkers, maxTaxCollectors, maxGuards, maxRoyalGuards int
@@ -53,10 +54,11 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// tech
 		allowsBuildings: []string{"HUT", "GOLDVAULT", "GUARDHOUSE", "MARKETPLACE", "WALL"},
 		// misc
-		goldStorage:            5000,
+		goldStorage: 5000,
+		// taxGoldGeneration:      25,
 		housing_unittypes:      []string{"PEASANT", "ROYALGUARD"},
-		housing_max_residents:  []int {3, 1},
-		housing_respawn_period: []int {100, 300},
+		housing_max_residents:  []int{3, 1},
+		housing_respawn_period: []int{100, 300},
 	},
 	"HUT": &buildingStaticData{
 		// appearance
@@ -79,11 +81,12 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		},
 		maxHitpoints: 100,
 		// cost
-		cost: 500,
+		cost:              500,
+		taxGoldGeneration: 1,
 		// misc
 		housing_unittypes:      []string{"PEASANT"},
-		housing_max_residents:  []int {2},
-		housing_respawn_period: []int {100},
+		housing_max_residents:  []int{2},
+		housing_respawn_period: []int{100},
 	},
 	"GOLDVAULT": &buildingStaticData{
 		// appearance
@@ -110,8 +113,8 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// misc
 		goldStorage:            5000,
 		housing_unittypes:      []string{"ROYALGUARD"},
-		housing_max_residents:  []int {1},
-		housing_respawn_period: []int {350},
+		housing_max_residents:  []int{1},
+		housing_respawn_period: []int{350},
 	},
 	"GUARDHOUSE": &buildingStaticData{
 		// appearance
@@ -137,8 +140,8 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		cost: 350,
 		// misc
 		housing_unittypes:      []string{"GUARD"},
-		housing_max_residents:  []int {1},
-		housing_respawn_period: []int {250},
+		housing_max_residents:  []int{1},
+		housing_respawn_period: []int{250},
 	},
 	"MARKETPLACE": &buildingStaticData{
 		// appearance
@@ -161,7 +164,8 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		},
 		maxHitpoints: 600,
 		// cost
-		cost: 1000,
+		cost:              1000,
+		taxGoldGeneration: 25,
 		// misc
 	},
 	"WALL": &buildingStaticData{
@@ -210,8 +214,8 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		cost: 1000,
 		// misc
 		housing_unittypes:      []string{"GOBLIN"},
-		housing_max_residents:  []int {1},
-		housing_respawn_period: []int {50},
+		housing_max_residents:  []int{1},
+		housing_respawn_period: []int{50},
 	},
 }
 

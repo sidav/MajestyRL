@@ -1,11 +1,12 @@
 package main
 
 type building struct {
-	hasBeenPlaced      bool
-	code               string
-	asBeingConstructed *underConstructionData
+	hasBeenPlaced         bool
+	code                  string
+	asBeingConstructed    *underConstructionData
+	accumulatedGoldAmount int // taxes, treasure, etc
 
-	currentResidents map [string]int
+	currentResidents map[string]int
 	pawnsInside      []*pawn
 	pawnsRegistered  []*pawn
 }

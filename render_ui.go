@@ -102,8 +102,10 @@ func (r *rendererStruct) renderInfoOnCursor() {
 						curr, max, perc := sp.asBuilding.asBeingConstructed.getCompletionValues()
 						details = append(details, fmt.Sprintf("Under construction: %d/%d (%d%%)", curr, max, perc))
 					} else {
-
 						static := getBuildingStaticDataFromTable(sp.asBuilding.code)
+						if sp.asBuilding.accumulatedGoldAmount > 0 {
+							details = append(details, fmt.Sprintf("Tax: %d", sp.asBuilding.accumulatedGoldAmount))
+						}
 						for i, code := range static.housing_unittypes {
 							details = append(details, fmt.Sprintf("%s: %d/%d",
 								getUnitStaticDataFromTable(code).name, sp.asBuilding.currentResidents[code], static.housing_max_residents[i]))

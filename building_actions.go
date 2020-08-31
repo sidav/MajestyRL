@@ -14,6 +14,9 @@ func (bl *buildingLogic) act(bld *pawn) {
 	if bld.asBuilding.isUnderConstruction() {
 		return 
 	}
+	if CURRENT_TICK % GENERATE_TAXES_EACH == 0 {
+		bld.asBuilding.accumulatedGoldAmount += bld.asBuilding.getStaticData().taxGoldGeneration
+	}
 	bl.generatePawns(bld)
 	bl.actForEachPawnInside(bld)
 }

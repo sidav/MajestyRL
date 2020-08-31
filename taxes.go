@@ -1,0 +1,3 @@
+package main
+
+const GENERATE_TAXES_EACH = 100 * TICKS_PER_TURN
