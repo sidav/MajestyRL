@@ -40,6 +40,8 @@ func initTestMission() {
 	playerFaction := createFaction("Your Majesty", 0, true, false)
 	CURRENT_MAP.factions = append(CURRENT_MAP.factions, playerFaction)
 	// CURRENT_MAP.addBid(&bid{intent_type_for_this_bid: INTENT_BUILD, targetPawn: createBuildingAtCoords("PALACE", false, mapW/2, mapH/2, playerFaction)})
+	playerFaction.cursor.x = mapW/2
+	playerFaction.cursor.y = mapH/2
 	CURRENT_MAP.addPawn(createBuildingAtCoords("PALACE", true, mapW/2, mapH/2, playerFaction))
 	for i := 0; i < 3; i++ {
 		CURRENT_MAP.addPawn(createUnitAtCoords("PEASANT", mapW/2, 0, playerFaction))
