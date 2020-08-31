@@ -8,10 +8,14 @@ import (
 
 type playerController struct {
 	exit, playerInControl bool
-	last_time             time.Time
-	rerenderNeeded        bool
-	endTurnPeriod         int
-	curFaction            *faction
+
+	last_time               time.Time
+	last_time_idle_rendered time.Time
+
+	rerenderNeeded bool
+	idleRerenderEachMs int
+	endTurnPeriod  int
+	curFaction     *faction
 }
 
 func (pc *playerController) init() {
@@ -19,20 +23,22 @@ func (pc *playerController) init() {
 	pc.last_time = time.Now()
 	pc.rerenderNeeded = true
 	pc.endTurnPeriod = 50
+	pc.idleRerenderEachMs = 50
 }
 
 func (pc *playerController) controlAsFaction(f *faction) {
 	pc.curFaction = f
 	pc.last_time = time.Now()
+	pc.last_time_idle_rendered = time.Now()
+	RENDERER.renderScreen(pc.curFaction)
 	for !pc.isTimeToAutoEndTurn() || (IS_PAUSED && pc.playerInControl) {
-		pc.rerenderNeeded = true
 		pc.playerInControl = true
 		pc.snapCursorToPawn()
-		if pc.rerenderNeeded {
+		pc.mainControlLoop()
+		if pc.rerenderNeeded || pc.isTimeToIdleRender() {
 			RENDERER.renderScreen(pc.curFaction)
 			pc.rerenderNeeded = false
 		}
-		pc.mainControlLoop()
 		if pc.exit {
 			return
 		}
@@ -48,19 +54,20 @@ func (pc *playerController) doUnconditionalKeyActions(keyPressed string) {
 			return
 		} else {
 			pc.rerenderNeeded = false
+			pc.moveCursorWithMouse()
 		}
 	case ".": // end turn without unpausing the game
 		if IS_PAUSED {
 			pc.playerInControl = false
 			return
 		}
-	// case "`":
-	// 	mouseEnabled = !mouseEnabled
-	// 	if mouseEnabled {
-	// 		LOG.appendMessage("Mouse controls enabled.")
-	// 	} else {
-	// 		LOG.appendMessage("Mouse controls disabled.")
-	// 	}
+		// case "`":
+		// 	mouseEnabled = !mouseEnabled
+		// 	if mouseEnabled {
+		// 		LOG.appendMessage("Mouse controls enabled.")
+		// 	} else {
+		// 		LOG.appendMessage("Mouse controls disabled.")
+		// 	}
 	case "SPACE", " ":
 		IS_PAUSED = !IS_PAUSED
 		if IS_PAUSED {
@@ -83,25 +90,25 @@ func (pc *playerController) doUnconditionalKeyActions(keyPressed string) {
 			log.AppendMessage("Can't decrease game speed any further.")
 		}
 
-	// case "ENTER", "RETURN":
-	// 	u := f.cursor.snappedPawn //m.getUnitAtCoordinates(cx, cy)
-	// 	if u == nil {
-	// 		return plr_bandboxSelectionWithMouse() // select multiple units
-	// 	}
-	// 	if u.faction.factionNumber != f.factionNumber {
-	// 		LOG.appendMessage("Enemy units can't be selected, Commander.")
-	// 		return nil
-	// 	}
-	// 	return &[]*pawn{f.cursor.snappedPawn}
-	// case "TAB":
-	// 	trySelectNextIdlePawn()
-	// case "C":
-	// 	trySnapCursorToCommander()
-	// 	return &[]*pawn{f.cursor.snappedPawn}
-	// case "?":
-	// 	if f.cursor.snappedPawn != nil {
-	// 		renderPawnInfo(f.cursor.snappedPawn)
-	// 	}
+		// case "ENTER", "RETURN":
+		// 	u := f.cursor.snappedPawn //m.getUnitAtCoordinates(cx, cy)
+		// 	if u == nil {
+		// 		return plr_bandboxSelectionWithMouse() // select multiple units
+		// 	}
+		// 	if u.faction.factionNumber != f.factionNumber {
+		// 		LOG.appendMessage("Enemy units can't be selected, Commander.")
+		// 		return nil
+		// 	}
+		// 	return &[]*pawn{f.cursor.snappedPawn}
+		// case "TAB":
+		// 	trySelectNextIdlePawn()
+		// case "C":
+		// 	trySnapCursorToCommander()
+		// 	return &[]*pawn{f.cursor.snappedPawn}
+		// case "?":
+		// 	if f.cursor.snappedPawn != nil {
+		// 		renderPawnInfo(f.cursor.snappedPawn)
+		// 	}
 	case "ESCAPE":
 		pc.exit = true
 		return
@@ -116,25 +123,25 @@ func (pc *playerController) doUnconditionalKeyActions(keyPressed string) {
 	case "INSERT": // test
 		pc.endTurnPeriod = 1
 
-	// case "E": // test
-	// 	CURRENT_MAP.addBuilding(createBuilding("testsmall", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
-	// 	LOG.appendMessage("Test enemy building created.")
-	// case "B": // test
-	// 	CURRENT_MAP.addBuilding(createBuilding("testbig", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
-	// 	LOG.appendMessage("LARGE test enemy building created.")
-	// case "INSERT": // cheat
-	// 	for _, fac := range CURRENT_MAP.factions {
-	// 		if fac != f {
-	// 			fac.economy.minerals += 500
-	// 			fac.economy.vespene += 500
-	// 		}
-	// 	}
-	// 	LOG.appendMessage("Added 500 minerals and gas to the enemies.")
-	// case "HOME": // cheat
-	// 	// CURRENT_MAP.addBuilding(createBuilding("lturret", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[0]), true)
-	// 	endTurnPeriod = 0
-	// case "END": // cheat
-	// 	CHEAT_IGNORE_FOW = !CHEAT_IGNORE_FOW
+		// case "E": // test
+		// 	CURRENT_MAP.addBuilding(createBuilding("testsmall", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
+		// 	LOG.appendMessage("Test enemy building created.")
+		// case "B": // test
+		// 	CURRENT_MAP.addBuilding(createBuilding("testbig", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
+		// 	LOG.appendMessage("LARGE test enemy building created.")
+		// case "INSERT": // cheat
+		// 	for _, fac := range CURRENT_MAP.factions {
+		// 		if fac != f {
+		// 			fac.economy.minerals += 500
+		// 			fac.economy.vespene += 500
+		// 		}
+		// 	}
+		// 	LOG.appendMessage("Added 500 minerals and gas to the enemies.")
+		// case "HOME": // cheat
+		// 	// CURRENT_MAP.addBuilding(createBuilding("lturret", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[0]), true)
+		// 	endTurnPeriod = 0
+		// case "END": // cheat
+		// 	CHEAT_IGNORE_FOW = !CHEAT_IGNORE_FOW
 
 	default:
 		pc.moveCursorWithMouse()

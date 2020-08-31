@@ -28,9 +28,10 @@ func (pc *playerController) moveCursorWithMouse() {
 	cx, cy := cw.GetMouseCoords()
 	camx, camy := pc.curFaction.cursor.getCameraCoords()
 
-	pc.rerenderNeeded = !(pc.curFaction.cursor.x == camx+cx && pc.curFaction.cursor.y == camy+cy) // rerender is needed if cursor was _actually_ moved
+	cursorWasMoved := !(pc.curFaction.cursor.x == camx+cx && pc.curFaction.cursor.y == camy+cy)
 
-	if CURRENT_MAP.areCoordsValid(camx+cx, camy+cy) {
+	if cursorWasMoved && CURRENT_MAP.areCoordsValid(camx+cx, camy+cy) {
+		pc.rerenderNeeded = true // rerender is needed if cursor was _actually_ moved
 		pc.curFaction.cursor.x, pc.curFaction.cursor.y = camx+cx, camy+cy
 		pc.snapCursorToPawn()
 	}
@@ -66,4 +67,14 @@ func (pc *playerController) moveCameraIfNeeded() bool { // true if camera was mo
 
 func (pc *playerController) isTimeToAutoEndTurn() bool {
 	return time.Since(pc.last_time) >= time.Duration(pc.endTurnPeriod)*time.Millisecond
+}
+
+// this is a horrible workaround for my TCell wrapper...
+// TODO: get rid of this by cleaning up useless mouse move events in wrapper.
+func (pc *playerController) isTimeToIdleRender() bool {
+	isTime := time.Since(pc.last_time_idle_rendered) >= time.Duration(pc.idleRerenderEachMs)*time.Millisecond
+	if isTime {
+		pc.last_time_idle_rendered = time.Now()
+	}
+	return isTime
 }
