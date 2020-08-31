@@ -8,11 +8,11 @@ func (u *pawn) spendTime(time int) {
 	u.nextTickToAct = CURRENT_TICK + time
 }
 
-func (u *pawn) doMoveToIntentTarget(desiredAccuracy int) bool { // Returns true if route exists. TODO: rewrite
+func (u *pawn) doMoveToIntentTarget(desiredAccuracy int, moveToTargetPawn bool) bool { // Returns true if route exists. TODO: rewrite
 	intent := u.asUnit.intent
 
 	ox, oy := intent.x, intent.y
-	if intent.targetPawn != nil {
+	if intent.targetPawn != nil && moveToTargetPawn {
 		ox, oy = intent.targetPawn.getCenter()
 	}
 	ux, uy := u.getCoords()
@@ -56,6 +56,8 @@ func (u *unit) getCurrentIntentDescription() string {
 		return "Building..."
 	case INTENT_REPAIR:
 		return "Repairing..."
+	case INTENT_MINE:
+		return "Mining..."
 	case INTENT_RETURN_HOME:
 		return "Going to rest..."
 	case INTENT_PATROL:

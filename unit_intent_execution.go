@@ -56,7 +56,7 @@ func (u *pawn) executeBuildIntent() {
 		}
 		u.spendTime(TICKS_PER_TURN)
 	} else {
-		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
 	}
 }
 
@@ -83,7 +83,7 @@ func (u *pawn) executeRepairIntent() {
 		u.spendTime(TICKS_PER_TURN)
 	} else {
 		log.AppendMessage("MOVING TO REPAIR")
-		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
 	}
 }
 
@@ -132,10 +132,9 @@ func (u *pawn) executeMineIntent() {
 			u.currentGold = AMOUNT_MINED
 			CURRENT_MAP.getResourcesAtCoords(ix, iy).amount -= AMOUNT_MINED
 		} else {
-			u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+			u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, false)
 		}
-	} else { // return with gold and drop intent  
-		currIntent.x, currIntent.y = currIntent.targetPawn.getCenter()
+	} else { // return with gold and drop intent
 		if currIntent.targetPawn.IsCloseupToCoords(ux, uy) {
 			u.faction.economy.currentGold += u.currentGold
 			u.currentGold = 0
@@ -143,7 +142,7 @@ func (u *pawn) executeMineIntent() {
 			u.asUnit.intent = nil
 			return
 		}
-		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
 	}
 }
 
@@ -167,12 +166,11 @@ func (u *pawn) executeReturnHome() {
 		return
 	}
 	u.asUnit.intent.targetPawn = tBld
-	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
 	if tBld.IsCloseupToCoords(ux, uy) {
 		CURRENT_MAP.putUnitIntoBuilding(u, tBld)
 		u.asUnit.intent = nil
 	} else {
-		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
 	}
 }
 
@@ -216,7 +214,7 @@ func (u *pawn) executePatrolIntent() {
 		u.asUnit.intent = nil // finished patrolling
 		return
 	}
-	u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+	u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, false)
 }
 
 func (u *pawn) executeAttackIntent() {
@@ -231,6 +229,6 @@ func (u *pawn) executeAttackIntent() {
 			}
 		}
 	} else {
-		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST)
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
 	}
 }
