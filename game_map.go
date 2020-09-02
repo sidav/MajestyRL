@@ -80,6 +80,14 @@ func (g *gameMap) getResourcesAtCoords(x, y int) *tileResource {
 	return g.tileMap[x][y].resources
 }
 
+func (g *gameMap) removeResourcesAtCoords(x, y int) {
+	if !g.areCoordsValid(x, y) {
+		panic("Wrong coords, wtf?")
+	}
+	g.tileMap[x][y].resources = nil
+}
+
+
 func (g *gameMap) getPawnsInRangeFrom(r, x, y int) *[]*pawn{
 	var pawns []*pawn
 	for _, b := range g.pawns {

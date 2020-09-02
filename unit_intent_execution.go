@@ -50,7 +50,7 @@ func (u *pawn) executeBuildIntent() {
 			hpToAdd = 1
 		}
 		// Workaround fix (increasing starting HP) for the bug described above
-		if tBld.hitpoints == 0 && tBld.getMaxHitpoints() % (tBld.asBuilding.asBeingConstructed.maxConstructedAmount / builderCoeff) > 0 {
+		if tBld.hitpoints == 0 && tBld.getMaxHitpoints()%(tBld.asBuilding.asBeingConstructed.maxConstructedAmount/builderCoeff) > 0 {
 			tBld.hitpoints = tBld.getMaxHitpoints() % (tBld.asBuilding.asBeingConstructed.maxConstructedAmount / builderCoeff)
 		}
 
@@ -110,7 +110,6 @@ func (u *pawn) executeCollectTaxes() {
 	}
 }
 
-
 func (u *pawn) executeReturnTaxes() {
 	tBld := u.asUnit.intent.targetPawn
 	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
@@ -135,6 +134,12 @@ func (u *pawn) executeMineIntent() {
 	ux, uy := u.getCoords()
 	currIntent := u.asUnit.intent
 	ix, iy := currIntent.getCoords()
+	if CURRENT_MAP.getResourcesAtCoords(ix, iy) == nil || CURRENT_MAP.getResourcesAtCoords(ix, iy).amount == 0 {
+		CURRENT_MAP.removeResourcesAtCoords(ix, iy)
+		CURRENT_MAP.removeBid(u.asUnit.intent.sourceBid)
+		u.asUnit.intent = nil
+		return 
+	}
 	minedType := CURRENT_MAP.getResourcesAtCoords(ix, iy).resType
 	// if intent has no target building, select closest TO THE MINING SITE building which can store gold
 	if currIntent.targetPawn == nil {
