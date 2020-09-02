@@ -6,9 +6,9 @@ type buildingStaticData struct {
 	underConstructionData underConstructionData
 	maxHitpoints          int
 
-	cost int
+	cost *resourceStock
 
-	goldStorage       int
+	resourceStorage map[resourceType]int
 	taxGoldGeneration int
 
 	// next line is obsolete
@@ -50,11 +50,11 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		},
 		maxHitpoints: 1000,
 		// cost
-		cost: 100000,
+		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 99999}},
 		// tech
 		allowsBuildings: []string{"HUT", "GOLDVAULT", "GUARDHOUSE", "MARKETPLACE", "WALL"},
 		// misc
-		goldStorage: 5000,
+		resourceStorage: map[resourceType]int{RESTYPE_GOLD: 2500, RESTYPE_WOOD: 250},
 		// taxGoldGeneration:      25,
 		housing_unittypes:      []string{"PEASANT", "TAXCOLLECTOR", "ROYALGUARD"},
 		housing_max_residents:  []int{2, 1, 1},
@@ -81,7 +81,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		},
 		maxHitpoints: 100,
 		// cost
-		cost:              500,
+		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 250}},
 		taxGoldGeneration: 1,
 		// misc
 		housing_unittypes:      []string{"PEASANT"},
@@ -109,9 +109,9 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		},
 		maxHitpoints: 300,
 		// cost
-		cost: 1000,
+		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 500}},
 		// misc
-		goldStorage:            5000,
+		resourceStorage: map[resourceType]int{RESTYPE_GOLD: 2500},
 		housing_unittypes:      []string{"ROYALGUARD"},
 		housing_max_residents:  []int{1},
 		housing_respawn_period: []int{350},
@@ -137,7 +137,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		},
 		maxHitpoints: 300,
 		// cost
-		cost: 350,
+		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 350}},
 		// misc
 		housing_unittypes:      []string{"GUARD"},
 		housing_max_residents:  []int{1},
@@ -164,7 +164,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		},
 		maxHitpoints: 600,
 		// cost
-		cost:              1000,
+		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 1500, RESTYPE_WOOD: 150}},
 		taxGoldGeneration: 25,
 		// misc
 	},
@@ -186,7 +186,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		},
 		maxHitpoints: 100,
 		// cost
-		cost: 100,
+		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 100}},
 	},
 
 	// ENEMY/NEUTRAL BUILDINGS
@@ -211,7 +211,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		},
 		maxHitpoints: 300,
 		// cost
-		cost: 1000,
+		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 100}},
 		// misc
 		housing_unittypes:      []string{"GOBLIN"},
 		housing_max_residents:  []int{1},

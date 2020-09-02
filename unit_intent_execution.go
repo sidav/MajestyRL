@@ -96,7 +96,11 @@ func (u *pawn) executeCollectTaxes() {
 	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
 	ux, uy := u.getCoords()
 	if tBld.IsCloseupToCoords(ux, uy) {
-		u.asUnit.carriedGold += tBld.asBuilding.accumulatedGoldAmount
+		if u.asUnit.carriedResourceType != RESTYPE_GOLD {
+			u.asUnit.carriedResourceType = RESTYPE_GOLD
+			u.asUnit.carriedResourceAmount = 0
+		}
+		u.asUnit.carriedResourceAmount += tBld.asBuilding.accumulatedGoldAmount
 		tBld.asBuilding.accumulatedGoldAmount = 0
 		u.spendTime(TICKS_PER_TURN)
 		ULOGIC.reconsiderSituation(u) // decide new intent
@@ -112,8 +116,8 @@ func (u *pawn) executeReturnTaxes() {
 	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
 	ux, uy := u.getCoords()
 	if tBld.IsCloseupToCoords(ux, uy) {
-		tBld.faction.economy.currentGold += u.asUnit.carriedGold
-		u.asUnit.carriedGold = 0
+		tBld.faction.economy.addResource(u.asUnit.carriedResourceAmount, RESTYPE_GOLD)
+		u.asUnit.carriedResourceAmount = 0
 		u.spendTime(TICKS_PER_TURN)
 		ULOGIC.reconsiderSituation(u) // decide new intent
 	} else {
@@ -131,22 +135,25 @@ func (u *pawn) executeMineIntent() {
 	ux, uy := u.getCoords()
 	currIntent := u.asUnit.intent
 	ix, iy := currIntent.getCoords()
-	// if intent has no target building, select closest TO THE MINING SITE building which can store gold 
-	// TODO: not only the gold, but anything (wood etc)
+	minedType := CURRENT_MAP.getResourcesAtCoords(ix, iy).resType
+	// if intent has no target building, select closest TO THE MINING SITE building which can store gold
 	if currIntent.targetPawn == nil {
 		var buildingToReturn *pawn
+
 		minDist := 999999999 // should be enough lol 
 		for _, bld := range CURRENT_MAP.pawns {
-			if bld.isBuilding() && bld.asBuilding.getStaticData().goldStorage > 0 {
-				if buildingToReturn == nil {
-					buildingToReturn = bld
-				}
-				bldx, bldy := bld.getCenter()
-				cbx, cby := buildingToReturn.getCenter()
-				dist := (bldx-cbx)*(bldx-cbx) + (bldy-cby)*(bldy-cby)
-				if dist < minDist {
-					minDist = dist
-					buildingToReturn = bld
+			if bld.isBuilding() {
+				if _, hasStorage := bld.asBuilding.getStaticData().resourceStorage[minedType]; hasStorage {
+					if buildingToReturn == nil {
+						buildingToReturn = bld
+					}
+					bldx, bldy := bld.getCenter()
+					cbx, cby := buildingToReturn.getCenter()
+					dist := (bldx-cbx)*(bldx-cbx) + (bldy-cby)*(bldy-cby)
+					if dist < minDist {
+						minDist = dist
+						buildingToReturn = bld
+					}
 				}
 			}
 		}
@@ -156,23 +163,24 @@ func (u *pawn) executeMineIntent() {
 		}
 	}
 
-	if u.currentGold == 0 {
-		if CURRENT_MAP.getResourcesAtCoords(ix, iy).amount <= 0 || u.faction.economy.currentGold >= u.faction.economy.maxGold {
+	if u.asUnit.carriedResourceAmount == 0 {
+		if CURRENT_MAP.getResourcesAtCoords(ix, iy).amount <= 0 || u.faction.economy.currentResources.amount[minedType] >= u.faction.economy.maxResources[minedType] {
 			currIntent.sourceBid.drop()
 			u.asUnit.intent = nil
 			return
 		}
 		if u.IsCloseupToCoords(ix, iy) {
 			u.spendTime(TIME_FOR_MINING)
-			u.currentGold = AMOUNT_MINED
+			u.asUnit.carriedResourceAmount = AMOUNT_MINED
+			u.asUnit.carriedResourceType = minedType
 			CURRENT_MAP.getResourcesAtCoords(ix, iy).amount -= AMOUNT_MINED
 		} else {
 			u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, false)
 		}
 	} else { // return with gold and drop intent
 		if currIntent.targetPawn.IsCloseupToCoords(ux, uy) {
-			u.faction.economy.currentGold += u.currentGold
-			u.currentGold = 0
+			u.faction.economy.currentResources.amount[minedType] += u.asUnit.carriedResourceAmount
+			u.asUnit.carriedResourceAmount = 0
 			currIntent.sourceBid.drop()
 			u.asUnit.intent = nil
 			return

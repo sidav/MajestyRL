@@ -42,7 +42,9 @@ func (ul *unitLogic) considerBids(p *pawn) {
 				return
 			}
 		case INTENT_MINE:
-			if static.canMine && p.faction.economy.currentGold < p.faction.economy.maxGold {
+			rx, ry := consideredBid.x, consideredBid.y
+			minedType := CURRENT_MAP.getResourcesAtCoords(rx, ry).resType
+			if static.canMine && p.faction.economy.currentResources.amount[minedType] < p.faction.economy.maxResources[minedType] {
 				p.asUnit.intent = consideredBid.dispatchIntent()
 				return
 			}
@@ -78,7 +80,7 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 	static := getUnitStaticDataFromTable(p.asUnit.code)
 	startingPawnIndex := rnd.Rand(len(CURRENT_MAP.pawns))
 	// should we return with collected gold?
-	if p.asUnit.getStaticData().canCollectTaxes && p.asUnit.carriedGold >= RETURN_MINIMUM_TAX {
+	if p.asUnit.getStaticData().canCollectTaxes && p.asUnit.carriedResourceAmount >= RETURN_MINIMUM_TAX && p.asUnit.carriedResourceType == RESTYPE_GOLD {
 		p.asUnit.intent = &intent{itype: INTENT_RETURN_TAXES, targetPawn: p.asUnit.registeredIn}
 	}
 	for i := range CURRENT_MAP.pawns {

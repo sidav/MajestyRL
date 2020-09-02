@@ -22,6 +22,10 @@ func (g *gameMap) initTileMap(strmap *[]string) {
 				g.tileMap[x][y] = &tile{tiletype: TTYPE_GRASS, resources: &tileResource {
 					amount: 1000, resType: RESTYPE_GOLD,
 				}}
+			} else if chr == '%' {
+				g.tileMap[x][y] = &tile{tiletype: TTYPE_GRASS, resources: &tileResource {
+					amount: 100, resType: RESTYPE_WOOD,
+				}}
 			} else {
 				g.tileMap[x][y] = &tile{tiletype: mapinit_getTiletypeByChar(chr)}
 			}

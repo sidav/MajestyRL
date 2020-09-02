@@ -8,27 +8,29 @@ import (
 
 func (pc *playerController) selectBuidingToConstruct() string {
 	allowedBuildingCodes := make([]string, 0)
+	names := make([]string, 0)
+	descriptions := make([]string, 0)
 	for {
-		names := make([]string, 0)
-		descriptions := make([]string, 0)
-		for code, allowed := range pc.curFaction.allowedBuildings {
-			if allowed == TECH_ALLOWED {
-				allowedBuildingCodes = append(allowedBuildingCodes, code)
+		if len(allowedBuildingCodes) == 0 {
+			for code, allowed := range pc.curFaction.allowedBuildings {
+				if allowed == TECH_ALLOWED {
+					allowedBuildingCodes = append(allowedBuildingCodes, code)
+				}
+			}
+
+			sort.Strings(allowedBuildingCodes)
+			for i := range allowedBuildingCodes {
+				// name, desc := getBuildingNameAndDescription(code)
+				names = append(names, getBuildingStaticDataFromTable(allowedBuildingCodes[i]).name)
+				descriptions = append(descriptions, "desc")
 			}
 		}
-
-		sort.Strings(allowedBuildingCodes) 
-		for i := range allowedBuildingCodes {
-			// name, desc := getBuildingNameAndDescription(code)
-			names = append(names, getBuildingStaticDataFromTable(allowedBuildingCodes[i]).name)
-			descriptions = append(descriptions, "desc")
-		} 
 
 		index := cmenu.ShowSidebarSingleChoiceMenu("BUILD:", pc.curFaction.getFactionColor(),
 			SIDEBAR_X, SIDEBAR_FLOOR_2, SIDEBAR_W, SIDEBAR_H-SIDEBAR_FLOOR_2, names, descriptions)
 		if index != -1 {
 			code := allowedBuildingCodes[index]
-			if getBuildingStaticDataFromTable(code).cost <= pc.curFaction.economy.currentGold {
+			if pc.curFaction.economy.currentResources.canSubstract(getBuildingStaticDataFromTable(code).cost) {
 				return code
 			} else {
 				pc.curFaction.reportToPlayer("we do not have enough gold!")
@@ -83,7 +85,7 @@ func (pc *playerController) selectBuildingSiteWithMouse(b *pawn) {
 				b.y = cursor.y - bh/2
 				newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: b.x, y: b.y, targetPawn: b}
 				CURRENT_MAP.addBid(newbid)
-				pc.curFaction.economy.currentGold -= b.asBuilding.getStaticData().cost
+				pc.curFaction.economy.currentResources.substract(b.asBuilding.getStaticData().cost)
 				pc.rerenderNeeded = true
 				return
 			} else {

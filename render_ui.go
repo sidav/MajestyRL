@@ -46,7 +46,9 @@ func (r *rendererStruct) renderFactionStats() {
 		cw.PutString(fmt.Sprintf("%s: turn %d", f.name, getCurrentTurn()), statsx, 0)
 	}
 	cw.SetFgColor(cw.YELLOW)
-	r.renderStatusbar("GOLD:", eco.currentGold, eco.maxGold, statsx, 2, SIDEBAR_W-3, cw.YELLOW, cw.DARK_YELLOW, false)
+	r.renderStatusbar("GOLD:", eco.currentResources.amount[RESTYPE_GOLD], eco.maxResources[RESTYPE_GOLD], statsx, 2, SIDEBAR_W-3, cw.YELLOW, cw.DARK_YELLOW, false)
+	cw.SetFgColor(cw.GREEN)
+	r.renderStatusbar("WOOD:", eco.currentResources.amount[RESTYPE_WOOD], eco.maxResources[RESTYPE_WOOD], statsx, 3, SIDEBAR_W-3, cw.YELLOW, cw.DARK_YELLOW, false)
 }
 
 func (r *rendererStruct) renderStatusbar(name string, curvalue, maxvalue, x, y, width, fillColor, emptyColor int, hideNumericValues bool) {
@@ -114,8 +116,8 @@ func (r *rendererStruct) renderInfoOnCursor() {
 				}
 
 				if sp.isUnit() {
-					if sp.asUnit.carriedGold > 0 {
-						details = append(details, fmt.Sprintf("Carries %d gold", sp.asUnit.carriedGold))
+					if sp.asUnit.carriedResourceAmount > 0 {
+						details = append(details, fmt.Sprintf("Carries %d %s", sp.asUnit.carriedResourceAmount, getResourceName(sp.asUnit.carriedResourceType)))
 					}
 					details = append(details, sp.asUnit.getCurrentIntentDescription())
 				}

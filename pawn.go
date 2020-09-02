@@ -12,7 +12,6 @@ type pawn struct {
 	nextTickToAct int
 
 	weapon      *item
-	currentGold int // TODO: remove!!! Use asUnit.carriedGold instead
 }
 
 func (p *pawn) isTimeToAct() bool {
