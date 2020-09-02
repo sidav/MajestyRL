@@ -23,6 +23,11 @@ func (b *building) isUnderConstruction() bool {
 	return b.asBeingConstructed != nil && !b.asBeingConstructed.isCompleted()
 }
 
+func (b *building) areBroughtResourcesEnoughToStartCostruction() bool {
+	cost := b.getStaticData().cost
+	return b.asBeingConstructed.resourcesBroughtToConstruction.canSubstract(cost)
+}
+
 func (b *building) getSize() (int, int) {
 	h := len(b.getAppearance().chars)
 	w := len(b.getAppearance().chars[0])

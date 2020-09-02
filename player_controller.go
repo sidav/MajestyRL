@@ -33,7 +33,7 @@ func (pc *playerController) controlAsFaction(f *faction) {
 	RENDERER.renderScreen(pc.curFaction)
 	for !pc.isTimeToAutoEndTurn() || (IS_PAUSED && pc.playerInControl) {
 		pc.playerInControl = true
-		pc.snapCursorToPawn()
+		pc.snapCursorToPawnOrBid()
 		pc.mainControlLoop()
 		if pc.rerenderNeeded || pc.isTimeToIdleRender() {
 			RENDERER.renderScreen(pc.curFaction)

@@ -11,7 +11,7 @@ const (
 	PC_CAMERA_MOVE_DELAY  = 20 // ms
 )
 
-func (pc *playerController) snapCursorToPawn() {
+func (pc *playerController) snapCursorToPawnOrBid() {
 	if !(pc.curFaction.areCoordsInSight(pc.curFaction.cursor.x, pc.curFaction.cursor.y)) {
 		return
 	}
@@ -21,6 +21,13 @@ func (pc *playerController) snapCursorToPawn() {
 	} else {
 		pc.curFaction.cursor.x, pc.curFaction.cursor.y = b.getCenter()
 		pc.curFaction.cursor.snappedPawn = b
+	}
+	sbid := CURRENT_MAP.getBidAtCoordinates(pc.curFaction.cursor.x, pc.curFaction.cursor.y)
+	if sbid == nil {
+		pc.curFaction.cursor.snappedBid = nil
+	} else {
+		// pc.curFaction.cursor.x, pc.curFaction.cursor.y = sbid.getCenter()
+		pc.curFaction.cursor.snappedBid = sbid
 	}
 }
 
@@ -33,7 +40,7 @@ func (pc *playerController) moveCursorWithMouse() {
 	if cursorWasMoved && CURRENT_MAP.areCoordsValid(camx+cx, camy+cy) {
 		pc.rerenderNeeded = true // rerender is needed if cursor was _actually_ moved
 		pc.curFaction.cursor.x, pc.curFaction.cursor.y = camx+cx, camy+cy
-		pc.snapCursorToPawn()
+		pc.snapCursorToPawnOrBid()
 	}
 }
 

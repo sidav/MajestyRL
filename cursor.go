@@ -16,6 +16,7 @@ type cursor struct {
 	x, y             int
 	xorig, yorig     int // for bandbox selection
 	snappedPawn      *pawn
+	snappedBid       *bid
 
 	currentCursorMode CURSOR_MODE_ENUM
 

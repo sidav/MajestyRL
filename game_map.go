@@ -67,6 +67,15 @@ func (g *gameMap) getPawnAtCoordinates(x, y int) *pawn {
 	return nil
 }
 
+func (g *gameMap) getBidAtCoordinates(x, y int) *bid {
+	for _, b := range g.bids {
+		if b.x == x && b.y == y || b.targetPawn != nil && b.targetPawn.isOccupyingCoords(x, y) {
+			return b
+		}
+	}
+	return nil
+}
+
 func (g *gameMap) placePawnNearPawn(spawnThis, nearThis *pawn) {
 	w, h := nearThis.getSize()
 	spawnThis.x = nearThis.x + w/2

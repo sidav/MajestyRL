@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // low level unit actions. 
 
@@ -37,6 +39,29 @@ func (u *pawn) doMoveToIntentTarget(desiredAccuracy int, moveToTargetPawn bool) 
 	return true
 }
 
+func (u *pawn) doMoveToCoords(ox, oy, desiredAccuracy int) bool { // Returns true if route exists. TODO: rewrite
+	ux, uy := u.getCoords()
+	var vx, vy int
+
+	path := CURRENT_MAP.getPathFromTo(ux, uy, ox, oy, desiredAccuracy)
+	if path != nil {
+		vx, vy = path.GetNextStepVector()
+	}
+
+	if true { // TODO: if canMove()
+		if vx == 0 && vy == 0 {
+			u.faction.reportToPlayer("no path to target!")
+			u.spendTime(10 * TICKS_PER_TURN)
+			u.asUnit.handleIntentUnsuccess()
+			return false
+		}
+		u.x += vx
+		u.y += vy
+		u.spendTime(TICKS_PER_TURN)
+	}
+	return true
+}
+
 func (u *pawn) performMeleeAttack(target *pawn) {
 	damage := u.weapon.weaponData.rollMeleeDamageDice()
 	target.hitpoints -= damage
@@ -45,6 +70,29 @@ func (u *pawn) performMeleeAttack(target *pawn) {
 
 	x, y := target.getCoords()
 	addBasicDecalToRender(x, y, 2)
+}
+
+func (u *pawn) dropResources() {
+	rtype := u.asUnit.carriedResourceType
+	ramount := u.asUnit.carriedResourceAmount
+	u.faction.economy.addResource(ramount, rtype)
+	u.asUnit.carriedResourceAmount = 0
+}
+
+func (u *pawn) giveResourcesToBuilding(b *pawn) {
+	rtype := u.asUnit.carriedResourceType
+	ramount := u.asUnit.carriedResourceAmount
+	if b.asBuilding.isUnderConstruction() {
+		if _, exists := b.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount[rtype]; exists {
+			b.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount[rtype] += ramount
+		} else {
+			b.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount[rtype] = ramount
+		}
+	} else {
+		b.faction.economy.addResource(ramount, rtype)
+	}
+	u.asUnit.carriedResourceAmount = 0
+	u.spendTime(TICKS_PER_TURN) // TODO: adjust
 }
 
 func (u *unit) getCurrentIntentDescription() string {

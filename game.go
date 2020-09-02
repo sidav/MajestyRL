@@ -2,14 +2,14 @@ package main
 
 import (
 	"github.com/sidav/golibrl/random/additive_random"
+	"MajestyRL/game_log"
 	// "strconv"
 	"time"
-	"MajestyRL/game_log"
 )
 
 const (
-	TICKS_PER_TURN    = 10
-	CLEANUP_BIDS_EACH = 500 // ticks
+	TICKS_PER_TURN        = 10
+	CLEANUP_BIDS_EACH     = 500 // ticks
 	READJUST_ECONOMY_EACH = 500 // ticks
 )
 
@@ -20,6 +20,7 @@ var (
 	rnd               = additive_random.FibRandom{}
 	GAME_IS_RUNNING   = true
 	IS_PAUSED         = false
+	RESOURCE_HAULING  = true
 	log               *game_log.GameLog
 	RENDERER          rendererStruct
 	PLAYER_CONTROLLER playerController
@@ -52,18 +53,18 @@ func startGameLoop() {
 		if CURRENT_TICK%TICKS_PER_TURN == 0 {
 			currentGameLoopTime = time.Since(start) / time.Nanosecond
 			totalGameLoopTimes += currentGameLoopTime
-			totalGameLoops += 1 
+			totalGameLoops += 1
 			if totalGameLoops == 10 {
 				averageGameLoopTime = totalGameLoopTimes / 10
-				totalGameLoopTimes = 0 
-				totalGameLoops = 0 
+				totalGameLoopTimes = 0
+				totalGameLoops = 0
 			}
 			start = time.Now()
 
 			for _, currFaction := range CURRENT_MAP.factions {
 				currFaction.economy.adjustResourcesToMax()
 				PLAYER_CONTROLLER.controlAsFaction(currFaction)
-				if CURRENT_TICK % READJUST_ECONOMY_EACH == 0 {
+				if CURRENT_TICK%READJUST_ECONOMY_EACH == 0 {
 					currFaction.economy.resetMaxResources()
 				}
 			}

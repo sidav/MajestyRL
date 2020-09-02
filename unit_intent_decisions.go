@@ -37,9 +37,15 @@ func (ul *unitLogic) considerBids(p *pawn) {
 		}
 		switch consideredBid.intent_type_for_this_bid {
 		case INTENT_BUILD:
-			if static.canBuild {
-				p.asUnit.intent = consideredBid.dispatchIntent()
-				return
+			if consideredBid.targetPawn.asBuilding.isUnderConstruction() {
+				if static.canBuild {
+					if !RESOURCE_HAULING || consideredBid.targetPawn.asBuilding.areBroughtResourcesEnoughToStartCostruction() {
+						p.asUnit.intent = consideredBid.dispatchIntent()
+					} else {
+						p.asUnit.intent = &intent{itype: INTENT_BRING_RESOURCES_TO_CONSTRUCTION, targetPawn: consideredBid.targetPawn}
+					}
+					return
+				}
 			}
 		case INTENT_MINE:
 			rx, ry := consideredBid.x, consideredBid.y
@@ -94,7 +100,11 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 				// should we build it?
 				if consideredPawn.asBuilding.isUnderConstruction() {
 					x, y := consideredPawn.getCenter()
-					p.asUnit.intent = &intent{itype: INTENT_BUILD, targetPawn: consideredPawn, x: x, y: y}
+					if !RESOURCE_HAULING || consideredPawn.asBuilding.areBroughtResourcesEnoughToStartCostruction() {
+						p.asUnit.intent = &intent{itype: INTENT_BUILD, targetPawn: consideredPawn, x: x, y: y}
+					} else {
+						p.asUnit.intent = &intent{itype: INTENT_BRING_RESOURCES_TO_CONSTRUCTION, targetPawn: consideredPawn, x: x, y: y}
+					}
 					return
 				} else { // should we repair it?
 					if consideredPawn.isDamaged() {

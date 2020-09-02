@@ -99,12 +99,18 @@ func (r *rendererStruct) renderInfoOnCursor() {
 
 			} else { // our pawn 
 				if sp.isBuilding() {
+					static := getBuildingStaticDataFromTable(sp.asBuilding.code)
 
 					if sp.asBuilding.isUnderConstruction() {
 						curr, max, perc := sp.asBuilding.asBeingConstructed.getCompletionValues()
 						details = append(details, fmt.Sprintf("Under construction: %d/%d (%d%%)", curr, max, perc))
+						if RESOURCE_HAULING {
+							for rtype, ramount := range sp.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount {
+								cost := static.cost.amount[rtype]
+								details = append(details, fmt.Sprintf("%s: %d/%d", getResourceName(rtype), ramount, cost))
+							}
+						}
 					} else {
-						static := getBuildingStaticDataFromTable(sp.asBuilding.code)
 						if sp.asBuilding.accumulatedGoldAmount > 0 {
 							details = append(details, fmt.Sprintf("Tax: %d", sp.asBuilding.accumulatedGoldAmount))
 						}
@@ -120,6 +126,19 @@ func (r *rendererStruct) renderInfoOnCursor() {
 						details = append(details, fmt.Sprintf("Carries %d %s", sp.asUnit.carriedResourceAmount, getResourceName(sp.asUnit.carriedResourceType)))
 					}
 					details = append(details, sp.asUnit.getCurrentIntentDescription())
+				}
+			}
+		}
+	} else { //snapped no pawn, render bid info if any
+		sb := r.currentFactionSeeingTheScreen.cursor.snappedBid
+		if sb != nil {
+			if sb.targetPawn != nil && sb.targetPawn.asBuilding.isUnderConstruction() {
+				static := sb.targetPawn.asBuilding.getStaticData()
+				if RESOURCE_HAULING {
+					for rtype, ramount := range sb.targetPawn.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount {
+						cost := static.cost.amount[rtype]
+						details = append(details, fmt.Sprintf("%s: %d/%d", getResourceName(rtype), ramount, cost))
+					}
 				}
 			}
 		}

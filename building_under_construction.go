@@ -12,6 +12,7 @@ func (ucd *underConstructionData) clone() *underConstructionData {
 		maxConstructedAmount:     ucd.maxConstructedAmount,
 		isSelfConstructing:       ucd.isSelfConstructing,
 	}
+	newUcd.resourcesBroughtToConstruction = &resourceStock{amount:make(map[resourceType]int)}
 	return &newUcd
 }
 

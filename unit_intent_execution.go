@@ -8,6 +8,8 @@ func (p *pawn) act() {
 	switch p.asUnit.intent.itype {
 	case INTENT_BUILD:
 		p.executeBuildIntent()
+	case INTENT_BRING_RESOURCES_TO_CONSTRUCTION:
+		p.executeBringResourcesToConstructionIntent()
 	case INTENT_REPAIR:
 		p.executeRepairIntent()
 	case INTENT_RETURN_HOME:
@@ -25,6 +27,50 @@ func (p *pawn) act() {
 	}
 }
 
+// HIGHLY EXPERIMENTAL
+func (u *pawn) executeBringResourcesToConstructionIntent() {
+	tBld := u.asUnit.intent.targetPawn
+	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
+	ux, uy := u.getCoords()
+	// bring resources to construction site
+	cost := tBld.asBuilding.getStaticData().cost
+	brought := tBld.asBuilding.asBeingConstructed.resourcesBroughtToConstruction
+	if !tBld.asBuilding.areBroughtResourcesEnoughToStartCostruction() {
+		// unit has the resource and it is appropriate for building
+		rtype, ramount := u.asUnit.carriedResourceType, u.asUnit.carriedResourceAmount
+		if cost.amount[rtype] > brought.amount[rtype] && ramount > 0 {
+			if tBld.IsCloseupToCoords(ux, uy) {
+				u.giveResourcesToBuilding(tBld)
+				return
+			} else {
+				u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
+				return
+			}
+		} else {
+			u.dropResources()
+		}
+		// 1. Decide what resource to bring
+		var decided resourceType
+		for rtype := range cost.amount {
+			if amount, exists := brought.amount[rtype]; amount < cost.amount[rtype] || !exists {
+				decided = rtype
+				break
+			}
+		}
+		closestBuilding := CURRENT_MAP.getNearestBuildingWithStorageOfType(ux, uy, decided)
+		if closestBuilding.IsCloseupToCoords(ux, uy) {
+			closestBuilding.faction.economy.currentResources.amount[decided] -= 5
+			u.asUnit.carriedResourceAmount = 5
+			u.asUnit.carriedResourceType = decided
+		} else {
+			cbx, cby := closestBuilding.getCenter()
+			u.doMoveToCoords(cbx, cby, PATHFINDING_DEPTH_FASTEST)
+		}
+	} else {
+		u.dropCurrentIntent()
+	}
+}
+
 func (u *pawn) executeBuildIntent() {
 	tBld := u.asUnit.intent.targetPawn
 	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
@@ -39,10 +85,7 @@ func (u *pawn) executeBuildIntent() {
 		u.asUnit.intent = nil
 		return
 	}
-	//if !tBld.asBuilding.getStaticData().cost.canSubstract(tBld.asBuilding.asBeingConstructed.resourcesBroughtToConstruction) {
-	//	// bring resources to construction site
-	//
-	//}
+
 	if tBld.IsCloseupToCoords(ux, uy) {
 		if !tBld.asBuilding.hasBeenPlaced {
 			CURRENT_MAP.addBuilding(tBld, true)
@@ -119,9 +162,7 @@ func (u *pawn) executeReturnTaxes() {
 	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
 	ux, uy := u.getCoords()
 	if tBld.IsCloseupToCoords(ux, uy) {
-		tBld.faction.economy.addResource(u.asUnit.carriedResourceAmount, RESTYPE_GOLD)
-		u.asUnit.carriedResourceAmount = 0
-		u.spendTime(TICKS_PER_TURN)
+		u.giveResourcesToBuilding(tBld)
 		ULOGIC.reconsiderSituation(u) // decide new intent
 	} else {
 		log.AppendMessage("MOVING TO RETURN")

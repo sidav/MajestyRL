@@ -30,7 +30,7 @@ func (pc *playerController) selectBuidingToConstruct() string {
 			SIDEBAR_X, SIDEBAR_FLOOR_2, SIDEBAR_W, SIDEBAR_H-SIDEBAR_FLOOR_2, names, descriptions)
 		if index != -1 {
 			code := allowedBuildingCodes[index]
-			if pc.curFaction.economy.currentResources.canSubstract(getBuildingStaticDataFromTable(code).cost) {
+			if RESOURCE_HAULING || pc.curFaction.economy.currentResources.canSubstract(getBuildingStaticDataFromTable(code).cost) {
 				return code
 			} else {
 				pc.curFaction.reportToPlayer("we do not have enough resources!")
@@ -85,7 +85,9 @@ func (pc *playerController) selectBuildingSiteWithMouse(b *pawn) {
 				b.y = cursor.y - bh/2
 				newbid := &bid{intent_type_for_this_bid: INTENT_BUILD, maxTaken: 2, x: b.x, y: b.y, targetPawn: b}
 				CURRENT_MAP.addBid(newbid)
-				pc.curFaction.economy.currentResources.substract(b.asBuilding.getStaticData().cost)
+				if !RESOURCE_HAULING {
+					pc.curFaction.economy.currentResources.substract(b.asBuilding.getStaticData().cost)
+				}
 				pc.rerenderNeeded = true
 				return
 			} else {
