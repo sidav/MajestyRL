@@ -160,7 +160,7 @@ func (pc *playerController) mainControlLoop() *pawn { // returns a pointer to se
 
 	u := pc.curFaction.cursor.snappedPawn
 	if click == "LEFT" {
-		if u != nil {
+		if u != nil && u.faction != nil {
 			if u.faction.factionNumber != pc.curFaction.factionNumber {
 				pc.curFaction.reportToPlayer("those fools won't obey you!")
 				return nil
