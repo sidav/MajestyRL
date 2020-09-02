@@ -95,6 +95,9 @@ func startGameLoop() {
 				}
 			}
 			if curpawn.hitpoints <= 0 {
+				if curpawn.asUnit.intent != nil && curpawn.asUnit.intent.isDispatchedFromBid() == true {
+					curpawn.asUnit.intent.sourceBid.drop()
+				}
 				CURRENT_MAP.removePawn(curpawn)
 				// TODO: drop items
 			}

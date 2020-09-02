@@ -92,16 +92,16 @@ func (ul *unitLogic) considerSituation(p *pawn) {
 			}
 			if static.canBuild { // try to build and/or repair building
 				// should we build it?
-				if consideredPawn.asBuilding.asBeingConstructed != nil {
+				if consideredPawn.asBuilding.isUnderConstruction() {
 					x, y := consideredPawn.getCenter()
 					p.asUnit.intent = &intent{itype: INTENT_BUILD, targetPawn: consideredPawn, x: x, y: y}
 					return
-				}
-				// should we repair it?
-				if consideredPawn.isDamaged() {
-					x, y := consideredPawn.getCenter()
-					p.asUnit.intent = &intent{itype: INTENT_REPAIR, targetPawn: consideredPawn, x: x, y: y}
-					return
+				} else { // should we repair it?
+					if consideredPawn.isDamaged() {
+						x, y := consideredPawn.getCenter()
+						p.asUnit.intent = &intent{itype: INTENT_REPAIR, targetPawn: consideredPawn, x: x, y: y}
+						return
+					}
 				}
 			}
 		}

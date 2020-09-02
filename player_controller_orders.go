@@ -33,7 +33,7 @@ func (pc *playerController) selectBuidingToConstruct() string {
 			if pc.curFaction.economy.currentResources.canSubstract(getBuildingStaticDataFromTable(code).cost) {
 				return code
 			} else {
-				pc.curFaction.reportToPlayer("we do not have enough gold!")
+				pc.curFaction.reportToPlayer("we do not have enough resources!")
 				RENDERER.renderScreen(pc.curFaction)
 				continue
 			}
