@@ -10,6 +10,7 @@ import (
 const (
 	TICKS_PER_TURN    = 10
 	CLEANUP_BIDS_EACH = 500 // ticks
+	READJUST_ECONOMY_EACH = 500 // ticks
 )
 
 var (
@@ -60,7 +61,11 @@ func startGameLoop() {
 			start = time.Now()
 
 			for _, currFaction := range CURRENT_MAP.factions {
+				currFaction.economy.adjustResourcesToMax()
 				PLAYER_CONTROLLER.controlAsFaction(currFaction)
+				if CURRENT_TICK % READJUST_ECONOMY_EACH == 0 {
+					currFaction.economy.resetMaxResources()
+				}
 			}
 		}
 
@@ -70,9 +75,18 @@ func startGameLoop() {
 
 		for _, curpawn := range CURRENT_MAP.pawns {
 			if curpawn.isBuilding() {
-				if CURRENT_TICK%TICKS_PER_TURN == 0 {
-					curpawn.setFactionTechAllowance() // TODO: call this less frequently. 
-					BLOGIC.act(curpawn)
+				if !curpawn.asBuilding.isUnderConstruction() {
+					// readjust max resources for faction
+					if CURRENT_TICK%READJUST_ECONOMY_EACH == 0 && curpawn.faction != nil {
+						for rtype, rvalue := range curpawn.asBuilding.getStaticData().resourceStorage {
+							curpawn.faction.economy.maxResources[rtype] += rvalue
+						}
+					}
+
+					if CURRENT_TICK%TICKS_PER_TURN == 0 {
+						curpawn.setFactionTechAllowance() // TODO: call this less frequently.
+						BLOGIC.act(curpawn)
+					}
 				}
 			} else {
 				if curpawn.isTimeToAct() {
