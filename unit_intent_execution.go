@@ -39,6 +39,10 @@ func (u *pawn) executeBuildIntent() {
 		u.asUnit.intent = nil
 		return
 	}
+	//if !tBld.asBuilding.getStaticData().cost.canSubstract(tBld.asBuilding.asBeingConstructed.resourcesBroughtToConstruction) {
+	//	// bring resources to construction site
+	//
+	//}
 	if tBld.IsCloseupToCoords(ux, uy) {
 		if !tBld.asBuilding.hasBeenPlaced {
 			CURRENT_MAP.addBuilding(tBld, true)
@@ -138,29 +142,12 @@ func (u *pawn) executeMineIntent() {
 		CURRENT_MAP.removeResourcesAtCoords(ix, iy)
 		CURRENT_MAP.removeBid(u.asUnit.intent.sourceBid)
 		u.asUnit.intent = nil
-		return 
+		return
 	}
 	minedType := CURRENT_MAP.getResourcesAtCoords(ix, iy).resType
 	// if intent has no target building, select closest TO THE MINING SITE building which can store gold
 	if currIntent.targetPawn == nil {
-		var buildingToReturn *pawn
-
-		minDist := 999999999 // should be enough lol 
-		for _, bld := range CURRENT_MAP.pawns {
-			if bld.isBuilding() {
-				if _, hasStorage := bld.asBuilding.getStaticData().resourceStorage[minedType]; hasStorage {
-					if buildingToReturn == nil {
-						buildingToReturn = bld
-					}
-					bldx, bldy := bld.getCenter()
-					dist := (bldx-ix)*(bldx-ix) + (bldy-iy)*(bldy-iy)
-					if dist < minDist {
-						minDist = dist
-						buildingToReturn = bld
-					}
-				}
-			}
-		}
+		buildingToReturn := CURRENT_MAP.getNearestBuildingWithStorageOfType(ix, iy, minedType)
 		currIntent.targetPawn = buildingToReturn
 		if buildingToReturn == nil {
 			u.asUnit.intent = nil
