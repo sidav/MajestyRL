@@ -129,7 +129,7 @@ func (u *pawn) executeReturnTaxes() {
 func (u *pawn) executeMineIntent() {
 	const (
 		// TODO: both should be removed 
-		TIME_FOR_MINING = 10
+		TIME_FOR_MINING = 50
 		AMOUNT_MINED    = 5
 	)
 	ux, uy := u.getCoords()
@@ -148,8 +148,7 @@ func (u *pawn) executeMineIntent() {
 						buildingToReturn = bld
 					}
 					bldx, bldy := bld.getCenter()
-					cbx, cby := buildingToReturn.getCenter()
-					dist := (bldx-cbx)*(bldx-cbx) + (bldy-cby)*(bldy-cby)
+					dist := (bldx-ix)*(bldx-ix) + (bldy-iy)*(bldy-iy)
 					if dist < minDist {
 						minDist = dist
 						buildingToReturn = bld
