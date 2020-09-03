@@ -29,7 +29,7 @@ func (p *pawn) act() {
 
 // HIGHLY EXPERIMENTAL
 func (u *pawn) executeBringResourcesToConstructionIntent() {
-	const MAX_CARRIED_RESOURCES = 100
+	const MAX_CARRIED_RESOURCES = 10
 	tBld := u.asUnit.intent.targetPawn
 	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
 	ux, uy := u.getCoords()
