@@ -52,7 +52,6 @@ func (u *pawn) doMoveToCoords(ox, oy, desiredAccuracy int) bool { // Returns tru
 		if vx == 0 && vy == 0 {
 			u.faction.reportToPlayer("no path to target!")
 			u.spendTime(10 * TICKS_PER_TURN)
-			u.asUnit.handleIntentUnsuccess()
 			return false
 		}
 		u.x += vx

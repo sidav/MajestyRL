@@ -76,9 +76,9 @@ func (pc *playerController) doUnconditionalKeyActions(keyPressed string) {
 			pc.curFaction.reportToPlayer("switched to real-time mode.")
 		}
 	case "=":
-		if pc.endTurnPeriod > 25 {
-			pc.endTurnPeriod -= 25
-			log.AppendMessagef("Game speed increased to %d", 10-(pc.endTurnPeriod/25))
+		if pc.endTurnPeriod > 20 {
+			pc.endTurnPeriod -= 10
+			log.AppendMessagef("Game speed increased to %d", 10-(pc.endTurnPeriod/10))
 		} else {
 			log.AppendMessage("Can't increase game speed any further.")
 		}

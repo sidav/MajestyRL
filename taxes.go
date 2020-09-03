@@ -1,7 +1,7 @@
 package main
 
 const (
-	GENERATE_TAXES_EACH = 100 * TICKS_PER_TURN
+	GENERATE_TAXES_EACH = 50 * TICKS_PER_TURN
 
 	// TODO: change that into variables
 	COLLECT_THAT_MINIMUM = 50
