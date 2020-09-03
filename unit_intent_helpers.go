@@ -20,3 +20,13 @@ func (g *gameMap) getNearestBuildingWithStorageOfType(ix, iy int, rtype resource
 	}
 	return buildingToReturn
 }
+
+func (u *pawn) dropCurrentIntent() {
+	if u.asUnit.intent.sourceBid != nil {
+		u.asUnit.intent.sourceBid.drop()
+	}
+	u.asUnit.intent = nil
+	if u.asUnit.carriedResourceAmount > 0 {
+		u.dropResources()
+	}
+}

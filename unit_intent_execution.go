@@ -29,6 +29,7 @@ func (p *pawn) act() {
 
 // HIGHLY EXPERIMENTAL
 func (u *pawn) executeBringResourcesToConstructionIntent() {
+	const MAX_CARRIED_RESOURCES = 100
 	tBld := u.asUnit.intent.targetPawn
 	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
 	ux, uy := u.getCoords()
@@ -59,8 +60,8 @@ func (u *pawn) executeBringResourcesToConstructionIntent() {
 		}
 		closestBuilding := CURRENT_MAP.getNearestBuildingWithStorageOfType(ux, uy, decided)
 		if closestBuilding.IsCloseupToCoords(ux, uy) {
-			closestBuilding.faction.economy.currentResources.amount[decided] -= 5
-			u.asUnit.carriedResourceAmount = 5
+			closestBuilding.faction.economy.currentResources.amount[decided] -= MAX_CARRIED_RESOURCES
+			u.asUnit.carriedResourceAmount = MAX_CARRIED_RESOURCES
 			u.asUnit.carriedResourceType = decided
 		} else {
 			cbx, cby := closestBuilding.getCenter()
@@ -75,14 +76,14 @@ func (u *pawn) executeBuildIntent() {
 	tBld := u.asUnit.intent.targetPawn
 	u.asUnit.intent.x, u.asUnit.intent.y = tBld.getCenter()
 	ux, uy := u.getCoords()
-	builderCoeff := 1
+	builderCoeff := 5
 	if !tBld.asBuilding.isUnderConstruction() {
 		if tBld.asBuilding.asBeingConstructed != nil {
 			tBld.asBuilding.asBeingConstructed = nil
 			u.faction.reportToPlayer("our new building is complete!")
 		}
 		u.asUnit.intent.fulfillBidIfExists()
-		u.asUnit.intent = nil
+		u.dropCurrentIntent()
 		return
 	}
 

@@ -23,14 +23,3 @@ func (u *unit) handleIntentUnsuccess() {
 		u.intent = nil
 	}
 }
-
-func (u *pawn) dropCurrentIntent() {
-	if u.asUnit.intent.sourceBid != nil {
-		u.asUnit.intent.sourceBid.drop()
-	}
-	u.asUnit.intent = nil
-	if u.asUnit.carriedResourceAmount > 0 {
-		u.dropResources()
-	}
-}
-

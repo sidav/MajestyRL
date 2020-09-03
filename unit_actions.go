@@ -83,8 +83,16 @@ func (u *pawn) giveResourcesToBuilding(b *pawn) {
 	rtype := u.asUnit.carriedResourceType
 	ramount := u.asUnit.carriedResourceAmount
 	if b.asBuilding.isUnderConstruction() {
+		neededAmount := b.asBuilding.getStaticData().cost.amount[rtype]
+		currAmount := b.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount[rtype]
 		if _, exists := b.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount[rtype]; exists {
-			b.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount[rtype] += ramount
+			if currAmount + ramount < neededAmount {
+				b.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount[rtype] += ramount
+			} else {
+				b.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount[rtype] = neededAmount
+				u.asUnit.carriedResourceAmount = currAmount + ramount - neededAmount
+				u.dropResources()
+			}
 		} else {
 			b.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount[rtype] = ramount
 		}
