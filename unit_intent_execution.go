@@ -52,16 +52,29 @@ func (u *pawn) executeBringResourcesToConstructionIntent() {
 		}
 		// 1. Decide what resource to bring
 		var decided resourceType
+		factionHasResource := false
 		for rtype := range cost.amount {
 			if amount, exists := brought.amount[rtype]; amount < cost.amount[rtype] || !exists {
-				decided = rtype
-				break
+				if u.faction.economy.getResourcesInStock(rtype) > 0 {
+					factionHasResource = true
+					decided = rtype
+					break
+				}
 			}
 		}
+		if !factionHasResource {
+			u.faction.reportToPlayer("not enough resources to build.")
+			u.dropCurrentIntent()
+		}
+		// Take the resource
 		closestBuilding := CURRENT_MAP.getNearestBuildingWithStorageOfType(ux, uy, decided)
 		if closestBuilding.IsCloseupToCoords(ux, uy) {
-			closestBuilding.faction.economy.currentResources.amount[decided] -= MAX_CARRIED_RESOURCES
-			u.asUnit.carriedResourceAmount = MAX_CARRIED_RESOURCES
+			amountToTake := MAX_CARRIED_RESOURCES
+			if closestBuilding.faction.economy.getResourcesInStock(decided) < amountToTake {
+				amountToTake = closestBuilding.faction.economy.getResourcesInStock(decided)
+			}
+			closestBuilding.faction.economy.currentResources.amount[decided] -= amountToTake
+			u.asUnit.carriedResourceAmount = amountToTake
 			u.asUnit.carriedResourceType = decided
 		} else {
 			cbx, cby := closestBuilding.getCenter()

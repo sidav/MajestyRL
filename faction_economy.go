@@ -15,6 +15,10 @@ func (f *factionEconomy) resetMaxResources() {
 	}
 }
 
+func (f *factionEconomy) getResourcesInStock(rtype resourceType) int {
+	return f.currentResources.amount[rtype]
+}
+
 func (f *factionEconomy) adjustResourcesToMax() {
 	for rtype := range f.maxResources {
 		if f.currentResources.amount[rtype] > f.maxResources[rtype] {

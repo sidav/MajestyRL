@@ -4,6 +4,7 @@ import (
 	"fmt"
 	cw "github.com/sidav/golibrl/console"
 	cmenu "github.com/sidav/golibrl/console_menu"
+	"sort"
 )
 
 func (r *rendererStruct) renderUI() {
@@ -104,12 +105,7 @@ func (r *rendererStruct) renderInfoOnCursor() {
 					if sp.asBuilding.isUnderConstruction() {
 						curr, max, perc := sp.asBuilding.asBeingConstructed.getCompletionValues()
 						details = append(details, fmt.Sprintf("Under construction: %d/%d (%d%%)", curr, max, perc))
-						if RESOURCE_HAULING {
-							for rtype, ramount := range sp.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount {
-								cost := static.cost.amount[rtype]
-								details = append(details, fmt.Sprintf("%s: %d/%d", getResourceName(rtype), ramount, cost))
-							}
-						}
+
 					} else {
 						if sp.asBuilding.accumulatedGoldAmount > 0 {
 							details = append(details, fmt.Sprintf("Tax: %d", sp.asBuilding.accumulatedGoldAmount))
@@ -135,9 +131,14 @@ func (r *rendererStruct) renderInfoOnCursor() {
 			if sb.targetPawn != nil && sb.targetPawn.asBuilding.isUnderConstruction() {
 				static := sb.targetPawn.asBuilding.getStaticData()
 				if RESOURCE_HAULING {
+					resStrings := make([]string, 0)
 					for rtype, ramount := range sb.targetPawn.asBuilding.asBeingConstructed.resourcesBroughtToConstruction.amount {
 						cost := static.cost.amount[rtype]
-						details = append(details, fmt.Sprintf("%s: %d/%d", getResourceName(rtype), ramount, cost))
+						resStrings = append(resStrings, fmt.Sprintf("%s: %d/%d", getResourceName(rtype), ramount, cost))
+					}
+					sort.Strings(resStrings)
+					for _, str := range resStrings {
+						details = append(details, str)
 					}
 				}
 			}
