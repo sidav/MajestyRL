@@ -130,5 +130,5 @@ func (u *unit) getCurrentIntentDescription() string {
 	case INTENT_ATTACK:
 		return "Attacking!"
 	}
-	return fmt.Sprintf("NO DESCRIPTION FOR INTENT %v", u.intent.itype)
+	panic(fmt.Sprintf("NO DESCRIPTION FOR INTENT %v", u.intent.itype))
 }

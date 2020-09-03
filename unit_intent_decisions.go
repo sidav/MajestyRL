@@ -54,6 +54,8 @@ func (ul *unitLogic) considerBids(p *pawn) {
 				p.asUnit.intent = consideredBid.dispatchIntent()
 				return
 			}
+		default:
+			p.asUnit.intent = consideredBid.dispatchIntent()
 		}
 	}
 }

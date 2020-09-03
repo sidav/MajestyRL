@@ -14,6 +14,8 @@ func (p *pawn) act() {
 		p.executeRepairIntent()
 	case INTENT_RETURN_HOME:
 		p.executeReturnHome()
+	case INTENT_GROW_FOREST:
+		p.executeGrowForestIntent()
 	case INTENT_COLLECT_TAXES:
 		p.executeCollectTaxes()
 	case INTENT_RETURN_TAXES:
@@ -24,6 +26,8 @@ func (p *pawn) act() {
 		p.executeMineIntent()
 	case INTENT_ATTACK:
 		p.executeAttackIntent()
+	default:
+		panic("NO INTENT IMPLEMENTATION")
 	}
 }
 
@@ -149,6 +153,23 @@ func (u *pawn) executeRepairIntent() {
 	} else {
 		log.AppendMessage("MOVING TO REPAIR")
 		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
+	}
+}
+
+func (u *pawn) executeGrowForestIntent() {
+	// ux, uy := u.getCoords()
+	ix, iy := u.asUnit.intent.getCoords()
+	if u.IsCloseupToCoords(ix, iy) {
+		log.AppendMessage("GROWING...")
+		CURRENT_MAP.plantForestAtCoords(ix, iy)
+		u.asUnit.intent.fulfillBidIfExists()
+		u.dropCurrentIntent()
+	} else {
+		log.AppendMessage("MOVING TO GROW")
+		u.doMoveToIntentTarget(PATHFINDING_DEPTH_FASTEST, true)
+		if u.IsCloseupToCoords(ix, iy) {
+			u.spendTime(150 * TICKS_PER_TURN)
+		}
 	}
 }
 

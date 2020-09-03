@@ -18,6 +18,7 @@ type buildingStaticData struct {
 	housing_respawn_period []int
 
 	allowsTightPlacement bool
+	spawnsBidOfIntentType intentType
 
 	//tech
 	allowsBuildings []string
@@ -52,7 +53,7 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		// cost
 		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 99999}},
 		// tech
-		allowsBuildings: []string{"HUT", "GOLDVAULT", "GUARDHOUSE", "MARKETPLACE", "SAWMILL", "WALL"},
+		allowsBuildings: []string{"HUT", "GOLDVAULT", "GUARDHOUSE", "FORESTER", "MARKETPLACE", "SAWMILL", "WALL"},
 		// misc
 		resourceStorage: map[resourceType]int{RESTYPE_GOLD: 2500, RESTYPE_WOOD: 250},
 		// taxGoldGeneration:      25,
@@ -87,6 +88,32 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 		housing_unittypes:      []string{"PEASANT"},
 		housing_max_residents:  []int{2},
 		housing_respawn_period: []int{100},
+	},
+	"FORESTER": &buildingStaticData{
+		// appearance
+		app: &buildingAppearance{
+			chars: []string{
+				"/-\\",
+				"===",
+				"---",
+			},
+			colors: [][]int{
+				{7, 7, 7},
+				{-1, -1, 2},
+				{7, 7, 7},
+			},
+		},
+		name: "Forester",
+		// construction
+		underConstructionData: underConstructionData{
+			maxConstructedAmount: 350,
+		},
+		maxHitpoints: 100,
+		spawnsBidOfIntentType: INTENT_GROW_FOREST,
+		// cost
+		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 250, RESTYPE_WOOD: 50}},
+		resourceStorage: map[resourceType]int{RESTYPE_WOOD: 250},
+		taxGoldGeneration: 1,
 	},
 	"SAWMILL": &buildingStaticData{
 		// appearance

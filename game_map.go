@@ -82,6 +82,26 @@ func (g *gameMap) placePawnNearPawn(spawnThis, nearThis *pawn) {
 	spawnThis.y = nearThis.y + h
 }
 
+func (g *gameMap) plantForestAtCoords(x, y int) {
+	if g.areCoordsValid(x, y) {
+		g.tileMap[x][y].resources = &tileResource{amount: 1, resType: RESTYPE_WOOD, grows: true}
+	}
+}
+
+func (g *gameMap) growForests() {
+	const MAX_WOOD_GROWTH = 10
+	for x := 0; x < mapW; x++ {
+		for y := 0; y < mapH; y++ {
+			if g.tileMap[x][y].resources != nil && g.tileMap[x][y].resources.grows && g.tileMap[x][y].resources.resType == RESTYPE_WOOD {
+				g.tileMap[x][y].resources.amount++
+				if g.tileMap[x][y].resources.amount >= MAX_WOOD_GROWTH { // TODO: make max wood a const
+					g.tileMap[x][y].resources.grows = false
+				}
+			}
+		}
+	}
+}
+
 func (g *gameMap) getResourcesAtCoords(x, y int) *tileResource {
 	if !g.areCoordsValid(x, y) {
 		return nil 

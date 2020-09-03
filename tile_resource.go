@@ -2,11 +2,11 @@ package main
 
 import cw "github.com/sidav/golibrl/console"
 
-type resourceType byte 
+type resourceType byte
 
 const (
-	RESTYPE_GOLD resourceType = iota 
-	RESTYPE_WOOD 
+	RESTYPE_GOLD resourceType = iota
+	RESTYPE_WOOD
 )
 
 var tileResAppearances = map[resourceType]*ccell{
@@ -16,7 +16,8 @@ var tileResAppearances = map[resourceType]*ccell{
 
 type tileResource struct {
 	resType resourceType
-	amount int 
+	grows   bool
+	amount  int
 }
 
 func (r *tileResource) getAppearance() *ccell {

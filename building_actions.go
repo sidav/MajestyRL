@@ -1,10 +1,9 @@
-package main 
+package main
 
 import "fmt"
 
 const (
-	REGENERATE_WORKERS_EACH = 1000 // ticks 
-	REGENERATE_GUARDS_EACH = 2500 
+	SPAWN_AUTO_BIDS_EACH = 1000 // ticks
 )
 
 type buildingLogic struct {
@@ -12,13 +11,14 @@ type buildingLogic struct {
 
 func (bl *buildingLogic) act(bld *pawn) {
 	if bld.asBuilding.isUnderConstruction() {
-		return 
+		return
 	}
-	if CURRENT_TICK % GENERATE_TAXES_EACH == 0 {
+	if CURRENT_TICK%GENERATE_TAXES_EACH == 0 {
 		bld.asBuilding.accumulatedGoldAmount += bld.asBuilding.getStaticData().taxGoldGeneration
 	}
 	bl.generatePawns(bld)
 	bl.actForEachPawnInside(bld)
+	bl.spawnAutoBids(bld)
 }
 
 func (bl *buildingLogic) generatePawn(bld *pawn, code string) {
@@ -34,7 +34,7 @@ func (bl *buildingLogic) generatePawns(bld *pawn) {
 		if bstatic.housing_respawn_period[i] == 0 {
 			continue
 		}
-		if CURRENT_TICK % (bstatic.housing_respawn_period[i] * TICKS_PER_TURN) == 0 &&
+		if CURRENT_TICK%(bstatic.housing_respawn_period[i]*TICKS_PER_TURN) == 0 &&
 			bld.asBuilding.canAffordNewResident(code) {
 
 			log.AppendMessage(fmt.Sprintf("Creating %s (%d/%d) at turn %d", code,
@@ -56,7 +56,23 @@ func (bl *buildingLogic) actForEachPawnInside(bld *pawn) {
 			CURRENT_MAP.addPawn(p)
 			CURRENT_MAP.placePawnNearPawn(p, bld)
 			log.AppendMessage("Pawn moved out.")
-			i-- 
+			i--
+		}
+	}
+}
+
+func (bl *buildingLogic) spawnAutoBids(bld *pawn) {
+	if CURRENT_TICK % SPAWN_AUTO_BIDS_EACH == 0 {
+		static := bld.asBuilding.getStaticData()
+		radius := 10
+		switch static.spawnsBidOfIntentType {
+		case INTENT_GROW_FOREST:
+			cx, cy := bld.getCenter()
+			x, y := rnd.RandInRange(cx-radius, cx+radius), rnd.RandInRange(cy-radius, cy+radius)
+			if CURRENT_MAP.getResourcesAtCoords(x, y) == nil && CURRENT_MAP.getPawnAtCoordinates(x, y) == nil {
+				newbid := &bid{intent_type_for_this_bid: INTENT_GROW_FOREST, maxTaken: 1, x: x, y: y, factionCreatedBid: bld.faction}
+				CURRENT_MAP.addBid(newbid)
+			}
 		}
 	}
 }

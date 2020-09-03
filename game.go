@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/sidav/golibrl/random/additive_random"
 	"MajestyRL/game_log"
+	"github.com/sidav/golibrl/random/additive_random"
 	// "strconv"
 	"time"
 )
@@ -11,6 +11,7 @@ const (
 	TICKS_PER_TURN        = 10
 	CLEANUP_BIDS_EACH     = 500 // ticks
 	READJUST_ECONOMY_EACH = 500 // ticks
+	GROW_FORESTS_EACH     = 100
 )
 
 var (
@@ -49,6 +50,10 @@ func initGame() {
 func startGameLoop() {
 	start := time.Now()
 	for !PLAYER_CONTROLLER.exit { // main game loop
+
+		if CURRENT_TICK%GROW_FORESTS_EACH == 0 {
+			CURRENT_MAP.growForests()
+		}
 
 		if CURRENT_TICK%TICKS_PER_TURN == 0 {
 			currentGameLoopTime = time.Since(start) / time.Nanosecond
