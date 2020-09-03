@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 const (
-	SPAWN_AUTO_BIDS_EACH = 1000 // ticks
+	SPAWN_AUTO_BIDS_EACH = 2000 // ticks
 )
 
 type buildingLogic struct {
@@ -64,14 +64,25 @@ func (bl *buildingLogic) actForEachPawnInside(bld *pawn) {
 func (bl *buildingLogic) spawnAutoBids(bld *pawn) {
 	if CURRENT_TICK % SPAWN_AUTO_BIDS_EACH == 0 {
 		static := bld.asBuilding.getStaticData()
-		radius := 10
-		switch static.spawnsBidOfIntentType {
-		case INTENT_GROW_FOREST:
-			cx, cy := bld.getCenter()
+		radius := static.autoBidRadius
+		cx, cy := bld.getCenter()
+		switch static.autoBidType {
+		case "GROW_FOREST":
 			x, y := rnd.RandInRange(cx-radius, cx+radius), rnd.RandInRange(cy-radius, cy+radius)
 			if CURRENT_MAP.getResourcesAtCoords(x, y) == nil && CURRENT_MAP.getPawnAtCoordinates(x, y) == nil {
 				newbid := &bid{intent_type_for_this_bid: INTENT_GROW_FOREST, maxTaken: 1, x: x, y: y, factionCreatedBid: bld.faction}
 				CURRENT_MAP.addBid(newbid)
+			}
+		case "MINE_FOREST":
+			// x, y := rnd.RandInRange(cx-radius, cx+radius), rnd.RandInRange(cy-radius, cy+radius)
+			for x := cx-radius; x <= cx+radius; x++ {
+				for y := cy-radius; y <= cy+radius; y++ {
+					res := CURRENT_MAP.getResourcesAtCoords(x, y)
+					if res != nil && res.resType == RESTYPE_WOOD && !res.grows {
+						newbid := &bid{intent_type_for_this_bid: INTENT_MINE, maxTaken: 1, x: x, y: y, factionCreatedBid: bld.faction}
+						CURRENT_MAP.addBid(newbid)
+					}
+				}
 			}
 		}
 	}

@@ -33,7 +33,7 @@ func (b *bid) markFulfilled() {
 
 func (b *bid) isFulfilled() bool {
 	if b.intent_type_for_this_bid == INTENT_MINE {
-		return CURRENT_MAP.getResourcesAtCoords(b.x, b.y).amount <= 0 
+		return CURRENT_MAP.getResourcesAtCoords(b.x, b.y) == nil || CURRENT_MAP.getResourcesAtCoords(b.x, b.y).amount <= 0
 	}
 	return b._markedAsFulfilled
 }

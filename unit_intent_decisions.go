@@ -32,6 +32,9 @@ func (ul *unitLogic) considerBids(p *pawn) {
 	static := getUnitStaticDataFromTable(p.asUnit.code)
 	for i := range CURRENT_MAP.bids {
 		consideredBid := CURRENT_MAP.bids[(i+startingBid)%len(CURRENT_MAP.bids)]
+		if consideredBid == nil {
+			continue
+		}
 		if consideredBid.isFulfilled() || !consideredBid.isVacant() {
 			continue // skip fulfilled bids (they are cleared automatically)
 		}

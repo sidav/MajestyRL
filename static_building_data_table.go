@@ -18,7 +18,8 @@ type buildingStaticData struct {
 	housing_respawn_period []int
 
 	allowsTightPlacement bool
-	spawnsBidOfIntentType intentType
+	autoBidType string
+	autoBidRadius int
 
 	//tech
 	allowsBuildings []string
@@ -109,11 +110,10 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 			maxConstructedAmount: 350,
 		},
 		maxHitpoints: 100,
-		spawnsBidOfIntentType: INTENT_GROW_FOREST,
+		autoBidType: "GROW_FOREST",
+		autoBidRadius: 5,
 		// cost
 		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 250, RESTYPE_WOOD: 50}},
-		resourceStorage: map[resourceType]int{RESTYPE_WOOD: 250},
-		taxGoldGeneration: 1,
 	},
 	"SAWMILL": &buildingStaticData{
 		// appearance
@@ -135,10 +135,11 @@ var staticBuildingDataTable = map[string]*buildingStaticData{
 			maxConstructedAmount: 350,
 		},
 		maxHitpoints: 100,
+		autoBidType: "MINE_FOREST",
+		autoBidRadius: 10,
 		// cost
 		cost: &resourceStock{amount: map[resourceType]int{RESTYPE_GOLD: 50, RESTYPE_WOOD: 50}},
 		resourceStorage: map[resourceType]int{RESTYPE_WOOD: 250},
-		taxGoldGeneration: 1,
 	},
 	"GOLDVAULT": &buildingStaticData{
 		// appearance
